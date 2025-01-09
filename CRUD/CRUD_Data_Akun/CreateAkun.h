@@ -1,0 +1,301 @@
+
+#define FILENAME "./Database/Akun/DataAkun.dat"
+#define MAX_ID 1000
+
+
+typedef struct
+{
+    char ID[10];
+    char akun[20];
+    char username[50];
+    char sandi[50];
+    char jabatan[20];
+    char status[50];
+} AkunDataCreate;
+
+void BuatAkun();
+bool ValidasiUsernameCreate(const char *username);
+bool ValidasiSandiCreate(const char *sandi);
+bool UsernameUnik(const char *username, FILE *file);
+void TambahAdminDefault(FILE *file);
+
+int CreateAkun()
+{
+   
+    BuatAkun();
+    return 0;
+}
+
+void TambahAdminDefault(FILE *file)
+{
+    AkunDataCreate adminDefault;
+    memset(&adminDefault, 0, sizeof(AkunDataCreate));
+
+    strncpy(adminDefault.ID, "ACT001", sizeof(adminDefault.ID) - 1);
+    strncpy(adminDefault.akun, "Admin", sizeof(adminDefault.akun) - 1);
+    strncpy(adminDefault.username, "Admin", sizeof(adminDefault.username) - 1);
+    strncpy(adminDefault.sandi, "Admin#123", sizeof(adminDefault.sandi) - 1);
+    strncpy(adminDefault.jabatan, "Manajer", sizeof(adminDefault.jabatan) - 1);
+    strncpy(adminDefault.status, "Mandatory", sizeof(adminDefault.status) - 1);
+
+    fwrite(&adminDefault, sizeof(AkunDataCreate), 1, file);
+    printf("Admin default (ACT001) telah ditambahkan.\n");
+}
+
+void BuatAkun()
+{
+    FILE *file = fopen(FILENAME, "a+b");
+    if (!file)
+    {
+        printf("Gagal membuka file database.\n");
+        return;
+    }
+
+    fseek(file, 0, SEEK_END);
+    if (ftell(file) == 0)
+    {
+        TambahAdminDefault(file);
+    }
+    rewind(file);
+
+    AkunDataCreate akunBaru;
+    memset(&akunBaru, 0, sizeof(AkunDataCreate));
+
+    const char *pilihanAkun[] = {"Admin", "User"};
+    const char *jabatanAdmin[] = {"Manajer", "Manajer IT"};
+    const char *jabatanUser[] = {"Kasir Tiket", "Kasir FNB"};
+
+    int pilihanAkunIndex = 0, jabatanIndex = 0;
+    char username[50] = "", sandi[50] = "";
+    int step = 0; 
+
+    while (1)
+    {
+        
+        system("cls");
+        ReadAkun();
+         printf("==== Tambah Akun ====\n");
+        printf("Akun    :");
+        for (int i = 0; i < 2; i++)
+        {
+            if (i == pilihanAkunIndex && step == 0)
+            {
+                printf(" >[%s]", pilihanAkun[i]);
+            }
+            else
+            {
+                printf("  [%s]", pilihanAkun[i]);
+            }
+        }
+        printf("\n");
+
+        printf("Jabatan :");
+        const char **jabatanOptions = strcmp(pilihanAkun[pilihanAkunIndex], "Admin") == 0 ? jabatanAdmin : jabatanUser;
+        int jabatanOptionsCount = 2;
+        for (int i = 0; i < jabatanOptionsCount; i++)
+        {
+            if (i == jabatanIndex && step == 1)
+            {
+                printf(" >[%s]", jabatanOptions[i]);
+            }
+            else
+            {
+                printf("  [%s]", jabatanOptions[i]);
+            }
+        }
+        printf("\n\n");
+
+        printf("Username: %s%s\n", step == 2 ? ">" : "", username);
+        printf("Sandi   : %s%s\n\n", step == 3 ? ">" : "", sandi);
+
+        const char *pilihanKonfirmasi[] = {"BATAL", "KONFIRMASI"};
+        printf("Konfirmasi: ");
+        for (int i = 0; i < 2; i++)
+        {
+            if (i == step - 4)
+            {
+                printf(" >[%s]", pilihanKonfirmasi[i]);
+            }
+            else
+            {
+                printf("  [%s]", pilihanKonfirmasi[i]);
+            }
+        }
+        printf("\n");
+
+        char key = getch();
+        if (step == 0)
+        {
+            if (key == 75)
+                pilihanAkunIndex = (pilihanAkunIndex - 1 + 2) % 2;
+            if (key == 77)
+                pilihanAkunIndex = (pilihanAkunIndex + 1) % 2;
+            if (key == '\r')
+                step++;
+        }
+        else if (step == 1)
+        {
+            if (key == 75)
+                jabatanIndex = (jabatanIndex - 1 + jabatanOptionsCount) % jabatanOptionsCount;
+            if (key == 77)
+                jabatanIndex = (jabatanIndex + 1) % jabatanOptionsCount;
+            if (key == '\r')
+                step++;
+        }
+        else if (step == 2)
+        {
+            if (isalnum(key) || key == '@' || key == '#')
+            {
+                size_t len = strlen(username);
+                if (len < sizeof(username) - 1)
+                {
+                    username[len] = key;
+                    username[len + 1] = '\0';
+                }
+            }
+            else if (key == 8 && strlen(username) > 0)
+            {
+                username[strlen(username) - 1] = '\0';
+            }
+            else if (key == '\r' && ValidasiUsernameCreate(username))
+            {
+                step++;
+            }
+        }
+        else if (step == 3)
+        {
+            if (isalnum(key) || ispunct(key))
+            {
+                size_t len = strlen(sandi);
+                if (len < sizeof(sandi) - 1)
+                {
+                    sandi[len] = key;
+                    sandi[len + 1] = '\0';
+                }
+            }
+            else if (key == 8 && strlen(sandi) > 0)
+            {
+                sandi[strlen(sandi) - 1] = '\0';
+            }
+            else if (key == '\r' && ValidasiSandiCreate(sandi))
+            {
+                step++;
+            }
+        }
+        else if (step >= 4)
+        {
+            int konfirmasiIndex = step - 4;
+            if (key == 75 || key == 77)
+            {
+                konfirmasiIndex = 1 - konfirmasiIndex;
+                step = 4 + konfirmasiIndex;
+            }
+            else if (key == '\r')
+            {
+                if (konfirmasiIndex == 0)
+                {
+                    printf("Pembuatan akun dibatalkan.\n");
+                    break;
+                }
+                else
+                {
+                    strncpy(akunBaru.akun, pilihanAkun[pilihanAkunIndex], sizeof(akunBaru.akun) - 1);
+                    strncpy(akunBaru.jabatan, jabatanOptions[jabatanIndex], sizeof(akunBaru.jabatan) - 1);
+                    strncpy(akunBaru.username, username, sizeof(akunBaru.username) - 1);
+                    strncpy(akunBaru.sandi, sandi, sizeof(akunBaru.sandi) - 1);
+
+                    rewind(file);
+                    bool idTerpakai[MAX_ID] = {false};
+                    AkunDataCreate temp;
+                    while (fread(&temp, sizeof(AkunDataCreate), 1, file))
+                    {
+                        if (strncmp(temp.ID, "ACT", 3) == 0)
+                        {
+                            int idNum = atoi(&temp.ID[3]);
+                            if (idNum > 0 && idNum < MAX_ID)
+                            {
+                                idTerpakai[idNum] = true;
+                            }
+                        }
+                    }
+                    int idBaru = 2;
+                    while (idBaru < MAX_ID && idTerpakai[idBaru])
+                    {
+                        idBaru++;
+                    }
+                    snprintf(akunBaru.ID, sizeof(akunBaru.ID), "ACT%03d", idBaru);
+
+                    if (UsernameUnik(username, file))
+                    {
+                        fwrite(&akunBaru, sizeof(AkunDataCreate), 1, file);
+                        TampilkanPesan("Data berhasil disimpan.\n",2);
+                    }
+                    else
+                    {
+                        TampilkanPesan("Username telah digunakan, coba yang lain.\n",2);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    fclose(file);
+}
+
+bool ValidasiUsernameCreate(const char *username)
+{
+    if (strlen(username) == 0)
+        return false;
+
+    for (int i = 0; username[i] != '\0'; i++)
+    {
+        if (!isalnum(username[i]) && username[i] != '@' && username[i] != '_')
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool ValidasiSandiCreate(const char *sandi)
+{
+    if (strlen(sandi) < 8)
+    {
+        TampilkanPesan("Sandi minimal 8 karakter.\n",2);
+        return false;
+    }
+
+    bool adaHuruf = false, adaAngka = false, adaSpesial = false;
+    for (int i = 0; sandi[i] != '\0'; i++)
+    {
+        if (isalpha(sandi[i]))
+            adaHuruf = true;
+        else if (isdigit(sandi[i]))
+            adaAngka = true;
+        else if (ispunct(sandi[i]))
+            adaSpesial = true;
+    }
+
+    if (!adaHuruf || !adaAngka || !adaSpesial)
+    {
+        TampilkanPesan("Sandi harus mengandung huruf, angka, dan karakter khusus.\n",2);
+        return false;
+    }
+
+    return true;
+}
+
+bool UsernameUnik(const char *username, FILE *file)
+{
+    rewind(file);
+    AkunDataCreate temp;
+    while (fread(&temp, sizeof(AkunDataCreate), 1, file))
+    {
+        if (strcmp(temp.username, username) == 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
