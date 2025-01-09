@@ -1,3 +1,4 @@
+
 //LIBRARY STANDAR
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,11 +10,14 @@
 #include <windows.h>
 #include <unistd.h>
 
+
+
 //CRUD DATA AKUN
 #include "CRUD/CRUD_Data_Akun/ReadAkun.h"
 #include "CRUD/CRUD_Data_Akun/CreateAkun.h"
 #include "CRUD/CRUD_Data_Akun/UpdateAkun.h"
 #include "CRUD/CRUD_Data_Akun/DeleteAkun.h"
+
 
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
 typedef struct
@@ -162,7 +166,8 @@ void tampilkanMenu() {
     } while (1);
 }
 
-int main() {
+//MAIN
+int DashboardAdmin() {
     tampilkanMenu();
     return 0;
 }

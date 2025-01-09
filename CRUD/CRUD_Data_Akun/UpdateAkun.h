@@ -23,12 +23,7 @@ int UpdateAkun()
     return 0;
 }
 
-void TampilkanPesan(const char *pesan, int waktu)
-{
-    printf("%s\n", pesan);
-    fflush(stdout);
-    sleep(waktu);
-}
+
 
 int PilihOpsi(const char *judul, const char *opsi[], int jumlah)
 {

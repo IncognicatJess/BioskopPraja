@@ -63,6 +63,9 @@
     "readakun.h": "c",
     "createakun.h": "c",
     "time.h": "c",
-    "conio.h": "c"
+    "conio.h": "c",
+    "windows.h": "c",
+    "dashboardadmin.h": "c",
+    "readakun2.h": "c"
   }
 }
