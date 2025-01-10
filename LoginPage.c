@@ -1,6 +1,6 @@
 #define FILENAME "./Database/Akun/DataAkun.dat"
 
-
+//berubah
 // LIBRARY STANDARD
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +11,6 @@
 //#include "CRUD/CRUD_Data_Akun/ReadAkun.h" // Untuk membaca akun dari file
 #include "TampilkanPesan.h"
 #include "DashboardAdmin.h" // Dashboard admin
-
 //FUNGSI EXTENDED
 
 // Struct AkunData untuk validasi login
