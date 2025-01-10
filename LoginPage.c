@@ -1,6 +1,6 @@
 #define FILENAME "./Database/Akun/DataAkun.dat"
 
-//berubah
+//berubahapa
 // LIBRARY STANDARD
 #include <stdio.h>
 #include <stdlib.h>
