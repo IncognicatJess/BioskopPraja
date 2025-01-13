@@ -90,7 +90,7 @@ void BuatFilm()
 
     // Select Format
     printf("Bentuk :");
-    const char **bentukOptions = strcmp(pilihanGenre[pilihanGenreIndex], "Action") == 0 ? pilihanGenre : pilihanBentuk;
+    const char **bentukOptions = strcmp(pilihanBentuk[pilihanBentukIndex], "2D") == 0 ? pilihanGenre : pilihanBentuk;
     int studioOptionsCount = 2;
     for (int i = 0; i < studioOptionsCount; i++)
     {
