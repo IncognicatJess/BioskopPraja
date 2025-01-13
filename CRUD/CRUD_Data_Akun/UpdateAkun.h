@@ -14,7 +14,7 @@ typedef struct
 void EditAkun();
 bool ValidasiUsernameUpdate(const char *username, FILE *file);
 bool ValidasiSandiUpdate(const char *sandi);
-int PilihOpsi(const char *judul, const char *opsi[], int jumlah);
+//int PilihOpsi(const char *master, const char *opsi[], int jumlah);
 
 int UpdateAkun()
 {
@@ -24,8 +24,8 @@ int UpdateAkun()
 }
 
 
-
-int PilihOpsi(const char *judul, const char *opsi[], int jumlah)
+/*
+int PilihOpsi(const char *master, const char *opsi[], int jumlah)
 {
     int indeks = 0;
     char key;
@@ -33,7 +33,16 @@ int PilihOpsi(const char *judul, const char *opsi[], int jumlah)
     while (1)
     {
         system("cls");
-        ReadAkun();
+
+        if(strcmp(master,"Akun") == 0){
+            ReadAkun();
+        }
+        else if(strcmp(master,"Film") == 0){
+            ReadFilm();
+        }else{
+            TampilkanPesan("Data Belum Tersedia!\n", 1);
+        }
+        
         for (int i = 0; i < jumlah; i++)
         {
             if (i == indeks)
@@ -55,7 +64,7 @@ int PilihOpsi(const char *judul, const char *opsi[], int jumlah)
             return indeks;
     }
 }
-
+*/
 void EditAkun()
 {
     FILE *file = fopen(FILENAME, "r+b");

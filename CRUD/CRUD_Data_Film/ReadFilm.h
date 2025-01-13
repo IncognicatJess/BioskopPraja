@@ -1,18 +1,20 @@
-#define FILENAME "./Database/film/Datafilm.dat"
 #define MAX_ID 1000
 
 typedef struct
 {
-    int ID;
-    char title[50];
+    char ID[10];
+    char judul[50];
     char genre[20];
-    char studio;
-    char status[20];
-    double price;
-} MovieData;
+    int tahunRelease;
+    double durasi;
+    char studioFilm[20];
+    char bentuk[10];
+    double harga;
+    char status[50];
+} MovieDataBaca;
 
 void TampilkanFilm();
-int BandingkanID(const void *a, const void *b);
+int BandingkanIDFilm(const void *a, const void *b);
 
 int ReadFilm() {
     printf("\n==== Data Film ====\n");
@@ -21,40 +23,40 @@ int ReadFilm() {
 }
 
 void TampilkanFilm() {
-    FILE *file = fopen(FILENAME, "rb");
+    FILE *file = fopen(FILEFILM, "rb");
     if (!file) {
-        printf("Gagal membuka file %s. Pastikan file tersebut ada.\n", FILENAME);
+        printf("Gagal membuka file %s. Pastikan file tersebut ada.\n", FILEFILM);
         return;
     }
 
-    MovieData film[MAX_ACCOUNTS];
+    MovieDataBaca film[MAX_ID];
     int jumlahFilm = 0;
 
     // Membaca semua data dari file
-    while (fread(&film[jumlahFilm], sizeof(MovieData) 1, file)) {
-        strncpy(film[jumlahFilm].status, "Aktif", sizeof(FILENAME[jumlahFilm].status));
+    while (fread(&film[jumlahFilm], sizeof(MovieDataBaca), 1, file)) {
+        strncpy(film[jumlahFilm].status, "Sedang Tayang", sizeof(film[jumlahFilm].status));
         jumlahFilm++;
     }
     fclose(file);
 
     // Mengurutkan data berdasarkan ID
-    qsort(film, jumlahFilm, sizeof(MovieData) BandingkanID);
+    qsort(film, jumlahFilm, sizeof(MovieDataBaca), BandingkanID);
 
     // Menampilkan tabel
-    printf("| %-8s | %-10s | %-15s | %-15s | %-15s | %-10s |\n", "ID", "Film", "Genre", "Studio", "Harga", "Status");
+    printf("| %-8s | %-10s | %-15s | %-15s | %-15s | %-10s |\n", "ID", "Judul Film", "Genre", "Tahun Rilis", "Durasi", "Studio Film", "Bentuk", "Harga", "Status");
     printf("----------------------------------------------------------------------------------------------------\n");
 
     for (int i = 0; i < jumlahFilm; i++) {
-        printf("| %-8s | %-10s | %-15s | %-15s | %-15s | %-10s |\n",
-               film[i].ID, film[i].title, film[i].genre, film[i].studio, film[i].price, film[i].status);
+        printf("| %-8s | %-10s | %-15s | %-15s | %-15s | %-10s | %-10s | %-10f | %-10s |\n",
+               film[i].ID, film[i].judul, film[i].genre, film[i].tahunRelease, film[i].durasi, film[i].studioFilm, film[i].bentuk, film[i].harga, film[i].status);
     }
     printf("\n\n\n");
 }
 
 // Fungsi pembanding untuk qsort berdasarkan ID
-int BandingkanID(const void *a, const void *b) {
-    MovieData *film = (MovieData *a);
-    MovieData *film = (MovieData *b);
+int BandingkanIDFilm(const void *a, const void *b) {
+    MovieDataBaca *filmA = (MovieDataBaca *)a;
+    MovieDataBaca *filmB = (MovieDataBaca *)b;
 
     // Memisahkan jenis ID (ADM atau USR)
     char prefixA[4], prefixB[4];

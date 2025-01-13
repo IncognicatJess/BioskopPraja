@@ -71,6 +71,7 @@
     "hidepassword.h": "c",
     "tampilkanpesan.h": "c",
     "tampilkanjudul.h": "c",
-    "tampungid.h": "c"
+    "tampungid.h": "c",
+    "deleteakun.h": "c"
   }
 }

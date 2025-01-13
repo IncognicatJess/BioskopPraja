@@ -19,7 +19,7 @@
 #include "CRUD/CRUD_Data_Akun/DeleteAkun.h"
 
 //CRUD DATA FILM
-//#include "CRUD/CRUD_Data_Film/ReadFilm.h"
+#include "CRUD/CRUD_Data_Film/ReadFilm.h"
 #include "CRUD/CRUD_Data_Film/CreateFilm.h"
 //#include "CRUD/CRUD_Data_Film/UpdateFilm.h"
 //#include "CRUD/CRUD_Data_Film/DeleteFilm.h"
@@ -87,14 +87,14 @@ int tampilkanMenuNavigasi() {
 
 // Fungsi untuk menampilkan profil admin
 void tampilkanProfil(ProfilData profil) {
-    clearScreen();
+    system("cls");
     printf("=== PROFIL ===\n");
     printf("ID       : %s\n", profil.ID);
     printf("Username : %s\n", profil.username);
-    printf("Nama     : John Agus\n");
-    printf("TTL      : Bandung, 1 Januari 1990\n");
+    printf("Nama     : -\n");
+    printf("TTL      : -\n");
     printf("Jabatan  : %s\n",profil.jabatan);
-    printf("No HP    : 081234567890\n");
+    printf("No HP    : -\n");
     printf("\nTekan Enter untuk kembali ke menu utama...");
     getchar();
 }
@@ -105,10 +105,10 @@ void tampilkanDaftarAkun() {
         clearScreen();
  
         const char *menuAkun[] = {"EDIT", "-HAPUS", "+TAMBAH","KEMBALI"};
-        ReadAkun();
         
-        int pilihan = PilihOpsi("Pilih aksi untuk akun:", menuAkun, 4);
-
+        const char *Master = "Akun";
+        int pilihan = PilihOpsi(Master,menuAkun, 4);
+        ReadAkun();
         switch (pilihan) {
         case 0:
             system("cls");
@@ -126,6 +126,37 @@ void tampilkanDaftarAkun() {
             break;
         case 3:
             break;   
+        }
+        if (pilihan == 3) {
+            break;
+        }
+    }
+}
+void tampilkanDaftarFilm() {
+    while (1) {
+        system("cls");
+ 
+        const char *menuFilm[] = {"EDIT", "-HAPUS", "+TAMBAH","KEMBALI"};
+        
+        const char *Master = "Film";
+        int pilihan = PilihOpsi(Master,menuFilm, 4);
+        ReadFilm();
+        switch (pilihan) {
+        case 0:
+            system("cls");
+            ReadFilm();
+            break;
+        case 1:
+            system("cls");
+            ReadFilm();
+            break;
+        case 2:
+            system("cls");
+            ReadFilm();
+            CreateFilm();
+            break;
+        case 3:
+            break; 
         }
         if (pilihan == 3) {
             break;
@@ -159,9 +190,9 @@ void tampilkanMenu(ProfilData profil) {
             case 2:
                 tampilkanDaftarAkun();
                 break;
-            //case 3:
-            //    tampilkanDaftarFilm();
-            //   break;
+            case 3:
+               tampilkanDaftarFilm();
+              break;
             case 4:
                 tampilkanDaftarRuangan();
                 break;

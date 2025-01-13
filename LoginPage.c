@@ -1,4 +1,5 @@
 #define FILENAME "./Database/Akun/DataAkun.dat"
+#define FILEFILM "./Database/Film/DataFilm.dat"
 
 // LIBRARY STANDARD
 #include <stdio.h>
@@ -35,6 +36,7 @@ typedef struct {
 #include "TampungID.h"
 #include "TampilkanPesan.h"
 #include "HidePassword.h"
+#include "TombolOpsi.h"
 #include "DashboardAdmin.h" // Dashboard admin
 
 
