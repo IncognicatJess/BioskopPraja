@@ -7,10 +7,10 @@
 #include <string.h>
 #include <conio.h>
 #include <unistd.h>
+#include <string.h>
+#include <windows.h>
+
 //#include "CRUD/CRUD_Data_Akun/ReadAkun.h" // Untuk membaca akun dari file
-#include "TampilkanPesan.h"
-#include "DashboardAdmin.h" // Dashboard admin
-//FUNGSI EXTENDED
 
 // Struct AkunData untuk validasi login
 typedef struct {
@@ -22,8 +22,25 @@ typedef struct {
     char status[50];
 } AkunData;
 
+//Struct Untuk menampung data ke dashboard sesuai akun
+typedef struct {
+    char ID[10];
+    char username[50];
+    char jabatan[20];
+} ProfilData;
+
+
+//FUNGSI EXTENDED
+#include "TampilkanJudul.h"
+#include "TampungID.h"
+#include "TampilkanPesan.h"
+#include "HidePassword.h"
+#include "DashboardAdmin.h" // Dashboard admin
+
+
+
+
 // Prototipe fungsi
-void tampilkanJudul();
 bool validasiLogin(const char *username, const char *password, AkunData *akun);
 void dashboardUser(const AkunData *akun);
 
@@ -31,6 +48,7 @@ void dashboardUser(const AkunData *akun);
 int main() {
     char username[50], password[50];
     AkunData akun;
+    ProfilData profil;
     int attempt = 3; // Jumlah percobaan login
 
     while (attempt > 0) {
@@ -43,28 +61,23 @@ int main() {
 
         // Input password
         printf("Password: ");
-        int i = 0;
-        char ch;
-        while ((ch = getch()) != '\r') { // Mask password input
-            if (ch == '\b' && i > 0) {
-                printf("\b \b");
-                i--;
-            } else if (ch != '\b' && i < sizeof(password) - 1) {
-                password[i++] = ch;
-                printf("*");
-            }
-        }
-        password[i] = '\0';
-        printf("\n");
+
+        //Fungsi menyembunyikan Password
+       HidePW(password, sizeof(password));
 
         // Validasi login
         if (validasiLogin(username, password, &akun)) {
-            if (strcmp(akun.akun, "Admin") == 0) {
-                DashboardAdmin();
+            profil = validasiID(username, password); // Simpan profil yang dikembalikan
+            if (strlen(profil.ID) > 0) { // Cek apakah ID tidak kosong
+                if (strcmp(akun.akun, "Admin") == 0) {
+                    DashboardAdmin(profil); // Kirim profil ke DashboardAdmin
+                } else {
+                    dashboardUser (&akun);
+                }
+                return 0; // Keluar setelah login berhasil
             } else {
-                dashboardUser(&akun);
+                printf("ID tidak ditemukan.\n");
             }
-            return 0; // Keluar setelah login berhasil
         } else {
             attempt--;
             char pesan[100];
@@ -73,17 +86,12 @@ int main() {
         }
     }
 
+    //Jika lebih dari 3 kali
     printf("Login gagal. Silakan coba lagi nanti.\n");
     return 0;
 }
 
-// Fungsi menampilkan judul aplikasi
-void tampilkanJudul() {
-    printf("\n========================\n");
-    printf("  BIOSKOP PRAJA\n");
-    printf("  Sistem Pemesanan Tiket dan F&B\n");
-    printf("========================\n\n");
-}
+
 
 // Fungsi validasi login
 bool validasiLogin(const char *username, const char *password, AkunData *akun) {
@@ -95,6 +103,7 @@ bool validasiLogin(const char *username, const char *password, AkunData *akun) {
 
     while (fread(akun, sizeof(AkunData), 1, file)) {
         if (strcmp(akun->username, username) == 0 && strcmp(akun->sandi, password) == 0) {
+       
             fclose(file);
             return true;
         }

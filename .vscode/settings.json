@@ -67,6 +67,10 @@
     "windows.h": "c",
     "dashboardadmin.h": "c",
     "readakun2.h": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "hidepassword.h": "c",
+    "tampilkanpesan.h": "c",
+    "tampilkanjudul.h": "c",
+    "tampungid.h": "c"
   }
 }

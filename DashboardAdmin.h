@@ -18,6 +18,12 @@
 #include "CRUD/CRUD_Data_Akun/UpdateAkun.h"
 #include "CRUD/CRUD_Data_Akun/DeleteAkun.h"
 
+//CRUD DATA FILM
+//#include "CRUD/CRUD_Data_Film/ReadFilm.h"
+#include "CRUD/CRUD_Data_Film/CreateFilm.h"
+//#include "CRUD/CRUD_Data_Film/UpdateFilm.h"
+//#include "CRUD/CRUD_Data_Film/DeleteFilm.h"
+
 
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
 typedef struct
@@ -50,7 +56,7 @@ void clearScreen() {
 // Fungsi untuk menampilkan menu dengan navigasi arrow key
 int tampilkanMenuNavigasi() {
     int pilihan = 1; // Indeks menu yang sedang dipilih
-    int jumlahPilihan = 7; // Total menu
+    int jumlahPilihan = 8; // Total menu
     char key;
 
     while (1) {
@@ -58,11 +64,12 @@ int tampilkanMenuNavigasi() {
         printf("=== SIDE NAVBAR ===\n");
         printf("%s PROFIL\n", pilihan == 1 ? ">" : " ");
         printf("%s DAFTAR AKUN\n", pilihan == 2 ? ">" : " ");
-        printf("%s DAFTAR RUANGAN\n", pilihan == 3 ? ">" : " ");
-        printf("%s JADWAL TAYANG\n", pilihan == 4 ? ">" : " ");
-        printf("%s DAFTAR FNB\n", pilihan == 5 ? ">" : " ");
-        printf("%s LAPORAN\n", pilihan == 6 ? ">" : " ");
-        printf("%s LOGOUT\n", pilihan == 7 ? ">" : " ");
+        printf("%s DAFTAR FILM\n", pilihan == 3 ? ">" : " ");
+        printf("%s DAFTAR RUANGAN\n", pilihan == 4 ? ">" : " ");
+        printf("%s JADWAL TAYANG\n", pilihan == 5 ? ">" : " ");
+        printf("%s DAFTAR FNB\n", pilihan == 6 ? ">" : " ");
+        printf("%s LAPORAN\n", pilihan == 7 ? ">" : " ");
+        printf("%s LOGOUT\n", pilihan == 8 ? ">" : " ");
 
         key = getch();
 
@@ -79,14 +86,14 @@ int tampilkanMenuNavigasi() {
 }
 
 // Fungsi untuk menampilkan profil admin
-void tampilkanProfil() {
+void tampilkanProfil(ProfilData profil) {
     clearScreen();
     printf("=== PROFIL ===\n");
-    printf("ID       : ADM000\n");
-    printf("Username : AdminUtama\n");
+    printf("ID       : %s\n", profil.ID);
+    printf("Username : %s\n", profil.username);
     printf("Nama     : John Agus\n");
     printf("TTL      : Bandung, 1 Januari 1990\n");
-    printf("Jabatan  : Admin Utama\n");
+    printf("Jabatan  : %s\n",profil.jabatan);
     printf("No HP    : 081234567890\n");
     printf("\nTekan Enter untuk kembali ke menu utama...");
     getchar();
@@ -139,7 +146,7 @@ void tampilkanDaftarRuangan() {
 }
 
 // Fungsi untuk menampilkan menu utama
-void tampilkanMenu() {
+void tampilkanMenu(ProfilData profil) {
     int pilihan;
 
     do {
@@ -147,15 +154,18 @@ void tampilkanMenu() {
 
         switch (pilihan) {
             case 1:
-                tampilkanProfil();
+                tampilkanProfil(profil);
                 break;
             case 2:
                 tampilkanDaftarAkun();
                 break;
-            case 3:
+            //case 3:
+            //    tampilkanDaftarFilm();
+            //   break;
+            case 4:
                 tampilkanDaftarRuangan();
                 break;
-            case 7:
+            case 8:
                 printf("Logging out...\n");
                 return; // Kembali ke halaman login
             default:
@@ -167,7 +177,9 @@ void tampilkanMenu() {
 }
 
 //MAIN
-int DashboardAdmin() {
-    tampilkanMenu();
+int DashboardAdmin(ProfilData profil) {
+    
+
+    tampilkanMenu(profil);
     return 0;
 }
