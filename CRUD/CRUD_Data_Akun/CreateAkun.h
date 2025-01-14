@@ -1,16 +1,4 @@
-    #define FILENAME "./Database/Akun/DataAkun.dat"
-#define MAX_ID 1000
-
-
-typedef struct
-{
-    char ID[10];
-    char akun[20];
-    char username[50];
-    char sandi[50];
-    char jabatan[20];
-    char status[50];
-} AkunDataCreate;
+#define MAX_ACCOUNTS 1000
 
 void BuatAkun();
 bool ValidasiUsernameCreate(const char *username);
@@ -20,15 +8,15 @@ void TambahAdminDefault(FILE *file);
 
 int CreateAkun()
 {
-   
+
     BuatAkun();
     return 0;
 }
 
 void TambahAdminDefault(FILE *file)
 {
-    AkunDataCreate adminDefault;
-    memset(&adminDefault, 0, sizeof(AkunDataCreate));
+    AkunData adminDefault;
+    memset(&adminDefault, 0, sizeof(AkunData));
 
     strncpy(adminDefault.ID, "ACT001", sizeof(adminDefault.ID) - 1);
     strncpy(adminDefault.akun, "Admin", sizeof(adminDefault.akun) - 1);
@@ -37,12 +25,13 @@ void TambahAdminDefault(FILE *file)
     strncpy(adminDefault.jabatan, "Manajer", sizeof(adminDefault.jabatan) - 1);
     strncpy(adminDefault.status, "Mandatory", sizeof(adminDefault.status) - 1);
 
-    fwrite(&adminDefault, sizeof(AkunDataCreate), 1, file);
+    fwrite(&adminDefault, sizeof(AkunData), 1, file);
     printf("Admin default (ACT001) telah ditambahkan.\n");
 }
 
 void BuatAkun()
 {
+
     FILE *file = fopen(FILENAME, "a+b");
     if (!file)
     {
@@ -57,8 +46,8 @@ void BuatAkun()
     }
     rewind(file);
 
-    AkunDataCreate akunBaru;
-    memset(&akunBaru, 0, sizeof(AkunDataCreate));
+    AkunData akunBaru;
+    memset(&akunBaru, 0, sizeof(AkunData));
 
     const char *pilihanAkun[] = {"Admin", "User"};
     const char *jabatanAdmin[] = {"Manajer", "Manajer IT"};
@@ -66,14 +55,14 @@ void BuatAkun()
 
     int pilihanAkunIndex = 0, jabatanIndex = 0;
     char username[50] = "", sandi[50] = "";
-    int step = 0; 
+    int step = 0;
 
     while (1)
     {
-        
+
         system("cls");
         ReadAkun();
-         printf("==== Tambah Akun ====\n");
+        printf("==== Tambah Akun ====\n");
         printf("Akun    :");
         for (int i = 0; i < 2; i++)
         {
@@ -106,21 +95,6 @@ void BuatAkun()
 
         printf("Username: %s%s\n", step == 2 ? ">" : "", username);
         printf("Sandi   : %s%s\n\n", step == 3 ? ">" : "", sandi);
-
-        const char *pilihanKonfirmasi[] = {"BATAL", "KONFIRMASI"};
-        printf("Konfirmasi: ");
-        for (int i = 0; i < 2; i++)
-        {
-            if (i == step - 4)
-            {
-                printf(" >[%s]", pilihanKonfirmasi[i]);
-            }
-            else
-            {
-                printf("  [%s]", pilihanKonfirmasi[i]);
-            }
-        }
-        printf("\n");
 
         char key = getch();
         if (step == 0)
@@ -163,6 +137,7 @@ void BuatAkun()
         }
         else if (step == 3)
         {
+
             if (isalnum(key) || ispunct(key))
             {
                 size_t len = strlen(sandi);
@@ -183,58 +158,53 @@ void BuatAkun()
         }
         else if (step >= 4)
         {
-            int konfirmasiIndex = step - 4;
-            if (key == 75 || key == 77)
+            strncpy(akunBaru.akun, pilihanAkun[pilihanAkunIndex], sizeof(akunBaru.akun) - 1);
+            strncpy(akunBaru.jabatan, jabatanOptions[jabatanIndex], sizeof(akunBaru.jabatan) - 1);
+            strncpy(akunBaru.username, username, sizeof(akunBaru.username) - 1);
+            strncpy(akunBaru.sandi, sandi, sizeof(akunBaru.sandi) - 1);
+
+            int konfirmasiIndex = TombolKonfirmasi("Akun", "Buat", &akunBaru);
+
+            if (konfirmasiIndex == 0)
             {
-                konfirmasiIndex = 1 - konfirmasiIndex;
-                step = 4 + konfirmasiIndex;
+                memset(&akunBaru, 0, sizeof(AkunData));
+                printf("Pembuatan akun dibatalkan.\n");
+                break;
             }
-            else if (key == '\r')
+            else
             {
-                if (konfirmasiIndex == 0)
+    
+                rewind(file);
+                bool idTerpakai[MAX_ACCOUNTS] = {false};
+                AkunData temp;
+                while (fread(&temp, sizeof(AkunData), 1, file))
                 {
-                    printf("Pembuatan akun dibatalkan.\n");
-                    break;
+                    if (strncmp(temp.ID, "ACT", 3) == 0)
+                    {
+                        int idNum = atoi(&temp.ID[3]);
+                        if (idNum > 0 && idNum < MAX_ACCOUNTS)
+                        {
+                            idTerpakai[idNum] = true;
+                        }
+                    }
+                }
+                int idBaru = 2;
+                while (idBaru < MAX_ACCOUNTS && idTerpakai[idBaru])
+                {
+                    idBaru++;
+                }
+                snprintf(akunBaru.ID, sizeof(akunBaru.ID), "ACT%03d", idBaru);
+
+                if (UsernameUnik(username, file))
+                {
+                    fwrite(&akunBaru, sizeof(AkunData), 1, file);
+                    TampilkanPesan("Data berhasil disimpan.\n", 2);
                 }
                 else
                 {
-                    strncpy(akunBaru.akun, pilihanAkun[pilihanAkunIndex], sizeof(akunBaru.akun) - 1);
-                    strncpy(akunBaru.jabatan, jabatanOptions[jabatanIndex], sizeof(akunBaru.jabatan) - 1);
-                    strncpy(akunBaru.username, username, sizeof(akunBaru.username) - 1);
-                    strncpy(akunBaru.sandi, sandi, sizeof(akunBaru.sandi) - 1);
-
-                    rewind(file);
-                    bool idTerpakai[MAX_ID] = {false};
-                    AkunDataCreate temp;
-                    while (fread(&temp, sizeof(AkunDataCreate), 1, file))
-                    {
-                        if (strncmp(temp.ID, "ACT", 3) == 0)
-                        {
-                            int idNum = atoi(&temp.ID[3]);
-                            if (idNum > 0 && idNum < MAX_ID)
-                            {
-                                idTerpakai[idNum] = true;
-                            }
-                        }
-                    }
-                    int idBaru = 2;
-                    while (idBaru < MAX_ID && idTerpakai[idBaru])
-                    {
-                        idBaru++;
-                    }
-                    snprintf(akunBaru.ID, sizeof(akunBaru.ID), "ACT%03d", idBaru);
-
-                    if (UsernameUnik(username, file))
-                    {
-                        fwrite(&akunBaru, sizeof(AkunDataCreate), 1, file);
-                        TampilkanPesan("Data berhasil disimpan.\n",2);
-                    }
-                    else
-                    {
-                        TampilkanPesan("Username telah digunakan, coba yang lain.\n",2);
-                    }
-                    break;
+                    TampilkanPesan("Username telah digunakan, coba yang lain.\n", 2);
                 }
+                break;
             }
         }
     }
@@ -261,7 +231,7 @@ bool ValidasiSandiCreate(const char *sandi)
 {
     if (strlen(sandi) < 8)
     {
-        TampilkanPesan("Sandi minimal 8 karakter.\n",2);
+        TampilkanPesan("Sandi minimal 8 karakter.\n", 2);
         return false;
     }
 
@@ -278,7 +248,7 @@ bool ValidasiSandiCreate(const char *sandi)
 
     if (!adaHuruf || !adaAngka || !adaSpesial)
     {
-        TampilkanPesan("Sandi harus mengandung huruf, angka, dan karakter khusus.\n",2);
+        TampilkanPesan("Sandi harus mengandung huruf, angka, dan karakter khusus.\n", 2);
         return false;
     }
 
@@ -288,8 +258,8 @@ bool ValidasiSandiCreate(const char *sandi)
 bool UsernameUnik(const char *username, FILE *file)
 {
     rewind(file);
-    AkunDataCreate temp;
-    while (fread(&temp, sizeof(AkunDataCreate), 1, file))
+    AkunData temp;
+    while (fread(&temp, sizeof(AkunData), 1, file))
     {
         if (strcmp(temp.username, username) == 0)
         {

@@ -13,6 +13,7 @@ int PilihOpsi(const char *master, const char *opsi[], int jumlah)
 
         if(strcmp(master,"Akun") == 0){
             ReadAkun();
+            printf("Apakah anda yakin ingin mengganti sandi pada admin utama?\n");
         }
         else if(strcmp(master,"Film") == 0){
             ReadFilm();

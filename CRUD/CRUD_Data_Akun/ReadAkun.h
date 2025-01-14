@@ -1,4 +1,3 @@
-#define FILENAME "./Database/Akun/DataAkun.dat"
 #define MAX_ACCOUNTS 1000
 
 typedef struct {

@@ -72,6 +72,7 @@
     "tampilkanpesan.h": "c",
     "tampilkanjudul.h": "c",
     "tampungid.h": "c",
-    "deleteakun.h": "c"
+    "deleteakun.h": "c",
+    "tombolkonfirmasi.h": "c"
   }
 }

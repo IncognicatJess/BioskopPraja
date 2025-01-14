@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <conio.h>
-#include <windows.h>
 
-int TombolKonfirmasi(const char *judul)
+int TombolKonfirmasi(const char *master, char opsi[10], AkunData *data);
+
+int TombolKonfirmasi(const char *master, char opsi[10], AkunData *data)
 {
     const char *pilihan[] = {"BATAL", "KONFIRMASI"};
     int indeks = 0;
@@ -10,8 +9,32 @@ int TombolKonfirmasi(const char *judul)
 
     while (1)
     {
-        
-        printf("%s\n\n", judul);
+        system("cls");
+        //CRUD AKUN
+        if (strcmp(master, "Akun") == 0)
+        {
+            ReadAkun();
+            //CREATE
+            if (strcmp(opsi, "Buat") == 0)
+            {
+                printf("Apakah anda yakin ingin membuat akun %s dengan username %s dan sandi %s\n", data->akun, data->username, data->sandi);
+            }else if(strcmp(opsi, "Perbarui")==0){
+                printf("Apakah anda yakin ingin memperbarui %s %s?\n", data->akun, data->ID);
+            }
+            //DELETE
+            else if (strcmp(opsi, "Hapus") == 0)
+            {
+                printf("Apakah anda yakin ingin menghapus %s %s dengan username %s\n", data->akun, data->ID, data->username);
+            }
+            else
+            {
+                TampilkanPesan("Maaf fitur belum tersedia\n", 2);
+            }
+        }
+        else
+        {
+            TampilkanPesan("Belum ada data!", 2);
+        }
 
         for (int i = 0; i < 2; i++)
         {

@@ -1,20 +1,7 @@
-#define FILENAME "./Database/Akun/DataAkun.dat"
-
-
-typedef struct
-{
-    char ID[10];
-    char akun[20];
-    char username[50];
-    char sandi[50];
-    char jabatan[20];
-    char status[50];
-} AkunDataUpdate;
 
 void EditAkun();
 bool ValidasiUsernameUpdate(const char *username, FILE *file);
 bool ValidasiSandiUpdate(const char *sandi);
-//int PilihOpsi(const char *master, const char *opsi[], int jumlah);
 
 int UpdateAkun()
 {
@@ -23,108 +10,77 @@ int UpdateAkun()
     return 0;
 }
 
-
-/*
-int PilihOpsi(const char *master, const char *opsi[], int jumlah)
-{
-    int indeks = 0;
-    char key;
-
-    while (1)
-    {
-        system("cls");
-
-        if(strcmp(master,"Akun") == 0){
-            ReadAkun();
-        }
-        else if(strcmp(master,"Film") == 0){
-            ReadFilm();
-        }else{
-            TampilkanPesan("Data Belum Tersedia!\n", 1);
-        }
-        
-        for (int i = 0; i < jumlah; i++)
-        {
-            if (i == indeks)
-            {
-                printf(" >[%s]\n", opsi[i]);
-            }
-            else
-            {
-                printf("  [%s]\n", opsi[i]);
-            }
-        }
-
-        key = getch();
-        if (key == 75 || key == 72) // Panah kiri
-            indeks = (indeks - 1 + jumlah) % jumlah;
-        if (key == 77 || key == 80) // Panah kanan
-            indeks = (indeks + 1) % jumlah;
-        if (key == '\r') // Enter
-            return indeks;
-    }
-}
-*/
 void EditAkun()
 {
-    FILE *file = fopen(FILENAME, "r+b");
+    FILE *file = fopen(FILENAME, "rb");
     if (!file)
     {
         printf("Gagal membuka file database.\n");
         return;
     }
 
+    // Baca semua record ke memori
+    AkunData akunArray[100]; 
+    int totalRecords = 0;
+
+    //Perulangan menghitung berapa banyak record/struct
+    while (fread(&akunArray[totalRecords], sizeof(AkunData), 1, file) == 1)
+    {
+        totalRecords++;
+    }
+    fclose(file);
+
+    // Search for the record to edit
     char idCari[10];
     printf("Masukkan ID akun yang ingin diedit: ");
-    scanf("%s", idCari);
+    scanf("%9s", idCari);
 
-    AkunDataUpdate akun;
-    bool ditemukan = false;
-
-    while (fread(&akun, sizeof(AkunDataUpdate), 1, file))
+    int targetIndex = -1;
+    for (int i = 0; i < totalRecords; i++)
     {
-        if (strcmp(akun.ID, idCari) == 0)
+        if (strcmp(akunArray[i].ID, idCari) == 0)
         {
-            ditemukan = true;
+            targetIndex = i;
             break;
         }
     }
 
-    if (!ditemukan)
+    //Jika ID tidak ditemukan
+    if (targetIndex == -1)
     {
         printf("Akun dengan ID %s tidak ditemukan.\n", idCari);
-        fclose(file);
         return;
     }
 
-    char username[50], sandi[50];
-    int jabatanIndex = 0, step = 0;
+    AkunData *akun = &akunArray[targetIndex];
+    int step = 0;
+    int jabatanIndex = 0;
     const char *jabatanOptions[2];
 
-    if (strcmp(akun.akun, "Admin") == 0)
+    if (strcmp(akun->akun, "Admin") == 0)
     {
-        if (strcmp(akun.ID, "ACT001") == 0)
+        if (strcmp(akun->ID, "ACT001") == 0)
         {
             printf("Edit untuk Admin utama. Hanya sandi yang dapat diubah.\n");
             while (1)
             {
                 printf("\nSandi baru: ");
-                scanf("%s", sandi);
+                char sandi[50];
+                scanf("%49s", sandi);
 
                 if (ValidasiSandiUpdate(sandi))
                 {
                     const char *opsiKonfirmasi[] = {"BATAL", "KONFIRMASI"};
-                    int pilihan = PilihOpsi("Konfirmasi perubahan sandi:", opsiKonfirmasi, 2);
+                    int pilihan = PilihOpsi("Akun", opsiKonfirmasi, 2);
 
                     if (pilihan == 1) // Konfirmasi
                     {
-                        strncpy(akun.sandi, sandi, sizeof(akun.sandi) - 1);
-                        fseek(file, -sizeof(AkunDataUpdate), SEEK_CUR);
-                        fwrite(&akun, sizeof(AkunDataUpdate), 1, file);
+                        strncpy(akun->sandi, sandi, sizeof(akun->sandi) - 1);
+                        akun->sandi[sizeof(akun->sandi) - 1] = '\0';
                         printf("Sandi berhasil diperbarui.\n");
                         break;
                     }
-                    else // Batal
+                    else // Batal Edit
                     {
                         printf("Perubahan dibatalkan.\n");
                         break;
@@ -148,7 +104,7 @@ void EditAkun()
             jabatanOptions[1] = "Manajer IT";
         }
     }
-    else if (strcmp(akun.akun, "User") == 0)
+    else if (strcmp(akun->akun, "User") == 0)
     {
         jabatanOptions[0] = "Kasir Tiket";
         jabatanOptions[1] = "Kasir FNB";
@@ -157,11 +113,12 @@ void EditAkun()
     while (1)
     {
         system("cls");
-        ReadAkun();
+        ReadAkun(); // Refresh screen with account data
         printf("==== Edit Akun ====\n");
-        printf("\nID: %s\n", akun.ID);
-        printf("Akun: %s\n", akun.akun);
-        
+        printf("\nID: %s\n", akun->ID);
+        printf("Akun: %s\n", akun->akun);
+
+        // Display jabatan options
         printf("Jabatan: ");
         for (int i = 0; i < 2; i++)
         {
@@ -176,22 +133,10 @@ void EditAkun()
         }
         printf("\n");
 
-        printf("Username: %s%s\n", step == 1 ? ">" : "", akun.username);
-        printf("Sandi: %s%s\n", step == 2 ? ">" : "", akun.sandi);
+        printf("Username: %s%s\n", step == 1 ? ">" : "", akun->username);
+        printf("Sandi: %s%s\n", step == 2 ? ">" : "", akun->sandi);
 
-        const char *pilihanKonfirmasi[] = {"BATAL", "KONFIRMASI"};
-        printf("Konfirmasi: ");
-        for (int i = 0; i < 2; i++)
-        {
-            if (i == step - 3)
-            {
-                printf(" >[%s]", pilihanKonfirmasi[i]);
-            }
-            else
-            {
-                printf("  [%s]", pilihanKonfirmasi[i]);
-            }
-        }
+      
         printf("\n");
 
         char key = getch();
@@ -203,17 +148,20 @@ void EditAkun()
                 jabatanIndex = (jabatanIndex + 1) % 2;
             if (key == '\r')
             {
-                strncpy(akun.jabatan, jabatanOptions[jabatanIndex], sizeof(akun.jabatan) - 1);
+                strncpy(akun->jabatan, jabatanOptions[jabatanIndex], sizeof(akun->jabatan) - 1);
+                akun->jabatan[sizeof(akun->jabatan) - 1] = '\0';
                 step++;
             }
         }
         else if (step == 1)
         {
             printf("Masukkan username baru: ");
-            scanf("%s", username);
-            if (ValidasiUsernameUpdate(username, file))
+            char username[50];
+            scanf("%49s", username);
+            if (ValidasiUsernameUpdate(username, file)) // Assume NULL for simplicity
             {
-                strncpy(akun.username, username, sizeof(akun.username) - 1);
+                strncpy(akun->username, username, sizeof(akun->username) - 1);
+                akun->username[sizeof(akun->username) - 1] = '\0';
                 step++;
             }
             else
@@ -224,10 +172,12 @@ void EditAkun()
         else if (step == 2)
         {
             printf("Masukkan sandi baru: ");
-            scanf("%s", sandi);
+            char sandi[50];
+            scanf("%49s", sandi);
             if (ValidasiSandiUpdate(sandi))
             {
-                strncpy(akun.sandi, sandi, sizeof(akun.sandi) - 1);
+                strncpy(akun->sandi, sandi, sizeof(akun->sandi) - 1);
+                akun->sandi[sizeof(akun->sandi) - 1] = '\0';
                 step++;
             }
             else
@@ -237,31 +187,31 @@ void EditAkun()
         }
         else if (step >= 3)
         {
-            int konfirmasiIndex = step - 3;
-            if (key == 75 || key == 77)
-            {
-                konfirmasiIndex = 1 - konfirmasiIndex;
-                step = 3 + konfirmasiIndex;
-            }
-            else if (key == '\r')
-            {
+          //  AkunData akunDiperbarui = akun;//= &akunArray[targetIndex];
+            int konfirmasiIndex = TombolKonfirmasi("Akun", "Perbarui", akun);
+           
+            
                 if (konfirmasiIndex == 0)
                 {
-                    TampilkanPesan("Pengeditan dibatalkan.\n",2);
+                    TampilkanPesan("Pengeditan dibatalkan.\n", 2);
                     break;
                 }
                 else
                 {
-                    fseek(file, -sizeof(AkunDataUpdate), SEEK_CUR);
-                    fwrite(&akun, sizeof(AkunDataUpdate), 1, file);
-                    TampilkanPesan("Data berhasil diperbarui.\n",2);
+                    file = fopen(FILENAME, "wb");
+                    if (!file)
+                    {
+                        printf("Gagal membuka file untuk menulis.\n");
+                        return;
+                    }
+                    fwrite(akunArray, sizeof(AkunData), totalRecords, file);
+                    fclose(file);
+                    TampilkanPesan("Data berhasil diperbarui.\n", 2);
                     break;
                 }
-            }
+            
         }
     }
-
-    fclose(file);
 }
 
 bool ValidasiUsernameUpdate(const char *username, FILE *file)
@@ -270,8 +220,8 @@ bool ValidasiUsernameUpdate(const char *username, FILE *file)
         return false;
 
     rewind(file);
-    AkunDataUpdate akun;
-    while (fread(&akun, sizeof(AkunDataUpdate), 1, file))
+    AkunData akun;
+    while (fread(&akun, sizeof(AkunData), 1, file))
     {
         if (strcmp(akun.username, username) == 0)
         {
