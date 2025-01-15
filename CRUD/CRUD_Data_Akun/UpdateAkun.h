@@ -1,7 +1,5 @@
 
 void EditAkun();
-bool ValidasiUsernameUpdate(const char *username, FILE *file);
-bool ValidasiSandiUpdate(const char *sandi);
 
 int UpdateAkun()
 {
@@ -20,10 +18,10 @@ void EditAkun()
     }
 
     // Baca semua record ke memori
-    AkunData akunArray[100]; 
+    AkunData akunArray[100];
     int totalRecords = 0;
 
-    //Perulangan menghitung berapa banyak record/struct
+    // Perulangan menghitung berapa banyak record/struct
     while (fread(&akunArray[totalRecords], sizeof(AkunData), 1, file) == 1)
     {
         totalRecords++;
@@ -45,7 +43,7 @@ void EditAkun()
         }
     }
 
-    //Jika ID tidak ditemukan
+    // Jika ID tidak ditemukan
     if (targetIndex == -1)
     {
         printf("Akun dengan ID %s tidak ditemukan.\n", idCari);
@@ -68,7 +66,7 @@ void EditAkun()
                 char sandi[50];
                 scanf("%49s", sandi);
 
-                if (ValidasiSandiUpdate(sandi))
+                if (ValidasiSandi(sandi))
                 {
                     const char *opsiKonfirmasi[] = {"BATAL", "KONFIRMASI"};
                     int pilihan = PilihOpsi("Akun", opsiKonfirmasi, 2);
@@ -136,7 +134,6 @@ void EditAkun()
         printf("Username: %s%s\n", step == 1 ? ">" : "", akun->username);
         printf("Sandi: %s%s\n", step == 2 ? ">" : "", akun->sandi);
 
-      
         printf("\n");
 
         char key = getch();
@@ -158,7 +155,15 @@ void EditAkun()
             printf("Masukkan username baru: ");
             char username[50];
             scanf("%49s", username);
-            if (ValidasiUsernameUpdate(username, file)) // Assume NULL for simplicity
+            FILE *file = fopen(FILENAME, "rb");
+
+            if (!file)
+            {
+                printf("Gagal membuka file database untuk validasi username.\n");
+                return;
+            }
+
+            if (UsernameUnik(username, file) && ValidasiUsername(username))// Assume NULL for simplicity
             {
                 strncpy(akun->username, username, sizeof(akun->username) - 1);
                 akun->username[sizeof(akun->username) - 1] = '\0';
@@ -168,13 +173,14 @@ void EditAkun()
             {
                 TampilkanPesan("Username sudah digunakan atau tidak valid.", 2);
             }
+              fclose(file);
         }
         else if (step == 2)
         {
             printf("Masukkan sandi baru: ");
             char sandi[50];
             scanf("%49s", sandi);
-            if (ValidasiSandiUpdate(sandi))
+            if (ValidasiSandi(sandi))
             {
                 strncpy(akun->sandi, sandi, sizeof(akun->sandi) - 1);
                 akun->sandi[sizeof(akun->sandi) - 1] = '\0';
@@ -187,83 +193,28 @@ void EditAkun()
         }
         else if (step >= 3)
         {
-          //  AkunData akunDiperbarui = akun;//= &akunArray[targetIndex];
+            //  AkunData akunDiperbarui = akun;//= &akunArray[targetIndex];
             int konfirmasiIndex = TombolKonfirmasi("Akun", "Perbarui", akun);
-           
-            
-                if (konfirmasiIndex == 0)
+
+            if (konfirmasiIndex == 0)
+            {
+                TampilkanPesan("Pengeditan dibatalkan.\n", 2);
+                break;
+            }
+            else
+            {
+                file = fopen(FILENAME, "wb");
+                if (!file)
                 {
-                    TampilkanPesan("Pengeditan dibatalkan.\n", 2);
-                    break;
+                    printf("Gagal membuka file untuk menulis.\n");
+                    return;
                 }
-                else
-                {
-                    file = fopen(FILENAME, "wb");
-                    if (!file)
-                    {
-                        printf("Gagal membuka file untuk menulis.\n");
-                        return;
-                    }
-                    fwrite(akunArray, sizeof(AkunData), totalRecords, file);
-                    fclose(file);
-                    TampilkanPesan("Data berhasil diperbarui.\n", 2);
-                    break;
-                }
-            
+                fwrite(akunArray, sizeof(AkunData), totalRecords, file);
+                fclose(file);
+                TampilkanPesan("Data berhasil diperbarui.\n", 2);
+                break;
+            }
         }
     }
-}
-
-bool ValidasiUsernameUpdate(const char *username, FILE *file)
-{
-    if (strlen(username) == 0)
-        return false;
-
-    rewind(file);
-    AkunData akun;
-    while (fread(&akun, sizeof(AkunData), 1, file))
-    {
-        if (strcmp(akun.username, username) == 0)
-        {
-            return false;
-        }
-    }
-
-    for (int i = 0; username[i] != '\0'; i++)
-    {
-        if (!isalnum(username[i]) && username[i] != '@' && username[i] != '_')
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool ValidasiSandiUpdate(const char *sandi)
-{
-    if (strlen(sandi) < 8)
-    {
-        TampilkanPesan("Sandi minimal 8 karakter.\n",2);
-        return false;
-    }
-
-    bool adaHuruf = false, adaAngka = false, adaSpesial = false;
-    for (int i = 0; sandi[i] != '\0'; i++)
-    {
-        if (isalpha(sandi[i]))
-            adaHuruf = true;
-        else if (isdigit(sandi[i]))
-            adaAngka = true;
-        else if (ispunct(sandi[i]))
-            adaSpesial = true;
-    }
-
-        if (!adaHuruf || !adaAngka || !adaSpesial)
-    {
-        TampilkanPesan("Sandi harus mengandung huruf, angka, dan karakter khusus.\n",2);
-        return false;
-    }
-
-    return true;
 }
 

@@ -1,8 +1,8 @@
 #define MAX_ACCOUNTS 1000
 
 void BuatAkun();
-bool ValidasiUsernameCreate(const char *username);
-bool ValidasiSandiCreate(const char *sandi);
+bool ValidasiUsername(const char *username);
+bool ValidasiSandi(const char *sandi);
 bool UsernameUnik(const char *username, FILE *file);
 void TambahAdminDefault(FILE *file);
 
@@ -130,7 +130,7 @@ void BuatAkun()
             {
                 username[strlen(username) - 1] = '\0';
             }
-            else if (key == '\r' && ValidasiUsernameCreate(username))
+            else if (key == '\r' && ValidasiUsername(username))
             {
                 step++;
             }
@@ -151,7 +151,7 @@ void BuatAkun()
             {
                 sandi[strlen(sandi) - 1] = '\0';
             }
-            else if (key == '\r' && ValidasiSandiCreate(sandi))
+            else if (key == '\r' && ValidasiSandi(sandi))
             {
                 step++;
             }
@@ -212,7 +212,7 @@ void BuatAkun()
     fclose(file);
 }
 
-bool ValidasiUsernameCreate(const char *username)
+bool ValidasiUsername(const char *username)
 {
     if (strlen(username) == 0)
         return false;
@@ -227,7 +227,7 @@ bool ValidasiUsernameCreate(const char *username)
     return true;
 }
 
-bool ValidasiSandiCreate(const char *sandi)
+bool ValidasiSandi(const char *sandi)
 {
     if (strlen(sandi) < 8)
     {
