@@ -4,7 +4,7 @@ ProfilData validasiID(const char *username, const char *password) {
     FILE *file = fopen(FILENAME, "rb");
     if (!file) {
         printf("Gagal membuka file database.\n");
-        strcpy(profil.ID, ""); // Atur ID kosong jika gagal
+        strcpy(akun.ID, ""); // Atur ID kosong jika gagal
         return profil; // Kembalikan profil kosong
     }
 
@@ -12,9 +12,9 @@ ProfilData validasiID(const char *username, const char *password) {
         if (strcmp(akun.username, username) == 0 && strcmp(akun.sandi, password) == 0) {
             fclose(file);
             // Isi data profil
-            strcpy(profil.ID, akun.ID);
-            strcpy(profil.username, akun.username);
-            strcpy(profil.jabatan, akun.jabatan);
+           // strcpy(profil.ID, akun.ID);
+            //strcpy(profil.username, akun.username);
+            //strcpy(profil.jabatan, akun.jabatan);
             return profil; // Kembalikan profil yang sesuai
         }
     }

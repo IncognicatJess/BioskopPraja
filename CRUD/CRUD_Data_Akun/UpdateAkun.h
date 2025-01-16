@@ -68,9 +68,8 @@ void EditAkun()
 
                 if (ValidasiSandi(sandi))
                 {
-                    const char *opsiKonfirmasi[] = {"BATAL", "KONFIRMASI"};
-                    int pilihan = PilihOpsi("Akun", opsiKonfirmasi, 2);
-
+            
+                    int pilihan = TombolKonfirmasi("Akun", "Perbarui",akun, "AkunData");
                     if (pilihan == 1) // Konfirmasi
                     {
                         strncpy(akun->sandi, sandi, sizeof(akun->sandi) - 1);
@@ -194,7 +193,7 @@ void EditAkun()
         else if (step >= 3)
         {
             //  AkunData akunDiperbarui = akun;//= &akunArray[targetIndex];
-            int konfirmasiIndex = TombolKonfirmasi("Akun", "Perbarui", akun);
+            int konfirmasiIndex = TombolKonfirmasi("Akun", "Perbarui", akun, "AkunData");
 
             if (konfirmasiIndex == 0)
             {

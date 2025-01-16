@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+#define KEY_ENTER '\r'
+
 
 #define MAX_ID 1000
 
@@ -31,124 +35,154 @@ void BuatFilm()
     FILE *file = fopen(FILEFILM, "a+b");
     if (!file)
     {
-        printf("Gagal membuka file database.\n");
+        perror("Gagal membuka file database");
         return;
     }
+
+    fseek(file, 0, SEEK_END);
 
     MovieData film;
     memset(&film, 0, sizeof(MovieData));
 
-    const char *pilihanGenre[] = {"Action", "Horror", "Comedy", "Drama", "Romance", "Thriller", "Sci-Fi", "Fantasy", "Animation", "Documentary"};
+    const char *pilihanGenre[] = {"Action", "Horror", "Comedy", "Drama", "Romance"};
     const char *pilihanBentuk[] = {"2D", "3D"};
+    const char *TombolKonfirmasi[] = {"KONFIRMASI", "BATALKAN"};
 
     int pilihanGenreIndex = 0;
     int pilihanBentukIndex = 0;
     int step = 0;
+    int konfirmasiIndex = 0; // 0 untuk "BATAL", 1 untuk "KONFIRMASI"
+    char key;
 
-    printf("==== Tambah Film ====\n");
-    getchar(); // Consume newline left by scanf
-
-    printf("Judul (maks. 50 karakter): ");
-    scanf("%[^\n]", film.judul);
-
-    printf("Tahun Rilis: ");
-    scanf("%d", &film.tahunRelease);
-
-    printf("Durasi (dalam jam): ");
-    scanf("%lf", &film.durasi);
-
-    getchar(); // Consume newline left by scanf
-
-    printf("Studio Film (maks. 20 karakter): ");
-    scanf("%[^\n]", film.studioFilm);
-
-    printf("Harga (Rp): ");
-    scanf("%lf", &film.harga);
-
-    // Select Genre
-    printf("Genre Film    :");
-    for (int i = 0; i < 2; i++)
+    while (1)
     {
-        if (i == pilihanGenreIndex && step == 0)
+        // Render menu berdasarkan step
+        system("cls"); // Bersihkan layar untuk tampilan baru
+        printf("==== Tambah Film ====\n");
+
+        if (step == 0) // Input Judul, Tahun, Durasi, Studio, dan Harga
         {
-            printf(" >[%s]", pilihanGenre[i]);
+            printf("Judul (maks. 50 karakter): ");
+            scanf(" %[^\n]", film.judul); // Input string dengan spasi
+            printf("Tahun Rilis: ");
+            scanf("%d", &film.tahunRelease);
+            printf("Durasi (dalam jam): ");
+            scanf("%lf", &film.durasi);
+            getchar(); // Bersihkan newline buffer
+            printf("Studio Film (maks. 20 karakter): ");
+            scanf(" %[^\n]", film.studioFilm);
+            printf("Harga (Rp): ");
+            scanf("%lf", &film.harga);
+
+            step++; // Lanjut ke genre
         }
-        else
+        
+        else if (step == 1) // Pilih Genre
         {
-            printf("  [%s]", pilihanGenre[i]);
-        }
-    }
-    printf("\n");
-
-    if (pilihanGenreIndex < 1 || pilihanGenreIndex > 10)
-    {
-        printf("Pilihan genre tidak valid.\n");
-        fclose(file);
-        return;
-    }
-    strcpy(film.genre, pilihanGenre[pilihanGenreIndex - 1]);
-
-    // Select Format
-    printf("Bentuk :");
-    const char **bentukOptions = strcmp(pilihanBentuk[pilihanBentukIndex], "2D") == 0 ? pilihanGenre : pilihanBentuk;
-    int studioOptionsCount = 2;
-    for (int i = 0; i < studioOptionsCount; i++)
-    {
-        if (i == pilihanBentukIndex && step == 1)
-        {
-            printf(" >[%s]", bentukOptions[i]);
-        }
-        else
-        {
-            printf("  [%s]", bentukOptions[i]);
-        }
-    }
-    printf("\n\n");
-
-    printf("Film: %s%s\n", step == 2 ? ">" : "", film.judul);
-
-    if (pilihanBentukIndex < 1 || pilihanBentukIndex > 2)
-    {
-        printf("Pilihan bentuk tidak valid.\n");
-        fclose(file);
-        return;
-    }
-    strcpy(film.bentuk, pilihanBentuk[pilihanBentukIndex - 1]);
-
-    // Generate ID
-    rewind(file);
-    int idTerpakai[MAX_ID] = {0};
-    MovieData temp;
-    while (fread(&temp, sizeof(MovieData), 1, file))
-    {
-        if (strncmp(temp.ID, "MOV", 3) == 0)
-        {
-            int idNum = atoi(&temp.ID[3]);
-            if (idNum > 0 && idNum < MAX_ID)
+            printf("Pilih Genre Film:\n");
+            for (int i = 0; i < 5; i++)
             {
-                idTerpakai[idNum] = 1;
+                if (i == pilihanGenreIndex)
+                {
+                    printf(" > [%s] ", pilihanGenre[i]); // Sorot pilihan
+                }
+                else
+                {
+                    printf("   [%s] ", pilihanGenre[i]);
+                }
+            }
+            printf("\nGunakan panah kiri/kanan untuk navigasi, Enter untuk konfirmasi.\n");
+
+            key = getch();
+            if (key == 75) // Panah kiri
+                pilihanGenreIndex = (pilihanGenreIndex - 1 + 5) % 5;
+            else if (key == 77) // Panah kanan
+                pilihanGenreIndex = (pilihanGenreIndex + 1) % 5;
+            else if (key == '\r') // Enter
+            {
+                strncpy(film.genre, pilihanGenre[pilihanGenreIndex], sizeof(film.genre) - 1);
+                step++; // Lanjut ke format
+            }
+        }
+        else if (step == 2) // Pilih Bentuk
+        {
+            printf("Pilih Bentuk Film:\n");
+            for (int i = 0; i < 2; i++)
+            {
+                if (i == pilihanBentukIndex)
+                {
+                    printf(" > [%s] ", pilihanBentuk[i]); // Sorot pilihan
+                }
+                else
+                {
+                    printf("   [%s] ", pilihanBentuk[i]);
+                }
+            }
+            printf("\nGunakan panah kiri/kanan untuk navigasi, Enter untuk konfirmasi.\n");
+
+            key = getch();
+            if (key == 75) // Panah kiri
+                pilihanBentukIndex = (pilihanBentukIndex - 1 + 2) % 2;
+            else if (key == 77) // Panah kanan
+                pilihanBentukIndex = (pilihanBentukIndex + 1) % 2;
+            else if (key == '\r') // Enter
+            {
+                strncpy(film.bentuk, pilihanBentuk[pilihanBentukIndex], sizeof(film.bentuk) - 1);
+                step++; // Lanjut ke konfirmasi
+            }
+        }
+        else if (step == 3) // Konfirmasi
+        {
+            printf("Konfirmasi Tambah Film:\n");
+            printf("Judul: %s\n", film.judul);
+            printf("Genre: %s\n", film.genre);
+            printf("Bentuk: %s\n", film.bentuk);
+            printf("Harga: Rp%.2lf\n", film.harga);
+            printf("\nKonfirmasi: %s\n", konfirmasiIndex == 0 ? "BATAL" : "KONFIRMASI");
+            printf("\nGunakan panah kiri/kanan untuk navigasi, Enter untuk konfirmasi.\n");
+
+            key = getch();
+            if (key == 75 || key == 77) // Panah kiri/kanan
+                konfirmasiIndex = 1 - konfirmasiIndex; // Toggle antara 0 dan 1
+            else if (key == '\r') // Enter
+            {
+                if (konfirmasiIndex == 0)
+                {
+                    printf("Pembuatan film dibatalkan.\n");
+                    break;
+                }
+                else
+                {
+                    rewind(file);
+
+                    // Generate ID baru
+                    bool idTerpakai[MAX_ID] = {false};
+                    MovieData temp;
+                    while (fread(&temp, sizeof(MovieData), 1, file))
+                    {
+                        if (strncmp(temp.ID, "MOV", 3) == 0)
+                        {
+                            int idNum = atoi(&temp.ID[3]);
+                            if (idNum > 0 && idNum < MAX_ID)
+                            {
+                                idTerpakai[idNum] = true;
+                            }
+                        }
+                    }
+
+                    int idBaru = 1;
+                    while (idBaru < MAX_ID && idTerpakai[idBaru])
+                        idBaru++;
+                    snprintf(film.ID, sizeof(film.ID), "MOV%03d", idBaru);
+
+                    fwrite(&film, sizeof(MovieData), 1, file);
+                    printf("Film berhasil ditambahkan!\n");
+                    break;
+                }
             }
         }
     }
 
-    int idBaru = 1;
-    while (idBaru < MAX_ID && idTerpakai[idBaru])
-    {
-        idBaru++;
-    }
-
-    if (idBaru >= MAX_ID)
-    {
-        printf("Gagal menghasilkan ID baru.\n");
-        fclose(file);
-        return;
-    }
-
-    snprintf(film.ID, sizeof(film.ID), "MOV%03d", idBaru);
-
-    // Save to file
-    fwrite(&film, sizeof(MovieData), 1, file);
-    printf("Film berhasil ditambahkan dengan ID: %s\n", film.ID);
-
     fclose(file);
 }
+

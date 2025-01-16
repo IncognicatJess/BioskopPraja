@@ -163,7 +163,7 @@ void BuatAkun()
             strncpy(akunBaru.username, username, sizeof(akunBaru.username) - 1);
             strncpy(akunBaru.sandi, sandi, sizeof(akunBaru.sandi) - 1);
 
-            int konfirmasiIndex = TombolKonfirmasi("Akun", "Buat", &akunBaru);
+            int konfirmasiIndex = TombolKonfirmasi("Akun", "Buat", &akunBaru, "AkunData");
 
             if (konfirmasiIndex == 0)
             {
@@ -195,6 +195,7 @@ void BuatAkun()
                 }
                 snprintf(akunBaru.ID, sizeof(akunBaru.ID), "ACT%03d", idBaru);
 
+                //Cek apakah username sudah ada
                 if (UsernameUnik(username, file))
                 {
                     fwrite(&akunBaru, sizeof(AkunData), 1, file);

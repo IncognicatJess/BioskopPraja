@@ -1,5 +1,8 @@
 #define FILENAME "./Database/Akun/DataAkun.dat"
 #define FILEFILM "./Database/Film/DataFilm.dat"
+#define PROFILDAT "./Database/Akun/DataProfil.dat"
+
+
 
 // LIBRARY STANDARD
 #include <stdio.h>
@@ -10,6 +13,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <windows.h>
+#include <ctype.h>
+#include <time.h>
 
 //#include "CRUD/CRUD_Data_Akun/ReadAkun.h" // Untuk membaca akun dari file
 
@@ -23,29 +28,38 @@ typedef struct {
     char status[50];
 } AkunData;
 
+typedef struct {
+    char tempat[50];
+    int tanggal;
+    int bulan;
+    int tahun;
+} TempatTanggalLahir;
+
 //Struct Untuk menampung data ke dashboard sesuai akun
 typedef struct {
     char ID[10];
-    char username[50];
-    char jabatan[20];
+    char nama[50];
+    TempatTanggalLahir TTL;
+    char noHP[13];
 } ProfilData;
+
 
 
 //FUNGSI EXTENDED
 #include "TampilkanJudul.h"
-#include "TampungID.h"
+//#include "TampungID.h"
 #include "TampilkanPesan.h"
 #include "HidePassword.h"
 #include "TombolOpsi.h"
 #include "TombolKonfirmasi.h"
 #include "DashboardAdmin.h" // Dashboard admin
-
-
+#include "cobadesain.h"
 
 
 // Prototipe fungsi
 bool validasiLogin(const char *username, const char *password, AkunData *akun);
 void dashboardUser(const AkunData *akun);
+void loginPage();
 
 // Fungsi utama
 int main() {
@@ -70,10 +84,10 @@ int main() {
 
         // Validasi login
         if (validasiLogin(username, password, &akun)) {
-            profil = validasiID(username, password); // Simpan profil yang dikembalikan
-            if (strlen(profil.ID) > 0) { // Cek apakah ID tidak kosong
+           // profil = validasiID(username, password); // Simpan profil yang dikembalikan
+            if (strlen(akun.ID) > 0) { // Cek apakah ID tidak kosong
                 if (strcmp(akun.akun, "Admin") == 0) {
-                    DashboardAdmin(profil); // Kirim profil ke DashboardAdmin
+                    DashboardAdmin(&akun); // Kirim profil ke DashboardAdmin
                 } else {
                     dashboardUser (&akun);
                 }
@@ -91,7 +105,7 @@ int main() {
 
     //Jika lebih dari 3 kali
     printf("Login gagal. Silakan coba lagi nanti.\n");
-    return 0;
+   return 0;
 }
 
 

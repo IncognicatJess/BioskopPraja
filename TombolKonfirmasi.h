@@ -1,30 +1,51 @@
-
-int TombolKonfirmasi(const char *master, char opsi[10], AkunData *data);
-
-int TombolKonfirmasi(const char *master, char opsi[10], AkunData *data)
+int TombolKonfirmasi(const char *master, const char *opsi, void *data, const char *tipeData)
 {
     const char *pilihan[] = {"BATAL", "KONFIRMASI"};
     int indeks = 0;
     char key;
 
+    if (!data || !master || !opsi || !tipeData)
+    {
+        TampilkanPesan("Parameter tidak valid.\n", 2);
+        return -1; // Nilai indikasi error
+    }
+
     while (1)
     {
         system("cls");
-        //CRUD AKUN
-        if (strcmp(master, "Akun") == 0)
+
+        if (strcmp(master, "Akun") == 0 && strcmp(tipeData, "AkunData") == 0)
         {
-            ReadAkun();
-            //CREATE
+            AkunData *akun = (AkunData *)data;
             if (strcmp(opsi, "Buat") == 0)
             {
-                printf("Apakah anda yakin ingin membuat akun %s dengan username %s dan sandi %s\n", data->akun, data->username, data->sandi);
-            }else if(strcmp(opsi, "Perbarui")==0){
-                printf("Apakah anda yakin ingin memperbarui %s %s?\n", data->akun, data->ID);
+                ReadAkun();
+                printf("Apakah anda yakin ingin membuat akun %s dengan username %s dan sandi %s?\n", akun->akun, akun->username, akun->sandi);
             }
-            //DELETE
+            else if (strcmp(opsi, "Perbarui") == 0)
+            {
+                ReadAkun();
+                printf("Apakah anda yakin ingin memperbarui akun %s %s?\n", akun->akun, akun->ID);
+            }
             else if (strcmp(opsi, "Hapus") == 0)
             {
-                printf("Apakah anda yakin ingin menghapus %s %s dengan username %s\n", data->akun, data->ID, data->username);
+                ReadAkun();
+                printf("Apakah anda yakin ingin menghapus akun %s %s dengan username %s?\n", akun->akun, akun->ID, akun->username);
+            }
+            else
+            {
+                TampilkanPesan("Maaf fitur belum tersedia\n", 2);
+            }
+        }
+        else if (strcmp(master, "Profil") == 0 && strcmp(tipeData, "ProfilData") == 0)
+        {
+            ProfilData *profil = (ProfilData *)data;
+            if (strcmp(opsi, "Edit") == 0)
+            {
+                printf("Apakah anda yakin ingin memperbarui profil berikut?\n");
+                printf("Nama   : %s\n", profil->nama);
+                printf("TTL    : %s, %02d/%02d/%04d\n", profil->TTL.tempat, profil->TTL.tanggal, profil->TTL.bulan, profil->TTL.tahun);
+                printf("No HP  : %s\n", profil->noHP);
             }
             else
             {
@@ -33,7 +54,7 @@ int TombolKonfirmasi(const char *master, char opsi[10], AkunData *data)
         }
         else
         {
-            TampilkanPesan("Belum ada data!", 2);
+            TampilkanPesan("Tipe data atau fitur belum tersedia.\n", 2);
         }
 
         for (int i = 0; i < 2; i++)

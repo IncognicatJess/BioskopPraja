@@ -1,34 +1,32 @@
-int PilihOpsi(const char *master, const char *opsi[], int jumlah);
+int PilihOpsi(const char *master, const char *opsi[], void *data,void *data2, int jumlah);
 int ReadAkun();
 int ReadFilm();
+void ReadProfile(AkunData *akun, ProfilData *profil);
 
-int PilihOpsi(const char *master, const char *opsi[], int jumlah)
-{
+
+int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, int jumlah) {
     int indeks = 0;
     char key;
 
-    while (1)
-    {
+    while (1) {
         system("cls");
 
-        if(strcmp(master,"Akun") == 0){
+        if (strcmp(master, "Akun") == 0) {
             ReadAkun();
-            printf("Apakah anda yakin ingin mengganti sandi pada admin utama?\n");
-        }
-        else if(strcmp(master,"Film") == 0){
+        } else if (strcmp(master, "Film") == 0) {
             ReadFilm();
-        }else{
+        } else if (strcmp(master, "Profil") == 0 && data != NULL) {
+            AkunData *akun = (AkunData *)data;
+            ProfilData *profil = (ProfilData *)data2;
+            ReadProfile(akun, profil);
+        } else {
             TampilkanPesan("Data Belum Tersedia!\n", 1);
         }
-        
-        for (int i = 0; i < jumlah; i++)
-        {
-            if (i == indeks)
-            {
+
+        for (int i = 0; i < jumlah; i++) {
+            if (i == indeks) {
                 printf(" >[%s]\n", opsi[i]);
-            }
-            else
-            {
+            } else {
                 printf("  [%s]\n", opsi[i]);
             }
         }

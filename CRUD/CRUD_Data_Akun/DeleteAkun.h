@@ -53,7 +53,7 @@ void HapusAkun() {
     if (ditemukan) {
         ReadAkun();
         // Konfirmasi sebelum penghapusan
-        int konfirmasi = TombolKonfirmasi("Akun","Hapus", &akunDihapus);
+        int konfirmasi = TombolKonfirmasi("Akun","Hapus", &akunDihapus, "AkunData");
         if (konfirmasi == 1) { // KONFIRMASI
             remove(FILENAME);
             rename(TEMP_FILENAME, FILENAME);

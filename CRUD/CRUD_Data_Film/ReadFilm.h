@@ -16,15 +16,18 @@ typedef struct
 void TampilkanFilm();
 int BandingkanIDFilm(const void *a, const void *b);
 
-int ReadFilm() {
+int ReadFilm()
+{
     printf("\n==== Data Film ====\n");
     TampilkanFilm();
     return 0;
 }
 
-void TampilkanFilm() {
+void TampilkanFilm()
+{
     FILE *file = fopen(FILEFILM, "rb");
-    if (!file) {
+    if (!file)
+    {
         printf("Gagal membuka file %s. Pastikan file tersebut ada.\n", FILEFILM);
         return;
     }
@@ -33,7 +36,8 @@ void TampilkanFilm() {
     int jumlahFilm = 0;
 
     // Membaca semua data dari file
-    while (fread(&film[jumlahFilm], sizeof(MovieDataBaca), 1, file)) {
+    while (fread(&film[jumlahFilm], sizeof(MovieDataBaca), 1, file))
+    {
         strncpy(film[jumlahFilm].status, "Sedang Tayang", sizeof(film[jumlahFilm].status));
         jumlahFilm++;
     }
@@ -43,18 +47,20 @@ void TampilkanFilm() {
     qsort(film, jumlahFilm, sizeof(MovieDataBaca), BandingkanID);
 
     // Menampilkan tabel
-    printf("| %-8s | %-10s | %-15s | %-15s | %-15s | %-10s |\n", "ID", "Judul Film", "Genre", "Tahun Rilis", "Durasi", "Studio Film", "Bentuk", "Harga", "Status");
-    printf("----------------------------------------------------------------------------------------------------\n");
+    printf("| %-8s | %-15s | %-15s | %-10s | %-8s | %-10s | %-8s | %-10s | %-10s |\n", "ID", "Judul Film", "Genre", "Tahun Rilis", "Durasi", "Studio Film", "Bentuk", "Harga", "Status");
+    printf("------------------------------------------------------------------------------------------------------------------------\n");
 
-    for (int i = 0; i < jumlahFilm; i++) {
-        printf("| %-8s | %-10s | %-15s | %-15s | %-15s | %-10s | %-10s | %-10f | %-10s |\n",
+    for (int i = 0; i < jumlahFilm; i++)
+    {
+        printf("| %-8s | %-15s | %-15s | %-10d | %-8.0f | %-10s | %-8s | %-10f | %-10s |\n",
                film[i].ID, film[i].judul, film[i].genre, film[i].tahunRelease, film[i].durasi, film[i].studioFilm, film[i].bentuk, film[i].harga, film[i].status);
     }
     printf("\n\n\n");
 }
 
 // Fungsi pembanding untuk qsort berdasarkan ID
-int BandingkanIDFilm(const void *a, const void *b) {
+int BandingkanIDFilm(const void *a, const void *b)
+{
     MovieDataBaca *filmA = (MovieDataBaca *)a;
     MovieDataBaca *filmB = (MovieDataBaca *)b;
 
@@ -67,7 +73,8 @@ int BandingkanIDFilm(const void *a, const void *b) {
 
     // Urutkan berdasarkan prefix dulu (ADM < USR)
     int cmp = strcmp(prefixA, prefixB);
-    if (cmp != 0) {
+    if (cmp != 0)
+    {
         return cmp;
     }
 
