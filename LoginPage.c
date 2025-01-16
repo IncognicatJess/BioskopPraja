@@ -1,6 +1,8 @@
 #define FILENAME "./Database/Akun/DataAkun.dat"
 #define FILEFILM "./Database/Film/DataFilm.dat"
 #define PROFILDAT "./Database/Akun/DataProfil.dat"
+#define FILEMENU "./Database/FNB/DataFnb.dat"
+#define TEATERDAT "./Database/Teater/DataTeater.dat"
 
 
 
@@ -42,6 +44,15 @@ typedef struct {
     TempatTanggalLahir TTL;
     char noHP[13];
 } ProfilData;
+
+typedef struct {
+    char ID[10];
+    int noTeater;
+    char kategoriTheater[20];
+    int jumlahKursi;
+    char status[20];
+    double harga;
+} TeaterData;
 
 
 

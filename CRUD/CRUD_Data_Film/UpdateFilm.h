@@ -11,7 +11,7 @@ typedef struct {
     char status[50];
 } MovieDataUpdate;
 
-
+void EditFilm();
 
 // Fungsi untuk membaca dan menampilkan daftar film (debugging)
 int UpdateFilm() {

@@ -26,6 +26,13 @@
 #include "CRUD/CRUD_Data_Film/UpdateFilm.h"
 #include "CRUD/CRUD_Data_Film/DeleteFilm.h"
 
+//CRUD DATA TEATER
+#include "CRUD/CRUD_Data_Teater/CreateTeater.h"
+#include "CRUD/CRUD_Data_Teater/ReadTeater.h"
+#include "CRUD/CRUD_Data_Teater/DeleteTeater.h"
+#include "CRUD/CRUD_Data_Teater/UpdateTeater.h"
+
+
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
 typedef struct
 {
@@ -41,7 +48,7 @@ typedef struct
 void clearScreen();
 void tampilkanProfil();
 void tampilkanDaftarAkun();
-void tampilkanDaftarRuangan();
+void tampilkanDaftarTeater();
 void tampilkanMenu();
 int tampilkanMenuNavigasi();
 
@@ -69,7 +76,7 @@ int tampilkanMenuNavigasi()
         printf("%s PROFIL\n", pilihan == 1 ? ">" : " ");
         printf("%s DAFTAR AKUN\n", pilihan == 2 ? ">" : " ");
         printf("%s DAFTAR FILM\n", pilihan == 3 ? ">" : " ");
-        printf("%s DAFTAR RUANGAN\n", pilihan == 4 ? ">" : " ");
+        printf("%s DAFTAR TEATER\n", pilihan == 4 ? ">" : " ");
         printf("%s JADWAL TAYANG\n", pilihan == 5 ? ">" : " ");
         printf("%s DAFTAR FNB\n", pilihan == 6 ? ">" : " ");
         printf("%s LAPORAN\n", pilihan == 7 ? ">" : " ");
@@ -115,7 +122,10 @@ void tampilkanProfil(AkunData *akun, ProfilData *profil)
         case 0:
             system("cls");
             ReadProfile(akun, profil);
-            TampilkanPesan("Maaf fitur belum tersedia!", 2);
+         //UpdateAkun();
+         // TampilkanPesan("Maaf fitur belum tersedia!", 2);
+            TampilkanPesan("Hubungi Admin untuk mengganti username dan password!", 2);
+            
             break;
         case 1:
             system("cls");
@@ -215,7 +225,7 @@ void tampilkanDaftarMenu()
 
         const char *Master = "Fnb";
         int pilihan = PilihOpsi(Master, menuFnb, NULL, NULL, 4);
-        ReadFnb();
+        //ReadFnb();
         switch (pilihan)
         {
         case 0:
@@ -227,7 +237,7 @@ void tampilkanDaftarMenu()
             break;
         case 2:
             system("cls");
-            createFnb();
+          //  createFnb();
             break;
         case 3:
             break;
@@ -240,16 +250,39 @@ void tampilkanDaftarMenu()
 }
 
 // Fungsi untuk menampilkan daftar ruangan
-void tampilkanDaftarRuangan()
+void tampilkanDaftarTeater()
 {
-    clearScreen();
-    printf("=== DAFTAR RUANGAN ===\n");
-    printf("| ID Ruangan | Nama Ruangan  | Kapasitas |\n");
-    printf("|------------|---------------|-----------|\n");
-    printf("| 001        | Studio 1      | 100       |\n");
-    printf("| 002        | Studio 2      | 150       |\n");
-    printf("\nTekan Enter untuk kembali ke menu utama...");
-    getchar();
+    while (1)
+    {
+        system("cls");
+
+        const char *menuTeater[] = {"EDIT", "-HAPUS", "+TAMBAH", "KEMBALI"};
+
+        const char *Master = "Teater";
+        int pilihan = PilihOpsi(Master, menuTeater, NULL, NULL, 4);
+        
+        switch (pilihan)
+        {
+        case 0:
+            system("cls");
+            UpdateTeater();
+            break;
+        case 1:
+            system("cls");
+            DeleteTeater();
+            break;
+        case 2:
+            system("cls");
+            CreateTeater();
+            break;
+        case 3:
+            break;
+        }
+        if (pilihan == 3)
+        {
+            break;
+        }
+    }
 }
 
 // Fungsi untuk menampilkan menu utama
@@ -273,7 +306,10 @@ void tampilkanMenu(AkunData *akun, ProfilData *profil)
             tampilkanDaftarFilm();
             break;
         case 4:
-            tampilkanDaftarRuangan();
+            tampilkanDaftarTeater();
+            break;
+        case 6:
+            tampilkanDaftarMenu();
             break;
         case 8:
             TampilkanPesan("Logging out...\n", 1);

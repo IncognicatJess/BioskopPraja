@@ -52,6 +52,46 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 TampilkanPesan("Maaf fitur belum tersedia\n", 2);
             }
         }
+        else if (strcmp(master, "Teater") == 0 && strcmp(tipeData, "TeaterData") == 0)
+        {
+            TeaterData *teater = (TeaterData *)data;
+            if (strcmp(opsi, "Buat") == 0)
+            {
+                ReadTeater();
+                printf("Apakah anda yakin ingin menambahkan teater berikut?\n");
+                printf("ID          : %s\n", teater->ID);
+                printf("No Teater   : %d\n", teater->noTeater);
+                printf("Kategori    : %s\n", teater->kategoriTheater);
+                printf("Jumlah Kursi: %d\n", teater->jumlahKursi);
+                printf("Status      : %s\n", teater->status);
+                printf("Harga       : Rp. %0.2lf\n", teater->harga);
+                printf("\n\n");
+            }else if(strcmp(opsi, "Hapus") == 0){
+                ReadTeater();
+                printf("Apakah anda yakin ingin menghapus teater berikut?\n");
+                printf("ID          : %s\n", teater->ID);
+                printf("No Teater   : %d\n", teater->noTeater);
+                printf("Kategori    : %s\n", teater->kategoriTheater);
+                printf("Jumlah Kursi: %d\n", teater->jumlahKursi);
+                printf("Status      : %s\n", teater->status);
+                printf("Harga       : Rp. %0.2lf\n", teater->harga);
+                printf("\n\n");
+            }else if(strcmp(opsi, "Perbarui") == 0){
+                ReadTeater();
+                printf("Apakah anda yakin ingin mengedit teater berikut?\n");
+                printf("ID          : %s\n", teater->ID);
+                printf("No Teater   : %d\n", teater->noTeater);
+                printf("Kategori    : %s\n", teater->kategoriTheater);
+                printf("Jumlah Kursi: %d\n", teater->jumlahKursi);
+                printf("Status      : %s\n", teater->status);
+                printf("Harga       : Rp. %0.2lf\n", teater->harga);
+                printf("\n\n");
+            }
+            else
+            {
+                TampilkanPesan("Maaf fitur belum tersedia\n", 2);
+            }
+        }
         else
         {
             TampilkanPesan("Tipe data atau fitur belum tersedia.\n", 2);
