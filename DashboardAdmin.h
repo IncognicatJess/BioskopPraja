@@ -26,11 +26,23 @@
 #include "CRUD/CRUD_Data_Film/UpdateFilm.h"
 #include "CRUD/CRUD_Data_Film/DeleteFilm.h"
 
-//CRUD DATA TEATER
+// CRUD DATA TEATER
 #include "CRUD/CRUD_Data_Teater/CreateTeater.h"
 #include "CRUD/CRUD_Data_Teater/ReadTeater.h"
 #include "CRUD/CRUD_Data_Teater/DeleteTeater.h"
 #include "CRUD/CRUD_Data_Teater/UpdateTeater.h"
+
+// CRUD DATA FNB
+#include "CRUD/CRUD_Data_FNB/CreateFnb.h"
+#include "CRUD/CRUD_Data_FNB/ReadFnb.h"
+#include "CRUD/CRUD_Data_FNB/DeleteFnb.h"
+#include "CRUD/CRUD_Data_FNB/UpdateFnb.h"
+
+// CRUD JADWAL TAYANG
+#include "CRUD/CRUD_JadwalTayang/CreateSchedule.h"
+#include "CRUD/CRUD_JadwalTayang/ReadSchedule.h"
+#include "CRUD/CRUD_JadwalTayang/UpdateSchedule.h"
+#include "CRUD/CRUD_JadwalTayang/DeleteSchedule.h"
 
 
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
@@ -49,8 +61,9 @@ void clearScreen();
 void tampilkanProfil();
 void tampilkanDaftarAkun();
 void tampilkanDaftarTeater();
-void tampilkanMenu();
-int tampilkanMenuNavigasi();
+void tampilkanMenuAdmin();
+void tampilkanJadwalTayang();
+int tampilkanMenuAdminNavigasi();
 
 // Fungsi membersihkan layar
 void clearScreen()
@@ -63,7 +76,7 @@ void clearScreen()
 }
 
 // Fungsi untuk menampilkan menu dengan navigasi arrow key
-int tampilkanMenuNavigasi()
+int tampilkanMenuAdminNavigasi()
 {
     int pilihan = 1;       // Indeks menu yang sedang dipilih
     int jumlahPilihan = 8; // Total menu
@@ -122,10 +135,10 @@ void tampilkanProfil(AkunData *akun, ProfilData *profil)
         case 0:
             system("cls");
             ReadProfile(akun, profil);
-         //UpdateAkun();
-         // TampilkanPesan("Maaf fitur belum tersedia!", 2);
+            // UpdateAkun();
+            //  TampilkanPesan("Maaf fitur belum tersedia!", 2);
             TampilkanPesan("Hubungi Admin untuk mengganti username dan password!", 2);
-            
+
             break;
         case 1:
             system("cls");
@@ -225,19 +238,22 @@ void tampilkanDaftarMenu()
 
         const char *Master = "Fnb";
         int pilihan = PilihOpsi(Master, menuFnb, NULL, NULL, 4);
-        //ReadFnb();
+        ReadFnb();
         switch (pilihan)
         {
         case 0:
             system("cls");
-            
+            ReadFnb();
+            UpdateFnb();
             break;
         case 1:
             system("cls");
+            ReadFnb();
+            DeleteFnb();
             break;
         case 2:
             system("cls");
-          //  createFnb();
+            CreateFnb();
             break;
         case 3:
             break;
@@ -260,7 +276,7 @@ void tampilkanDaftarTeater()
 
         const char *Master = "Teater";
         int pilihan = PilihOpsi(Master, menuTeater, NULL, NULL, 4);
-        
+
         switch (pilihan)
         {
         case 0:
@@ -285,14 +301,50 @@ void tampilkanDaftarTeater()
     }
 }
 
+// Fungsi untuk menampilkan jadwal tayang
+void tampilkanJadwalTayang()
+{
+    while (1)
+    {
+        system("cls");
+
+        const char *menuJadwalTayang[] = {"EDIT", "-HAPUS", "+TAMBAH", "KEMBALI"};
+
+        const char *Master = "Schedule";
+        int pilihan = PilihOpsi(Master, menuJadwalTayang, NULL, NULL, 4);
+
+        switch (pilihan)
+        {
+        case 0:
+            system("cls");
+            UpdateSchedule();
+            break;
+        case 1:
+            system("cls");
+            DeleteSchedule();
+            break;
+        case 2:
+            system("cls");
+            BuatJadwalTayang();
+            break;
+        case 3:
+            break;
+        }
+        if (pilihan == 3)
+        {
+            break;
+        }
+    }
+}
+
 // Fungsi untuk menampilkan menu utama
-void tampilkanMenu(AkunData *akun, ProfilData *profil)
+void tampilkanMenuAdmin(AkunData *akun, ProfilData *profil)
 {
     int pilihan;
 
     do
     {
-        pilihan = tampilkanMenuNavigasi();
+        pilihan = tampilkanMenuAdminNavigasi();
 
         switch (pilihan)
         {
@@ -308,12 +360,15 @@ void tampilkanMenu(AkunData *akun, ProfilData *profil)
         case 4:
             tampilkanDaftarTeater();
             break;
+        case 5:
+            tampilkanJadwalTayang();
+            break;
         case 6:
             tampilkanDaftarMenu();
             break;
         case 8:
             TampilkanPesan("Logging out...\n", 1);
-            // return loginPage(); // Kembali ke halaman login
+            return loginPage(); // Kembali ke halaman login
             return;
         default:
 
@@ -329,6 +384,6 @@ int DashboardAdmin(AkunData *akun)
 {
 
     ProfilData profil = {0};
-    tampilkanMenu(akun, &profil);
+    tampilkanMenuAdmin(akun, &profil);
     return 0;
 }

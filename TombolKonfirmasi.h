@@ -58,7 +58,7 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
             if (strcmp(opsi, "Buat") == 0)
             {
                 ReadTeater();
-                printf("Apakah anda yakin ingin menambahkan teater berikut?\n");
+                printf("Apakah anda yakin ingin menambahkan jadwal tayang berikut?\n");
                 printf("ID          : %s\n", teater->ID);
                 printf("No Teater   : %d\n", teater->noTeater);
                 printf("Kategori    : %s\n", teater->kategoriTheater);
@@ -66,9 +66,11 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("Status      : %s\n", teater->status);
                 printf("Harga       : Rp. %0.2lf\n", teater->harga);
                 printf("\n\n");
-            }else if(strcmp(opsi, "Hapus") == 0){
+            }
+            else if (strcmp(opsi, "Hapus") == 0)
+            {
                 ReadTeater();
-                printf("Apakah anda yakin ingin menghapus teater berikut?\n");
+                printf("Apakah anda yakin ingin menghapus jadwal tayang berikut?\n");
                 printf("ID          : %s\n", teater->ID);
                 printf("No Teater   : %d\n", teater->noTeater);
                 printf("Kategori    : %s\n", teater->kategoriTheater);
@@ -76,9 +78,11 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("Status      : %s\n", teater->status);
                 printf("Harga       : Rp. %0.2lf\n", teater->harga);
                 printf("\n\n");
-            }else if(strcmp(opsi, "Perbarui") == 0){
+            }
+            else if (strcmp(opsi, "Perbarui") == 0)
+            {
                 ReadTeater();
-                printf("Apakah anda yakin ingin mengedit teater berikut?\n");
+                printf("Apakah anda yakin ingin mengedit jadwal tayang berikut?\n");
                 printf("ID          : %s\n", teater->ID);
                 printf("No Teater   : %d\n", teater->noTeater);
                 printf("Kategori    : %s\n", teater->kategoriTheater);
@@ -86,6 +90,73 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("Status      : %s\n", teater->status);
                 printf("Harga       : Rp. %0.2lf\n", teater->harga);
                 printf("\n\n");
+            }
+            else
+            {
+                TampilkanPesan("Maaf fitur belum tersedia\n", 2);
+            }
+        }
+        if (strcmp(master, "Schedule") == 0 && strcmp(tipeData, "ScheduleData") == 0)
+        {
+            ScheduleData *jadwal = (ScheduleData *)data;
+
+            if (strcmp(opsi, "Buat") == 0)
+            {
+                ReadSchedule();
+                printf("\n");
+                printf("Apakah anda yakin ingin menambahkan jadwal tayang berikut?\n");
+                printf("ID          : %s\n", jadwal->ID);
+                printf("Judul Film  : %s\n", jadwal->judulFilm);
+                printf("Teater      : %d\n", jadwal->Teater);
+                printf("Durasi      : %d menit\n", jadwal->durasi);
+                printf("Tanggal     : %02d/%02d/%04d\n", jadwal->Tanggal.tanggal, jadwal->Tanggal.bulan, jadwal->Tanggal.tahun);
+
+                // Hitung waktu akhir
+                // int jamAkhir = (jadwal->jamTayang.jam + jadwal->durasi / 60) % 24;
+                // int menitAkhir = jadwal->durasi % 60;
+
+                printf("Jam         : %02d:%02d - %02d:%02d\n",
+                       jadwal->jamTayang.jam, jadwal->jamTayang.menit, jadwal->Berakhir.jam, jadwal->Berakhir.menit);
+                printf("Status      : %s\n", jadwal->status);
+                printf("Harga       : Rp. %.2lf\n", jadwal->harga);
+                printf("\n");
+            }
+            else if (strcmp(opsi, "Hapus") == 0)
+            {
+                
+                ReadSchedule();
+                printf("\n");
+
+                printf("Apakah anda yakin ingin menghapus jadwal tayang berikut?\n");
+                printf("ID          : %s\n", jadwal->ID);
+                printf("Judul Film  : %s\n", jadwal->judulFilm);
+                printf("Teater      : %d\n", jadwal->Teater);
+                printf("Tanggal     : %02d/%02d/%04d\n", jadwal->Tanggal.tanggal, jadwal->Tanggal.bulan, jadwal->Tanggal.tahun);
+
+
+                printf("Jam         : %02d:%02d - %02d:%02d\n",
+                       jadwal->jamTayang.jam, jadwal->jamTayang.menit, jadwal->Berakhir.jam, jadwal->Berakhir.menit);
+                printf("Status      : %s\n", jadwal->status);
+                printf("Harga       : Rp. %.2lf\n", jadwal->harga);
+                printf("\n");
+            }else if (strcmp(opsi, "Perbarui") == 0)
+            {
+                
+                ReadSchedule();
+                printf("\n");
+
+                printf("Apakah anda yakin ingin memperbarui jadwal tayang berikut?\n");
+                printf("ID          : %s\n", jadwal->ID);
+                printf("Judul Film  : %s\n", jadwal->judulFilm);
+                printf("Teater      : %d\n", jadwal->Teater);
+                printf("Tanggal     : %02d/%02d/%04d\n", jadwal->Tanggal.tanggal, jadwal->Tanggal.bulan, jadwal->Tanggal.tahun);
+
+
+                printf("Jam         : %02d:%02d - %02d:%02d\n",
+                       jadwal->jamTayang.jam, jadwal->jamTayang.menit, jadwal->Berakhir.jam, jadwal->Berakhir.menit);
+                printf("Status      : %s\n", jadwal->status);
+                printf("Harga       : Rp. %.2lf\n", jadwal->harga);
+                printf("\n");
             }
             else
             {

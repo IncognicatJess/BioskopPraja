@@ -1,15 +1,3 @@
-// Struktur data untuk film
-typedef struct {
-    char ID[10];
-    char judul[50];
-    char genre[20];
-    int tahunRelease;
-    double durasi;
-    char studioFilm[20];
-    char bentuk[10];
-    double harga;
-    char status[50];
-} MovieDataUpdate;
 
 void EditFilm();
 
@@ -29,10 +17,10 @@ void EditFilm() {
     }
 
     // Baca semua record ke memori
-    MovieDataUpdate filmArray[100];
+    MovieData filmArray[100];
     int totalRecords = 0;
 
-    while (fread(&filmArray[totalRecords], sizeof(MovieDataUpdate), 1, file) == 1) {
+    while (fread(&filmArray[totalRecords], sizeof(MovieData), 1, file) == 1) {
         totalRecords++;
     }
     fclose(file);
@@ -55,9 +43,9 @@ void EditFilm() {
         return;
     }
 
-    MovieDataUpdate *film = &filmArray[targetIndex];
+    MovieData *film = &filmArray[targetIndex];
     printf("\nFilm ditemukan:\n");
-    printf("ID: %s | Judul: %s | Genre: %s | Tahun: %d | Durasi: %.2f jam | Harga: %.2f\n",
+    printf("ID: %s | Judul: %s | Genre: %s | Tahun: %d | Durasi: %.2f menit | Harga: %.2f\n",
            film->ID, film->judul, film->genre, film->tahunRelease, film->durasi, film->harga);
 
     // Edit data film
@@ -69,7 +57,7 @@ void EditFilm() {
     printf("Masukkan tahun rilis baru: ");
     scanf("%d", &film->tahunRelease);
 
-    printf("Masukkan durasi baru (jam): ");
+    printf("Masukkan durasi baru (menit): ");
     scanf("%lf", &film->durasi);
 
     printf("Masukkan studio baru: ");
@@ -141,7 +129,7 @@ void EditFilm() {
         printf("Gagal membuka file untuk menulis.\n");
         return;
     }
-    fwrite(filmArray, sizeof(MovieDataUpdate), totalRecords, file);
+    fwrite(filmArray, sizeof(MovieData), totalRecords, file);
     fclose(file);
 
     printf("Data film berhasil diperbarui.\n");

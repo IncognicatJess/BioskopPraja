@@ -28,7 +28,7 @@ void EditAkun()
     }
     fclose(file);
 
-    // Search for the record to edit
+    // Cari record yang ingin di-edit
     char idCari[10];
     printf("Masukkan ID akun yang ingin diedit: ");
     scanf("%9s", idCari);

@@ -3,6 +3,8 @@
 #define PROFILDAT "./Database/Akun/DataProfil.dat"
 #define FILEMENU "./Database/FNB/DataFnb.dat"
 #define TEATERDAT "./Database/Teater/DataTeater.dat"
+#define TEMP_FILEMENU "./Database/FNB/TempDataFnb.dat"
+#define TEMP_FILEFILM "./Database/Film/TempDataFilm.dat"
 
 
 
@@ -18,10 +20,11 @@
 #include <ctype.h>
 #include <time.h>
 
-//#include "CRUD/CRUD_Data_Akun/ReadAkun.h" // Untuk membaca akun dari file
+// #include "CRUD/CRUD_Data_Akun/ReadAkun.h" // Untuk membaca akun dari file
 
 // Struct AkunData untuk validasi login
-typedef struct {
+typedef struct
+{
     char ID[10];
     char akun[20];
     char username[50];
@@ -30,22 +33,25 @@ typedef struct {
     char status[50];
 } AkunData;
 
-typedef struct {
+typedef struct
+{
     char tempat[50];
     int tanggal;
     int bulan;
     int tahun;
 } TempatTanggalLahir;
 
-//Struct Untuk menampung data ke dashboard sesuai akun
-typedef struct {
+// Struct Untuk menampung data ke dashboard sesuai akun
+typedef struct
+{
     char ID[10];
     char nama[50];
     TempatTanggalLahir TTL;
     char noHP[13];
 } ProfilData;
 
-typedef struct {
+typedef struct
+{
     char ID[10];
     int noTeater;
     char kategoriTheater[20];
@@ -54,11 +60,18 @@ typedef struct {
     double harga;
 } TeaterData;
 
+typedef struct
+{
+    char ID[10];
+    char namaMakanan[50];
+    char kategori[10];
+    int stok;
+    double harga;
+} FnbData;
 
-
-//FUNGSI EXTENDED
+// FUNGSI EXTENDED
 #include "TampilkanJudul.h"
-//#include "TampungID.h"
+// #include "TampungID.h"
 #include "TampilkanPesan.h"
 #include "HidePassword.h"
 #include "TombolOpsi.h"
@@ -66,20 +79,21 @@ typedef struct {
 #include "DashboardAdmin.h" // Dashboard admin
 #include "cobadesain.h"
 
-
 // Prototipe fungsi
 bool validasiLogin(const char *username, const char *password, AkunData *akun);
 void dashboardUser(const AkunData *akun);
 void loginPage();
 
 // Fungsi utama
-int main() {
+int main()
+{
     char username[50], password[50];
     AkunData akun;
     ProfilData profil;
     int attempt = 3; // Jumlah percobaan login
 
-    while (attempt > 0) {
+    while (attempt > 0)
+    {
         system("cls");
         tampilkanJudul();
 
@@ -90,23 +104,32 @@ int main() {
         // Input password
         printf("Password: ");
 
-        //Fungsi menyembunyikan Password
-       HidePW(password, sizeof(password));
+        // Fungsi menyembunyikan Password
+        HidePW(password, sizeof(password));
 
         // Validasi login
-        if (validasiLogin(username, password, &akun)) {
-           // profil = validasiID(username, password); // Simpan profil yang dikembalikan
-            if (strlen(akun.ID) > 0) { // Cek apakah ID tidak kosong
-                if (strcmp(akun.akun, "Admin") == 0) {
+        if (validasiLogin(username, password, &akun))
+        {
+            // profil = validasiID(username, password); // Simpan profil yang dikembalikan
+            if (strlen(akun.ID) > 0)
+            { // Cek apakah ID tidak kosong
+                if (strcmp(akun.akun, "Admin") == 0)
+                {
                     DashboardAdmin(&akun); // Kirim profil ke DashboardAdmin
-                } else {
-                    dashboardUser (&akun);
+                }
+                else
+                {
+                    // DashboardUser(&akun); // Kirim profil ke DashboardKasirTiket
                 }
                 return 0; // Keluar setelah login berhasil
-            } else {
+            }
+            else
+            {
                 printf("ID tidak ditemukan.\n");
             }
-        } else {
+        }
+        else
+        {
             attempt--;
             char pesan[100];
             snprintf(pesan, sizeof(pesan), "Username atau password salah! %d percobaan tersisa.", attempt);
@@ -114,24 +137,26 @@ int main() {
         }
     }
 
-    //Jika lebih dari 3 kali
+    // Jika lebih dari 3 kali
     printf("Login gagal. Silakan coba lagi nanti.\n");
-   return 0;
+    return 0;
 }
 
-
-
 // Fungsi validasi login
-bool validasiLogin(const char *username, const char *password, AkunData *akun) {
+bool validasiLogin(const char *username, const char *password, AkunData *akun)
+{
     FILE *file = fopen(FILENAME, "rb");
-    if (!file) {
+    if (!file)
+    {
         printf("Gagal membuka file database.\n");
         return false;
     }
 
-    while (fread(akun, sizeof(AkunData), 1, file)) {
-        if (strcmp(akun->username, username) == 0 && strcmp(akun->sandi, password) == 0) {
-       
+    while (fread(akun, sizeof(AkunData), 1, file))
+    {
+        if (strcmp(akun->username, username) == 0 && strcmp(akun->sandi, password) == 0)
+        {
+
             fclose(file);
             return true;
         }
@@ -140,22 +165,3 @@ bool validasiLogin(const char *username, const char *password, AkunData *akun) {
     fclose(file);
     return false;
 }
-
-// Fungsi menampilkan dashboard user (dummy)
-void dashboardUser(const AkunData *akun) {
-    system("cls");
-    tampilkanJudul();
-    if (strcmp(akun->jabatan, "Kasir Tiket") == 0) {
-        printf("Selamat datang, %s (Kasir Tiket).\n", akun->username);
-        printf("Fitur ini belum tersedia.\n");
-    } else if (strcmp(akun->jabatan, "Kasir FNB") == 0) {
-        printf("Selamat datang, %s (Kasir F&B).\n", akun->username);
-        printf("Fitur ini belum tersedia.\n");
-    } else {
-        printf("Jabatan tidak dikenali.\n");
-    }
-    printf("Tekan Enter untuk keluar...");
-    getchar();
-    getchar();
-}
-

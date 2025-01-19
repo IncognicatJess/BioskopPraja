@@ -77,7 +77,13 @@
     "updatefilm.h": "c",
     "cobadesain.h": "c",
     "createprofile.h": "c",
-    "deleteteater.h": "c"
+    "deleteteater.h": "c",
+    "createteater.h": "c",
+    "updateteater.h": "c",
+    "CreateProfile.H": "cpp",
+    "createfnb.h": "c",
+    "updateschedule.h": "c",
+    "deletefnb.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

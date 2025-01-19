@@ -1,17 +1,5 @@
 #define TEMP_FILEFILM "./Database/Film/TempDataFilm.dat"
 
-typedef struct {
-    char ID[10];
-    char judul[50];
-    char genre[20];
-    int tahunRelease;
-    double durasi;
-    char studioFilm[20];
-    char bentuk[10];
-    double harga;
-    char status[50];
-} MovieDataDelete;
-
 void HapusFilm();
 int BandingkanID(const void *a, const void *b);
 
@@ -36,16 +24,16 @@ void HapusFilm() {
     printf("Masukkan ID yang ingin dihapus: ");
     scanf("%9s", idHapus);
 
-    MovieDataDelete film;
-    MovieDataDelete filmDihapus;
+    MovieData film;
+    MovieData filmDihapus;
     bool ditemukan = false;
 
-    while (fread(&film, sizeof(MovieDataDelete), 1, file)) {
+    while (fread(&film, sizeof(MovieData), 1, file)) {
         if (strcmp(film.ID, idHapus) == 0) {
             ditemukan = true;
             filmDihapus = film;
         } else {
-            fwrite(&film, sizeof(MovieDataDelete), 1, tempFile);
+            fwrite(&film, sizeof(MovieData), 1, tempFile);
         }
     }
 
@@ -55,7 +43,7 @@ void HapusFilm() {
     if (ditemukan) {
         ReadFilm();
         // Konfirmasi sebelum penghapusan
-        int konfirmasi = TombolKonfirmasi("Film","Hapus", &filmDihapus, "MovieDataDelete");
+        int konfirmasi = TombolKonfirmasi("Film","Hapus", &filmDihapus, "MovieData");
         if (konfirmasi == 1) { // KONFIRMASI
             remove(FILEFILM);
             rename(TEMP_FILEFILM, FILEFILM);

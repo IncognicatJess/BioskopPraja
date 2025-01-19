@@ -9,19 +9,6 @@
 
 #define MAX_ID 1000
 
-typedef struct
-{
-    char ID[10];
-    char judul[50];
-    char genre[20];
-    int tahunRelease;
-    double durasi;
-    char studioFilm[20];
-    char bentuk[10];
-    double harga;
-    char status[50];
-} MovieData;
-
 void BuatFilm();
 
 int CreateFilm()
@@ -45,9 +32,9 @@ void BuatFilm()
     memset(&film, 0, sizeof(MovieData));
 
     const char *pilihanGenre[] = {"Action", "Horror", "Comedy", "Drama", "Romance"};
-    const char *pilihanBentuk[] = {"2D", "3D"};
+    const char *pilihanBentuk[] = {"2D", "3D", "IMAX"};
     const char *TombolKonfirmasi[] = {"KONFIRMASI", "BATALKAN"};
-
+   
     int pilihanGenreIndex = 0;
     int pilihanBentukIndex = 0;
     int step = 0;
@@ -66,7 +53,7 @@ void BuatFilm()
             scanf(" %[^\n]", film.judul); // Input string dengan spasi
             printf("Tahun Rilis: ");
             scanf("%d", &film.tahunRelease);
-            printf("Durasi (dalam jam): ");
+            printf("Durasi (dalam menit): ");
             scanf("%lf", &film.durasi);
             getchar(); // Bersihkan newline buffer
             printf("Studio Film (maks. 20 karakter): ");

@@ -1,8 +1,10 @@
 int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, int jumlah);
 int ReadAkun();
 int ReadFilm();
+int ReadFnb();
 void ReadProfile(AkunData *akun, ProfilData *profil);
 int ReadTeater();
+int ReadSchedule();
 
 int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, int jumlah)
 {
@@ -30,6 +32,15 @@ int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, i
         else if (strcmp(master, "Teater") == 0)
         {
             ReadTeater();
+        }
+        else if (strcmp(master, "Fnb") == 0)
+        {
+            ReadFnb();
+        }
+        else if (strcmp(master, "Schedule") == 0)
+        {
+            ReadSchedule();
+            
         }
         else
         {

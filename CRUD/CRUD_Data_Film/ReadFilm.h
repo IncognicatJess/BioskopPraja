@@ -47,15 +47,15 @@ void TampilkanFilm()
     qsort(film, jumlahFilm, sizeof(MovieDataBaca), BandingkanID);
 
     // Menampilkan tabel
-    printf("| %-8s | %-15s | %-15s | %-10s | %-8s | %-10s | %-8s | %-10s | %-10s |\n", "ID", "Judul Film", "Genre", "Tahun Rilis", "Durasi", "Studio Film", "Bentuk", "Harga", "Status");
+    printf("| %-8s | %-15s | %-10s | %-10s | %-8s | %-10s | %-8s | %-10s |\n", "ID", "Judul Film", "Genre", "Tahun Rilis", "Durasi(menit)", "Studio Film", "Bentuk", "Harga");
     printf("------------------------------------------------------------------------------------------------------------------------\n");
 
     for (int i = 0; i < jumlahFilm; i++)
     {
-        printf("| %-8s | %-15s | %-15s | %-10d | %-8.0f | %-10s | %-8s | %-10f | %-10s |\n",
-               film[i].ID, film[i].judul, film[i].genre, film[i].tahunRelease, film[i].durasi, film[i].studioFilm, film[i].bentuk, film[i].harga, film[i].status);
+        printf("| %-8s | %-15s | %-10s | %-10d  | %-8.0f | %-10s | %-8s | %-10f |\n",
+               film[i].ID, film[i].judul, film[i].genre, film[i].tahunRelease, film[i].durasi, film[i].studioFilm, film[i].bentuk, film[i].harga);
     }
-    printf("\n\n\n");
+    printf("\n");
 }
 
 // Fungsi pembanding untuk qsort berdasarkan ID

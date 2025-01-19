@@ -18,7 +18,7 @@ void BuatTeater()
     FILE *file = fopen(TEATERDAT, "a+b");
     if (!file)
     {
-        printf("Gagal membuka file database.");
+        TampilkanPesan("Gagal membuka file database.",2);
         return;
     }
 
