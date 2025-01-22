@@ -1,7 +1,6 @@
 #ifndef UPDATE_SCHEDULE_H
 #define UPDATE_SCHEDULE_H
 
-
 // Deklarasi fungsi
 void PerbaruiJadwal();
 int UpdateSchedule();
@@ -9,7 +8,6 @@ bool ValidasiTanggalUpdate(ScheduleData *tanggal);
 bool ValidasiJamUpdate(ScheduleData *jam);
 bool jamUnikUpdate(ScheduleData *jamUnikUpdate, FILE *file);
 int DigunakanTeaterUpdate(ScheduleData *teater, FILE *file);
-
 
 int UpdateSchedule()
 {
@@ -20,7 +18,6 @@ int UpdateSchedule()
 
 void PerbaruiJadwal()
 {
-    
 
     FILE *scheduleFile = fopen(SCHEDULEDAT, "rb");
     if (!scheduleFile)
@@ -29,18 +26,20 @@ void PerbaruiJadwal()
         return;
     }
 
-    
+    // Variabel Sebagai pembanding dengan data yang ada di file
+    ScheduleData jadwalLain;
+    // memset(&jadwalLain, 0, sizeof(ScheduleData));
+
     char judulFilm[50] = "";
     char noTeaterStr[4] = "";
     char tanggalStr[11] = "";
     char jamStr[6] = "";
 
-    //Baca semua record ke dalam memori
+    // Baca semua record ke dalam memori
     ScheduleData jadwal[MAX_SCHEDULE];
     int jumlahJadwal = 0;
 
-    
-     // Membaca semua data dari file
+    // Membaca semua data dari file
     while (fread(&jadwal[jumlahJadwal], sizeof(ScheduleData), 1, scheduleFile))
     {
         jumlahJadwal++;
@@ -53,8 +52,6 @@ void PerbaruiJadwal()
     char idCari[10];
     printf("Masukkan ID jadwal yang ingin diperbarui: ");
     scanf("%9s", idCari);
-
-  
 
     // Mencari jadwal berdasarkan ID
     int targetIndex = -1;
@@ -75,21 +72,21 @@ void PerbaruiJadwal()
     }
 
     ScheduleData *jadwalBaru = &jadwal[targetIndex];
+
     int step = 0;
     int statusIndex = 0;
     const char *statusOptions[] = {"Now Showing", "Coming Soon", "Ended", "Sold Out", "Pre-sale"};
 
-    
-   /* // Menampilkan data saat ini
-    printf("\nData saat ini:\n");
-    printf("| %-8s | %-20s | %-8d | %02d/%02d/%04d    | %d menit    | %02d:%02d       | %02d:%02d       | Rp %-15.2f |\n",
-           dataJadwal->ID, dataJadwal->judulFilm, dataJadwal->Teater,
-           dataJadwal->Tanggal.tanggal, dataJadwal->Tanggal.bulan, dataJadwal->Tanggal.tahun,
-           dataJadwal->durasi,
-           dataJadwal->jamTayang.jam, dataJadwal->jamTayang.menit,
-           dataJadwal->Berakhir.jam, dataJadwal->Berakhir.menit,
-           dataJadwal->harga);
-*/
+    /* // Menampilkan data saat ini
+     printf("\nData saat ini:\n");
+     printf("| %-8s | %-20s | %-8d | %02d/%02d/%04d    | %d menit    | %02d:%02d       | %02d:%02d       | Rp %-15.2f |\n",
+            dataJadwal->ID, dataJadwal->judulFilm, dataJadwal->Teater,
+            dataJadwal->Tanggal.tanggal, dataJadwal->Tanggal.bulan, dataJadwal->Tanggal.tahun,
+            dataJadwal->durasi,
+            dataJadwal->jamTayang.jam, dataJadwal->jamTayang.menit,
+            dataJadwal->Berakhir.jam, dataJadwal->Berakhir.menit,
+            dataJadwal->harga);
+ */
     // Input data baru
 
     while (1)
@@ -264,7 +261,7 @@ void PerbaruiJadwal()
             }
         }
         else if (step == 3)
-        { 
+        {
             if (isdigit(key) || key == ':')
             {
                 size_t len = strlen(jamStr);
@@ -273,13 +270,12 @@ void PerbaruiJadwal()
                     jamStr[len] = key;
                     jamStr[len + 1] = '\0';
                 }
-               
             }
             else if (key == 8 && strlen(jamStr) > 0)
             {
                 jamStr[strlen(jamStr) - 1] = '\0';
             }
-    
+
             else if (key == '\r')
             {
                 if (strlen(jamStr) == 5 && jamStr[2] == ':')
@@ -321,8 +317,6 @@ void PerbaruiJadwal()
                 {
                     TampilkanPesan("\n\nFormat jam salah. Gunakan format 00:00 24 jam.\n", 2);
                 }
-
-               
             }
         }
         else if (step == 4)
@@ -348,7 +342,7 @@ void PerbaruiJadwal()
                 scheduleFile = fopen(SCHEDULEDAT, "wb");
                 if (!scheduleFile)
                 {
-                    TampilkanPesan("Gagal membuka file untuk menyimpan perubahan.\n",2);
+                    TampilkanPesan("Gagal membuka file untuk menyimpan perubahan.\n", 2);
                     return;
                 }
                 fwrite(jadwal, sizeof(ScheduleData), jumlahJadwal, scheduleFile);
@@ -367,11 +361,10 @@ void PerbaruiJadwal()
     fclose(scheduleFile);
 }
 
-
-
 // Fungsi untuk mencari teater yang sudah menggunakan jadwal
 int DigunakanTeaterUpdate(ScheduleData *teater, FILE *file)
 {
+    file = fopen(SCHEDULEDAT, "rb");
     rewind(file);
     ScheduleData temp;
     while (fread(&temp, sizeof(ScheduleData), 1, file))
@@ -379,6 +372,7 @@ int DigunakanTeaterUpdate(ScheduleData *teater, FILE *file)
         if (temp.Teater == teater->Teater)
         {
             return temp.Teater;
+            fclose(file);
             break;
         }
     }
@@ -387,39 +381,44 @@ int DigunakanTeaterUpdate(ScheduleData *teater, FILE *file)
 // Fungsi untuk mengecek apakah jadwal jam pada teater sudah digunakan
 bool jamUnikUpdate(ScheduleData *jamUnikUpdate, FILE *file)
 {
-    rewind(file);
+    file = fopen(SCHEDULEDAT, "rb");
+    rewind(file); // Kembali ke awal file
     ScheduleData temp;
+
     while (fread(&temp, sizeof(ScheduleData), 1, file))
     {
-        // seleksi teater
+        // Seleksi teater
         if (temp.Teater == jamUnikUpdate->Teater)
         {
-            // seleksi tanggal
+            // Seleksi tanggal
             if (temp.Tanggal.tanggal == jamUnikUpdate->Tanggal.tanggal &&
                 temp.Tanggal.bulan == jamUnikUpdate->Tanggal.bulan &&
                 temp.Tanggal.tahun == jamUnikUpdate->Tanggal.tahun)
             {
+
+                int start1 = jamUnikUpdate->jamTayang.jam * 60 + jamUnikUpdate->jamTayang.menit;
+                int end1 = jamUnikUpdate->Berakhir.jam * 60 + jamUnikUpdate->Berakhir.menit;
+                int start2 = temp.jamTayang.jam * 60 + temp.jamTayang.menit;
+                int end2 = temp.Berakhir.jam * 60 + temp.Berakhir.menit;
+
+                bool isOverlap = !(end1 <= start2 || start1 >= end2);
+
                 // Memeriksa apakah ada tabrakan waktu
-                bool isOverlap = (jamUnikUpdate->jamTayang.jam < temp.Berakhir.jam ||
-                                  (jamUnikUpdate->jamTayang.jam == temp.Berakhir.jam && jamUnikUpdate->jamTayang.menit < temp.Berakhir.menit)) &&
-                                 (temp.jamTayang.jam < jamUnikUpdate->Berakhir.jam ||
-                                  (temp.jamTayang.jam == jamUnikUpdate->Berakhir.jam && temp.jamTayang.menit < jamUnikUpdate->Berakhir.menit));
-
-                // Kondisi untuk menghindari tabrakan pada waktu yang sama
-                if ((jamUnikUpdate->jamTayang.jam == temp.Berakhir.jam && jamUnikUpdate->jamTayang.menit == 0) || 
-                    (jamUnikUpdate->Berakhir.jam == temp.jamTayang.jam && jamUnikUpdate->Berakhir.menit == 0))
-                {
-                    return false; // Tabrakan jika jam tayang baru dimulai tepat saat berakhirnya jadwal yang sudah ada
-                }
-
+                /* bool isOverlap = (jamUnikUpdate->jamTayang.jam * 60 + jamUnikUpdate->jamTayang.menit <
+                                   temp.Berakhir.jam * 60 + temp.Berakhir.menit) &&
+                                  (temp.jamTayang.jam * 60 + temp.jamTayang.menit <
+                                   jamUnikUpdate->Berakhir.jam * 60 + jamUnikUpdate->Berakhir.menit);
+ */
                 if (isOverlap)
                 {
+                    fclose(file); // Tutup file sebelum keluar
                     return false; // Ada tabrakan
                 }
             }
         }
     }
-    return true;
+    fclose(file); // Pastikan file ditutup
+    return true;  // Tidak ada tabrakan
 }
 
 bool ValidasiTanggalUpdate(ScheduleData *tanggal)
@@ -451,6 +450,5 @@ bool ValidasiJamUpdate(ScheduleData *jam)
     return true;
     // return (jam >= 0 && jam <= 23);
 }
-
 
 #endif // UPDATE_SCHEDULE_H

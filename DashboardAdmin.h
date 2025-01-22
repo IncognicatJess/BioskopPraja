@@ -44,6 +44,15 @@
 #include "CRUD/CRUD_JadwalTayang/UpdateSchedule.h"
 #include "CRUD/CRUD_JadwalTayang/DeleteSchedule.h"
 
+//CRUD KURSI
+#include "CRUD/CRUD_Data_Teater/CreateKursi.h"
+#include "CRUD/CRUD_Data_Teater/ReadKursi.h"
+#include "CRUD/CRUD_Data_Teater/DeleteKursi.h"
+#include "CRUD/CRUD_Data_Teater/UpdateKursi.h"
+
+
+
+
 
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
 typedef struct
@@ -272,10 +281,10 @@ void tampilkanDaftarTeater()
     {
         system("cls");
 
-        const char *menuTeater[] = {"EDIT", "-HAPUS", "+TAMBAH", "KEMBALI"};
+        const char *menuTeater[] = {"EDIT", "-HAPUS", "+TAMBAH", "KURSI","KEMBALI"};
 
         const char *Master = "Teater";
-        int pilihan = PilihOpsi(Master, menuTeater, NULL, NULL, 4);
+        int pilihan = PilihOpsi(Master, menuTeater, NULL, NULL, 5);
 
         switch (pilihan)
         {
@@ -292,9 +301,13 @@ void tampilkanDaftarTeater()
             CreateTeater();
             break;
         case 3:
+            system("cls");
+            ReadKursi();
+            break;
+        case 4:
             break;
         }
-        if (pilihan == 3)
+        if (pilihan == 4)
         {
             break;
         }

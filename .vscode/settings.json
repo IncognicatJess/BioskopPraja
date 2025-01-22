@@ -83,7 +83,10 @@
     "CreateProfile.H": "cpp",
     "createfnb.h": "c",
     "updateschedule.h": "c",
-    "deletefnb.h": "c"
+    "deletefnb.h": "c",
+    "createkursi.h": "c",
+    "updatefnb.h": "c",
+    "readschedule.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

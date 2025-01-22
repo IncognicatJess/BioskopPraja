@@ -2,6 +2,8 @@
 
 void HapusTeater();
 int BandingkanIDTeater(const void *a, const void *b);
+int DeleteKursi(char idHapus[10]);
+
 
 int DeleteTeater() {
     ReadTeater();
@@ -59,6 +61,7 @@ void HapusTeater() {
         // Konfirmasi sebelum penghapusan
         int konfirmasi = TombolKonfirmasi("Teater", "Hapus", &teaterDihapus, "TeaterData");
         if (konfirmasi == 1) { // KONFIRMASI
+            DeleteKursi(idHapus);
             remove(TEATERDAT);
             rename(TEMP_TEATERDAT, TEATERDAT);
             printf("Teater dengan ID %s berhasil dihapus.\n", idHapus);

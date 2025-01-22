@@ -6,6 +6,7 @@
 // #define SCHEDULEDAT "./Database/JadwalTayang/DataJadwalTayang.dat"
 #define MAX_SCHEDULE 1000
 
+
 // Function declarations
 void BuatJadwalTayang();
 bool ValidasiTanggal(ScheduleData tanggal);

@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "z:/",
-      "program": "z:/build/Debug/outDebug",
+      "cwd": "e:/A Kuliah COy/OneDrive - Politeknik Astra/PRG 1/Proyek Akhir/BioskopPraja",
+      "program": "e:/A Kuliah COy/OneDrive - Politeknik Astra/PRG 1/Proyek Akhir/BioskopPraja/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

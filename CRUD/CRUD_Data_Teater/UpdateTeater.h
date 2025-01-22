@@ -1,4 +1,5 @@
 void EditTeater();
+int UpdateKursi(TeaterData *kursiTeater, int kelas);
 
 int UpdateTeater()
 {
@@ -48,7 +49,7 @@ void EditTeater()
 
     TeaterData *teater = &teaterArray[targetIndex];
     const char *statusOptions[] = {"Open", "Closed", "Maintenance"};
-    const char *kategoriOptions[] = {"Standar", "Premium", "VIP"};
+    const char *kategoriOptions[] = {"Reguler", "Premiere", "Mini Studio"};
 
     int statusIndex = 0, kategoriIndex = 0;
     char noTeaterStr[4] = "", jumlahKursiStr[6] = "", hargaStr[10] = "";
@@ -174,9 +175,16 @@ void EditTeater()
             {
                 jumlahKursiStr[strlen(jumlahKursiStr) - 1] = '\0';
             }
-            else if (key == '\r' && ValidasiJumlahKursi(jumlahKursiStr))
+            else if (key == '\r' && ValidasiJumlahKursi(jumlahKursiStr, kategoriIndex))
             {
                 step++;
+            }else{
+                if(kategoriIndex == 0){TampilkanPesan("\nKelas Reguler 120 - 200 kursi! ",2);
+                }
+                else if(kategoriIndex == 1){TampilkanPesan("\nKelas Premiere 20 - 50 kursi! ",2);
+                }
+                else if(kategoriIndex == 2){TampilkanPesan("\nKelas Mini Studio 80 - 100 kursi! ",2);
+                }
             }
         }
         else if (step == 3)
@@ -229,6 +237,7 @@ void EditTeater()
             if (konfirmasi == 1)
             {
                 // Tulis ulang semua data ke file
+                UpdateKursi(teater, kategoriIndex);
                 rewind(file);
                 fwrite(teaterArray, sizeof(TeaterData), totalRecords, file);
                 // Potong ukuran file (opsional)

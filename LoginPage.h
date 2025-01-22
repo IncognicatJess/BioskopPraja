@@ -7,6 +7,8 @@
 #define TEMP_FILEFILM "./Database/Film/TempDataFilm.dat"
 #define SCHEDULEDAT "./Database/JadwalTayang/DataJadwalTayang.dat"
 #define TEMP_SCHEDULEDAT "./Database/JadwalTayang/TempJadwalTayang.dat"
+#define SEATDAT "./Database/Teater/DataKursi.dat"
+
 
 // LIBRARY STANDARD
 #include <stdio.h>
@@ -19,6 +21,8 @@
 #include <windows.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
+
 
 // #include "CRUD/CRUD_Data_Akun/ReadAkun.h" // Untuk membaca akun dari file
 
@@ -65,7 +69,7 @@ typedef struct
     char status[50];
 } MovieData;
 
-typedef struct
+typedef struct 
 {
     char ID[10];
     int noTeater;
@@ -116,6 +120,12 @@ typedef struct {
     double harga;
 } ScheduleData;
 
+typedef struct
+{
+    char IDTeater[10];
+    char ID[10];
+    char status[10]; // Status kursi, default "Tersedia"
+} KursiData;
 
 
 // FUNGSI EXTENDED

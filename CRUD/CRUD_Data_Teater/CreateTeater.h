@@ -2,10 +2,11 @@
 
 void BuatTeater();
 bool ValidasiNoTeater(const char *noTeater);
-bool ValidasiJumlahKursi(const char *jumlahKursi);
+bool ValidasiJumlahKursi(const char *jumlahKursi, int kelas);
 bool ValidasiHarga(const char *hargaStr);
 void TampilkanPesan(const char *pesan, int waktu);
 int TombolKonfirmasi(const char *master, const char *opsi, void *data, const char *tipeData);
+int CreateKursi(TeaterData kursiTeater, int kelas);
 
 int CreateTeater()
 {
@@ -18,7 +19,7 @@ void BuatTeater()
     FILE *file = fopen(TEATERDAT, "a+b");
     if (!file)
     {
-        TampilkanPesan("Gagal membuka file database.",2);
+        TampilkanPesan("Gagal membuka file database.", 2);
         return;
     }
 
@@ -26,7 +27,7 @@ void BuatTeater()
     memset(&teaterBaru, 0, sizeof(TeaterData));
 
     const char *statusOptions[] = {"Open", "Closed", "Maintenance"};
-    const char *kategoriOptions[] = {"Standar", "Premium", "VIP"};
+    const char *kategoriOptions[] = {"Reguler", "Premiere", "Mini Studio"};
 
     int statusIndex = 0, kategoriIndex = 0;
     char noTeaterStr[4] = "", jumlahKursiStr[6] = "", hargaStr[10] = "";
@@ -35,6 +36,7 @@ void BuatTeater()
     while (1)
     {
         system("cls");
+        ReadTeater();
         printf("==== Tambah Teater ====");
 
         printf("\nNomor Teater: %s%s", step == 0 ? ">" : "", noTeaterStr);
@@ -129,9 +131,16 @@ void BuatTeater()
             {
                 jumlahKursiStr[strlen(jumlahKursiStr) - 1] = '\0';
             }
-            else if (key == '\r' && ValidasiJumlahKursi(jumlahKursiStr))
+            else if (key == '\r' && ValidasiJumlahKursi(jumlahKursiStr, kategoriIndex))
             {
                 step++;
+            }else{
+                if(kategoriIndex == 0){TampilkanPesan("\nKelas Reguler 120 - 200 kursi! ",2);
+                }
+                else if(kategoriIndex == 1){TampilkanPesan("\nKelas Premiere 20 - 50 kursi! ",2);
+                }
+                else if(kategoriIndex == 2){TampilkanPesan("\nKelas Mini Studio 80 - 100 kursi! ",2);
+                }
             }
         }
         else if (step == 3)
@@ -205,6 +214,7 @@ void BuatTeater()
             int konfirmasi = TombolKonfirmasi("Teater", "Buat", &teaterBaru, "TeaterData");
             if (konfirmasi == 1)
             {
+                CreateKursi(teaterBaru, kategoriIndex);
                 fwrite(&teaterBaru, sizeof(TeaterData), 1, file);
                 TampilkanPesan("Teater berhasil ditambahkan.\n", 2);
             }
@@ -224,9 +234,38 @@ bool ValidasiNoTeater(const char *noTeater)
     return strlen(noTeater) > 0 && strlen(noTeater) <= 3;
 }
 
-bool ValidasiJumlahKursi(const char *jumlahKursi)
+bool ValidasiJumlahKursi(const char *jumlahKursi, int kelas)
 {
-    return strlen(jumlahKursi) > 0 && atoi(jumlahKursi) > 0;
+    int Kursi = atoi(jumlahKursi);
+    switch (kelas)
+    {
+    // Validasi jumlah kursi Reguler
+    case 0:
+        if (Kursi >= 120 && Kursi <= 200)
+        {
+            return true;
+        }
+        break;
+    // Validasi jumlah kursi Premiere
+    case 1:
+        if (Kursi >= 20 && Kursi <= 50)
+        {
+            return true;
+        }
+        break;
+    // Validasi jumlah kursi Mini Studio
+    case 2:
+        if (Kursi >= 80 && Kursi <= 100)
+        {
+            return true;
+        }
+        break;
+    default:
+        return false;
+        break;
+    }
+    return false;
+    // return strlen(jumlahKursi) > 0 && atoi(jumlahKursi) > 0;
 }
 
 bool ValidasiHarga(const char *hargaStr)

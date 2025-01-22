@@ -58,7 +58,7 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
             if (strcmp(opsi, "Buat") == 0)
             {
                 ReadTeater();
-                printf("Apakah anda yakin ingin menambahkan jadwal tayang berikut?\n");
+                printf("Apakah anda yakin ingin menambahkan teater berikut?\n");
                 printf("ID          : %s\n", teater->ID);
                 printf("No Teater   : %d\n", teater->noTeater);
                 printf("Kategori    : %s\n", teater->kategoriTheater);
@@ -96,7 +96,7 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 TampilkanPesan("Maaf fitur belum tersedia\n", 2);
             }
         }
-        if (strcmp(master, "Schedule") == 0 && strcmp(tipeData, "ScheduleData") == 0)
+        else if (strcmp(master, "Schedule") == 0 && strcmp(tipeData, "ScheduleData") == 0)
         {
             ScheduleData *jadwal = (ScheduleData *)data;
 

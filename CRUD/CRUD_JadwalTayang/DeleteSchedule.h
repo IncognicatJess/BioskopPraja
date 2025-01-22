@@ -62,17 +62,20 @@ void HapusSchedule()
             remove(SCHEDULEDAT);
             rename(TEMP_SCHEDULEDAT, SCHEDULEDAT);
             printf("Jadwal dengan ID %s berhasil dihapus.\n", idHapus);
+            sleep(2);
         }
         else
         {
             printf("Penghapusan dibatalkan.\n");
             remove(TEMP_SCHEDULEDAT);
+            sleep(2);
         }
     }
     else
     {
         remove(TEMP_SCHEDULEDAT);
         printf("Jadwal dengan ID %s tidak ditemukan.\n", idHapus);
+        sleep(2);
     }
 }
 
