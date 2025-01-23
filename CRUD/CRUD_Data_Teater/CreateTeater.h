@@ -135,11 +135,11 @@ void BuatTeater()
             {
                 step++;
             }else{
-                if(kategoriIndex == 0){TampilkanPesan("\nKelas Reguler 120 - 200 kursi! ",2);
+                if(kategoriIndex == 0){TampilkanPesan("\nKelas Reguler Mencakup 120, 150 dan 200 kursi! ",2);
                 }
-                else if(kategoriIndex == 1){TampilkanPesan("\nKelas Premiere 20 - 50 kursi! ",2);
+                else if(kategoriIndex == 1){TampilkanPesan("\nKelas Premiere Mencakup 20, 30 dan 50 kursi! ",2);
                 }
-                else if(kategoriIndex == 2){TampilkanPesan("\nKelas Mini Studio 80 - 100 kursi! ",2);
+                else if(kategoriIndex == 2){TampilkanPesan("\nKelas Mini Studio Mencakup 80, 90 dan 100 kursi! ",2);
                 }
             }
         }
@@ -241,21 +241,21 @@ bool ValidasiJumlahKursi(const char *jumlahKursi, int kelas)
     {
     // Validasi jumlah kursi Reguler
     case 0:
-        if (Kursi >= 120 && Kursi <= 200)
+        if (Kursi == 120 || Kursi == 150 || Kursi == 200)
         {
             return true;
         }
         break;
     // Validasi jumlah kursi Premiere
     case 1:
-        if (Kursi >= 20 && Kursi <= 50)
+        if (Kursi == 20 || Kursi == 30 || Kursi == 50)
         {
             return true;
         }
         break;
     // Validasi jumlah kursi Mini Studio
     case 2:
-        if (Kursi >= 80 && Kursi <= 100)
+        if (Kursi == 80 || Kursi == 90 || Kursi == 100)
         {
             return true;
         }

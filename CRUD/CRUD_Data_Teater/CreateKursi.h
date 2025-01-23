@@ -6,6 +6,7 @@ void BuatKursi(TeaterData kursiTeater, int kelas);
 void cariBarisKolom(int jumlahKursi, int *baris, int *kolom, int kelas);
 void indeksKeHuruf(int indeks, char *huruf);
 int CreateKursi(TeaterData kursiTeater, int kelas);
+
 const char *StatusKursi[] = {"Tersedia", "Dipesan"};
 
 // Fungsi utama untuk membuat kursi berdasarkan data teater
@@ -76,18 +77,7 @@ void indeksKeHuruf(int indeks, char *huruf)
 }
 
 
-// Fungsi untuk mengecek bilangan prima
-bool isPrima(int n)
-{
-    if (n <= 1)
-        return false;
-    for (int i = 2; i <= sqrt(n); i++)
-    {
-        if (n % i == 0)
-            return false;
-    }
-    return true;
-}
+
 
 // Fungsi utama mencari baris dan kolom
 void cariBarisKolom(int jumlahKursi, int *baris, int *kolom, int kelas)
@@ -119,24 +109,6 @@ void cariBarisKolom(int jumlahKursi, int *baris, int *kolom, int kelas)
         TampilkanPesan("Kelas tidak valid.", 2);
         *baris = 0;
         *kolom = 0;
-        return;
-    }
-
-    // Jika angka prima, tetapkan salah satu dimensi sebagai 1
-    if (isPrima(jumlahKursi))
-    {
-        if (jumlahKursi >= minKolom && jumlahKursi <= maxKolom)
-        {
-            *baris = 1;
-            *kolom = jumlahKursi;
-            TampilkanPesan("Jumlah kursi adalah angka prima. Menggunakan 1 baris.", 1);
-        }
-        else
-        {
-            TampilkanPesan("Jumlah kursi prima tidak sesuai dengan batasan kolom.", 2);
-            *baris = 0;
-            *kolom = 0;
-        }
         return;
     }
 

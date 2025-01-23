@@ -179,11 +179,11 @@ void EditTeater()
             {
                 step++;
             }else{
-                if(kategoriIndex == 0){TampilkanPesan("\nKelas Reguler 120 - 200 kursi! ",2);
+                  if(kategoriIndex == 0){TampilkanPesan("\nKelas Reguler Mencakup 120, 150 dan 200 kursi! ",2);
                 }
-                else if(kategoriIndex == 1){TampilkanPesan("\nKelas Premiere 20 - 50 kursi! ",2);
+                else if(kategoriIndex == 1){TampilkanPesan("\nKelas Premiere Mencakup 20, 30 dan 50 kursi! ",2);
                 }
-                else if(kategoriIndex == 2){TampilkanPesan("\nKelas Mini Studio 80 - 100 kursi! ",2);
+                else if(kategoriIndex == 2){TampilkanPesan("\nKelas Mini Studio Mencakup 80, 90 dan 100 kursi! ",2);
                 }
             }
         }
