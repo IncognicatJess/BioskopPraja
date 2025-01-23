@@ -86,7 +86,9 @@
     "deletefnb.h": "c",
     "createkursi.h": "c",
     "updatefnb.h": "c",
-    "readschedule.h": "c"
+    "readschedule.h": "c",
+    "deletekursi.h": "c",
+    "createschedule.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

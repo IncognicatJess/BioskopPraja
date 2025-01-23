@@ -134,7 +134,7 @@ void EditProfil(AkunData *akun, ProfilData *profil)
                 }
 
                 fwrite(profil, sizeof(ProfilData), 1, file);
-                TampilkanPesan("Data berhasil diperbarui!\n", 2);
+                TampilkanPesan("\nData berhasil diperbarui!\n", 2);
             }
             else
             {

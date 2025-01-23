@@ -44,15 +44,14 @@
 #include "CRUD/CRUD_JadwalTayang/UpdateSchedule.h"
 #include "CRUD/CRUD_JadwalTayang/DeleteSchedule.h"
 
-//CRUD KURSI
+// CRUD KURSI
 #include "CRUD/CRUD_Data_Teater/CreateKursi.h"
 #include "CRUD/CRUD_Data_Teater/ReadKursi.h"
 #include "CRUD/CRUD_Data_Teater/DeleteKursi.h"
 #include "CRUD/CRUD_Data_Teater/UpdateKursi.h"
 
-
-
-
+// U SANDI
+#include "CRUD/CRU_Data_Profile/UpdateSandi.h"
 
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
 typedef struct
@@ -144,9 +143,8 @@ void tampilkanProfil(AkunData *akun, ProfilData *profil)
         case 0:
             system("cls");
             ReadProfile(akun, profil);
-            // UpdateAkun();
-            //  TampilkanPesan("Maaf fitur belum tersedia!", 2);
-            TampilkanPesan("Hubungi Admin untuk mengganti username dan password!", 2);
+            GantiSandi(akun, "Profil");
+            // TampilkanPesan("Hubungi Admin untuk mengganti username dan password!", 2);
 
             break;
         case 1:
@@ -171,10 +169,10 @@ void tampilkanDaftarAkun()
     {
         clearScreen();
 
-        const char *menuAkun[] = {"EDIT", "-HAPUS", "+TAMBAH", "KEMBALI"};
+        const char *menuAkun[] = {"EDIT", "-HAPUS", "+TAMBAH", "GANTI SANDI", "KEMBALI"};
 
         const char *Master = "Akun";
-        int pilihan = PilihOpsi(Master, menuAkun, NULL, NULL, 4);
+        int pilihan = PilihOpsi(Master, menuAkun, NULL, NULL, 5);
         ReadAkun();
         switch (pilihan)
         {
@@ -193,9 +191,13 @@ void tampilkanDaftarAkun()
             CreateAkun();
             break;
         case 3:
+            system("cls");
+            GantiSandi(NULL, "Akun");
+            break;
+        case 4:
             break;
         }
-        if (pilihan == 3)
+        if (pilihan == 4)
         {
             break;
         }
@@ -281,7 +283,7 @@ void tampilkanDaftarTeater()
     {
         system("cls");
 
-        const char *menuTeater[] = {"EDIT", "-HAPUS", "+TAMBAH", "KURSI","KEMBALI"};
+        const char *menuTeater[] = {"EDIT", "-HAPUS", "+TAMBAH", "KURSI", "KEMBALI"};
 
         const char *Master = "Teater";
         int pilihan = PilihOpsi(Master, menuTeater, NULL, NULL, 5);
