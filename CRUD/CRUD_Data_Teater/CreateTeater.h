@@ -220,7 +220,7 @@ void BuatTeater()
             }
             else
             {
-                TampilkanPesan("Pembuatan teater dibatalkan.\n", 2);
+                TampilkanPesan("\nPembuatan teater dibatalkan.\n", 2);
             }
             break;
         }

@@ -1,21 +1,11 @@
-typedef struct
-{
-    char ID[10];
-    char namaMakanan[50];
-    char kategori[20];
-    int stok;
-    double harga;
-} FnbDataDelete;
-
-
 void HapusMenu();
 
-int DeleteFnb() {
-    printf("\n==== Hapus Film ====\n");
+int DeleteFnb()
+{
+    printf("\n==== Hapus Menu ====\n");
     HapusMenu();
     return 0;
 }
-
 void HapusMenu() {
     FILE *file = fopen(FILEMENU, "rb");
     FILE *tempFile = fopen(TEMP_FILEMENU, "wb");
@@ -28,19 +18,20 @@ void HapusMenu() {
     }
 
     char idHapus[10];
-    printf("Masukkan ID yang ingin dihapus: ");
+    printf("Masukkan ID menu yang ingin dihapus: ");
     scanf("%9s", idHapus);
 
-    FnbDataDelete menu;
-    FnbDataDelete menuDihapus;
+    FnbData menu;
+    FnbData menuDihapus;
     bool ditemukan = false;
 
-    while (fread(&menu, sizeof(FnbDataDelete), 1, file)) {
+    // Baca semua data dari file
+    while (fread(&menu, sizeof(FnbData), 1, file)) {
         if (strcmp(menu.ID, idHapus) == 0) {
             ditemukan = true;
             menuDihapus = menu;
         } else {
-            fwrite(&menu, sizeof(FnbDataDelete), 1, tempFile);
+            fwrite(&menu, sizeof(FnbData), 1, tempFile);
         }
     }
 
@@ -48,16 +39,23 @@ void HapusMenu() {
     fclose(tempFile);
 
     if (ditemukan) {
-        ReadFnb();
-        // Konfirmasi sebelum penghapusan
-        int konfirmasi = TombolKonfirmasi("FNB","Hapus", &menuDihapus, "FnbData"    );
+        // Tampilkan data menu yang akan dihapus
+        printf("\nMenu yang akan dihapus:\n");
+        printf("ID      : %s\n", menuDihapus.ID);
+        printf("Nama    : %s\n", menuDihapus.namaMakanan);
+        printf("Kategori: %s\n", menuDihapus.kategori);
+        printf("Stok    : %d\n", menuDihapus.stok);
+        printf("Harga   : Rp. %.2f\n", menuDihapus.harga);
+
+        // Konfirmasi penghapusan menggunakan TombolKonfirmasi
+        int konfirmasi = TombolKonfirmasi("Fnb", "Hapus", &menuDihapus, "FnbData");
         if (konfirmasi == 1) { // KONFIRMASI
             remove(FILEMENU);
             rename(TEMP_FILEMENU, FILEMENU);
             printf("Menu dengan ID %s berhasil dihapus.\n", idHapus);
         } else { // BATAL
-            printf("Penghapusan dibatalkan.\n");
             remove(TEMP_FILEMENU);
+            printf("Penghapusan dibatalkan.\n");
         }
     } else {
         remove(TEMP_FILEMENU);

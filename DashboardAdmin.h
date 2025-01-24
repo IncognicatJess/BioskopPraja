@@ -247,9 +247,8 @@ void tampilkanDaftarMenu()
 
         const char *menuFnb[] = {"EDIT", "-HAPUS", "+TAMBAH", "KEMBALI"};
 
-        const char *Master = "Fnb";
-        int pilihan = PilihOpsi(Master, menuFnb, NULL, NULL, 4);
-        ReadFnb();
+      
+        int pilihan = PilihOpsi("Fnb", menuFnb, NULL, NULL, 4);
         switch (pilihan)
         {
         case 0:

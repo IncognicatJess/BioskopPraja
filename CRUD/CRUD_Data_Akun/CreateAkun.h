@@ -70,6 +70,10 @@ void BuatAkun()
             {
                 printf(" >[%s]", pilihanAkun[i]);
             }
+            else if (i == pilihanAkunIndex)
+            {
+                printf("  #[%s] ", pilihanAkun[i]);
+            }
             else
             {
                 printf("  [%s]", pilihanAkun[i]);
@@ -85,6 +89,10 @@ void BuatAkun()
             if (i == jabatanIndex && step == 1)
             {
                 printf(" >[%s]", jabatanOptions[i]);
+            }
+            else if (i == jabatanIndex)
+            {
+                printf("  #[%s] ", jabatanOptions[i]);
             }
             else
             {
@@ -173,7 +181,7 @@ void BuatAkun()
             }
             else
             {
-    
+
                 rewind(file);
                 bool idTerpakai[MAX_ACCOUNTS] = {false};
                 AkunData temp;
@@ -195,7 +203,7 @@ void BuatAkun()
                 }
                 snprintf(akunBaru.ID, sizeof(akunBaru.ID), "ACT%03d", idBaru);
 
-                //Cek apakah username sudah ada
+                // Cek apakah username sudah ada
                 if (UsernameUnik(username, file))
                 {
                     fwrite(&akunBaru, sizeof(AkunData), 1, file);

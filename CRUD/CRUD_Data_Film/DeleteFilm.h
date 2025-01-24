@@ -1,7 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #define TEMP_FILEFILM "./Database/Film/TempDataFilm.dat"
 
 void HapusFilm();
-int BandingkanID(const void *a, const void *b);
+int BandingkanIDFilm(const void *a, const void *b);
 
 int DeleteFilm() {
     printf("\n==== Hapus Film ====\n");
@@ -21,7 +25,7 @@ void HapusFilm() {
     }
 
     char idHapus[10];
-    printf("Masukkan ID yang ingin dihapus: ");
+    printf("Masukkan ID film yang ingin dihapus: ");
     scanf("%9s", idHapus);
 
     MovieData film;
@@ -41,19 +45,23 @@ void HapusFilm() {
     fclose(tempFile);
 
     if (ditemukan) {
-        ReadFilm();
-        // Konfirmasi sebelum penghapusan
-        int konfirmasi = TombolKonfirmasi("Film","Hapus", &filmDihapus, "MovieData");
+        // Tampilkan data film yang akan dihapus
+        printf("\nFilm yang akan dihapus:\n");
+        printf("ID: %s | Judul: %s | Genre: %s | Tahun: %d | Durasi: %.0f menit | Harga: %.2f\n",
+               filmDihapus.ID, filmDihapus.judul, filmDihapus.genre, filmDihapus.tahunRelease, filmDihapus.durasi, filmDihapus.harga);
+
+        // Konfirmasi penghapusan
+        int konfirmasi = TombolKonfirmasi("Film", "Hapus", &filmDihapus, "MovieData");
         if (konfirmasi == 1) { // KONFIRMASI
             remove(FILEFILM);
             rename(TEMP_FILEFILM, FILEFILM);
-            printf("Film dengan ID %s berhasil dihapus.\n", idHapus);
+            TampilkanPesan("\nFilm berhasil dihapus.\n", 2);
         } else { // BATAL
-            printf("Penghapusan dibatalkan.\n");
             remove(TEMP_FILEFILM);
+            TampilkanPesan("\nPenghapusan dibatalkan.\n", 2);
         }
     } else {
         remove(TEMP_FILEFILM);
-        printf("Film dengan ID %s tidak ditemukan.\n", idHapus);
+        TampilkanPesan("\nFilm dengan ID tersebut tidak ditemukan.\n", 2);
     }
 }

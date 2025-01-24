@@ -8,7 +8,7 @@ void tampilkanFilmKasir();
 int tampilkanMenuTiketNavigasi();
 void cariFilmByIDOrJudul(const char *keyword);
 
-
+#include "Transaksi/coba1.h"
 
 
 // Fungsi untuk menampilkan menu dengan navigasi arrow key
@@ -82,7 +82,8 @@ void tampilkanPemesananTiket()
 {
     while (1)
     {
-        clearScreen();
+        system("cls");
+        transaksiFnb();
     }
 }
 /*
@@ -140,7 +141,7 @@ void tampilkanMenuTiket(AkunData *akun, ProfilData *profil)
             tampilkanProfilKasirTiket(akun, profil);
             break;
         case 2:
-            // tampilkanPemesanan();
+            tampilkanPemesananTiket();
             break;
         case 3:
             // tampilkanDaftarJadwalTayang();
