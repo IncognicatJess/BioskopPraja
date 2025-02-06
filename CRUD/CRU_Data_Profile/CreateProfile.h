@@ -72,6 +72,14 @@ void EditProfil(AkunData *akun, ProfilData *profil)
         printf("TTL     : %s%s, %02d/%02d/%4d\n", step == 1 ? ">" : "", tempat, tanggal, bulan, tahun);
         printf("NO HP   : %s%s\n\n", step == 3 ? ">" : "", noHP);
 
+           char key = getch();
+
+        if (key == 27) { // ESC untuk batal
+            TampilkanPesan("\nPengeditan profil dibatalkan.\n", 2);
+            fclose(file);
+            return;
+        }
+
         switch (step)
         {
         case 0:

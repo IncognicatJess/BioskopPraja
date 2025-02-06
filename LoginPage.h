@@ -8,6 +8,7 @@
 #define SCHEDULEDAT "./Database/JadwalTayang/DataJadwalTayang.dat"
 #define TEMP_SCHEDULEDAT "./Database/JadwalTayang/TempJadwalTayang.dat"
 #define SEATDAT "./Database/Teater/DataKursi.dat"
+#define TRANSCFILE "./Transaksi/Tiket.dat"
 
 
 // LIBRARY STANDARD
@@ -23,11 +24,35 @@
 #include <time.h>
 #include <math.h>
 
+// LIBRARY EXTENDED
+
+
+/*
+// Fungsi untuk mengatur ukuran CMD ke 1366x720 dan mencegah resize
+void setConsoleReso() {
+    HWND hwnd = GetConsoleWindow(); // Dapatkan handle jendela CMD
+    if (hwnd != NULL) {
+        // Atur ukuran CMD ke 1366x720 di posisi (50,50) dari pojok kiri atas
+        MoveWindow(hwnd, 50, 50, 1366, 720, TRUE);
+
+        // Hilangkan fitur resize (drag), tombol maximize, dan border resize
+        LONG style = GetWindowLong(hwnd, GWL_STYLE);
+        style &= ~WS_SIZEBOX;   // Hilangkan fitur resize (drag)
+        style &= ~WS_MAXIMIZEBOX; // Hilangkan tombol maximize
+        SetWindowLong(hwnd, GWL_STYLE, style);
+
+        // Terapkan perubahan
+        SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+    }
+}
+
+*/
+
 
 // #include "CRUD/CRUD_Data_Akun/ReadAkun.h" // Untuk membaca akun dari file
 
 void loginPage();
-
+ //setConsoleReso(); // Atur ukuran CMD sebelum menampilkan login
 // Struct AkunData untuk validasi login
 typedef struct
 {
@@ -69,7 +94,7 @@ typedef struct
     char status[50];
 } MovieData;
 
-typedef struct 
+typedef struct
 {
     char ID[10];
     int noTeater;
@@ -107,9 +132,10 @@ typedef struct
     int menit;
 } JamTayangAkhir;
 
-
 typedef struct {
     char ID[10];
+    char IDFilm[10];
+    char IDTeater[10];
     char judulFilm[50];
     int Teater;
     int durasi;
@@ -127,79 +153,146 @@ typedef struct
     char status[10]; // Status kursi, default "Tersedia"
 } KursiData;
 
+typedef struct
+{
+    int id;
+    char nama[50];
+    char metode[10];
+    char konfir[15];
+    char tanggal[15];
+    double harga;
+    int jumlah;
+    float total;
+} ListMakanan;
 
 // FUNGSI EXTENDED
 #include "TampilkanJudul.h"
 // #include "TampungID.h"
 #include "TampilkanPesan.h"
 #include "HidePassword.h"
+#include "ReadNowShowing.h"
 #include "TombolOpsi.h"
 #include "TombolKonfirmasi.h"
-#include "DashboardKasirTiket.h"
 #include "DashboardAdmin.h" // Dashboard admin
-#include "cobadesain.h"
+#include "DashboardKasirFnb.h"
+#include "DashboardKasirTiket.h"
 #include "Utility.h"
+
 
 // Prototipe fungsi
 bool validasiLogin(const char *username, const char *password, AkunData *akun);
-void dashboardUser(const AkunData *akun);
+void dashboardUser(AkunData *akun);
 void loginPage();
 
 // Fungsi utama
 void loginPage()
 {
+    enable_ansi_support();
+    setConsoleSize();
+    system("cls"); // Membersihkan layar sebelum menampilkan tampilan login
+    takeDrawBox();
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0);
+    judul();
+    
     char username[50], password[50];
     AkunData akun;
-    ProfilData profil;
     int attempt = 3; // Jumlah percobaan login
 
     while (attempt > 0)
     {
-        system("cls");
-        tampilkanJudul();
+        // Judul LOGIN
+        gotoxy(30, 16);
+        printf("\033[37;48;2;197;148;1m LOGIN\033[0m");
 
-        // Input username
-        printf("Username: ");
-        scanf("%s", username);
+        gotoxy(30, 20);
+        printf("\033[37;48;2;197;148;1m USERNAME : \033[0m");
+        textBoxBordir(30, 21, 30, 2); // Kotak input username
 
-        // Input password
-        printf("Password: ");
+        gotoxy(30, 24);
+        printf("\033[37;48;2;197;148;1m PASSWORD : \033[0m");
+        textBoxBordir(30, 25, 30, 2); // Kotak input password
 
-        // Fungsi menyembunyikan Password
-        HidePW(password, sizeof(password));
+        gotoxy(54, 29);
+        printf("\033[37;48;2;197;148;1m login : \033[0m");
+        textBoxBordir(53, 28, 7, 2); // Kotak login
 
-        // Validasi login
-        if (validasiLogin(username, password, &akun))
+        gotoxy(32, 22);
+        printf("\033[30;48;2;197;148;1m"); // Set latar belakang coklat keemasan
+        fgets(username, sizeof(username), stdin);
+        username[strcspn(username, "\n")] = '\0'; // Hapus newline
+        printf("\033[0m");                        // Reset warna setelah input
+
+        gotoxy(32, 26);
+        printf("\033[30;48;2;197;148;1m");  // Set latar belakang coklat keemasan
+        HidePW(password, sizeof(password)); // Sembunyikan password
+        printf("\033[0m");                  // Reset warna setelah input
+
+        // Fokus ke kotak login
+        gotoxy(55, 29);
+        printf("\033[30;48;2;197;148;1m"); // Set latar belakang coklat keemasan
+        char loginConfirm;
+        loginConfirm = getch(); // Tunggu input dari pengguna (misalnya, Enter)
+        printf("\033[0m");      // Reset warna setelah input
+
+        // Jika pengguna menekan Enter di kotak login
+        if (loginConfirm == 13) // 13 adalah kode ASCII untuk Enter
         {
-            // profil = validasiID(username, password); // Simpan profil yang dikembalikan
-            if (strlen(akun.ID) > 0)
-            { // Cek apakah ID tidak kosong
-                if (strcmp(akun.akun, "Admin") == 0)
-                {
-                    DashboardAdmin(&akun); // Kirim profil ke DashboardAdmin
+            // Validasi login
+            if (validasiLogin(username, password, &akun))
+            {
+                if (strlen(akun.ID) > 0)
+                { // Cek apakah ID tidak kosong
+                    if (strcmp(akun.akun, "Admin") == 0)
+                    {
+                        DashboardAdmin(&akun); // Buka dashboard admin
+                    }
+                    else
+                    {
+                        dashboardUser(&akun); // Buka dashboard user
+                    }
+                    return; // Keluar setelah login berhasil
                 }
                 else
                 {
-                    DashboardUser(&akun);
+                    gotoxy(20, 25);
+                    printf("\033[31mID tidak ditemukan.\033[0m"); // Pesan error merah
+                    Sleep(2000);                                  // Tunggu 2 detik
                 }
-                break; // Keluar setelah login berhasil
             }
             else
             {
-                printf("ID tidak ditemukan.\n");
+                attempt--;
+                char pesan[100];
+                snprintf(pesan, sizeof(pesan), "\033[30;48;2;197;148;1mUsername atau password salah! %d percobaan tersisa.\033[0m", attempt);
+                gotoxy(30, 55);
+                printf("%s", pesan); // Tampilkan pesan error
+                Sleep(2000);         // Tunggu 2 detik
+
+                // Membersihkan area input username dan password
+                gotoxy(32, 22);
+                printf("\033[30;48;2;197;148;1m"); // Set latar belakang coklat keemasan
+                for (int i = 0; i < sizeof(username); i++)
+                {
+                    printf(" "); // Mengisi dengan spasi untuk menghapus input sebelumnya
+                }
+                printf("\033[0m"); // Reset warna setelah input
+
+                gotoxy(32, 26);
+                printf("\033[30;48;2;197;148;1m"); // Set latar belakang coklat keemasan
+                for (int i = 0; i < sizeof(password); i++)
+                {
+                    printf(" "); // Mengisi dengan spasi untuk menghapus input sebelumnya
+                }
+                printf("\033[0m"); // Reset warna setelah input
             }
-        }
-        else
-        {
-            attempt--;
-            char pesan[100];
-            snprintf(pesan, sizeof(pesan), "Username atau password salah! %d percobaan tersisa.", attempt);
-            TampilkanPesan(pesan, 2);
         }
     }
 
-    // Jika lebih dari 3 kali
-    printf("Login gagal. Silakan coba lagi nanti.\n");
+    // Jika lebih dari 3 kali gagal
+    gotoxy(20, 25);
+    printf("\033[31mLogin gagal. Silakan coba lagi nanti.\033[0m");
+    Sleep(2000); // Tunggu 2 detik sebelum keluar
+    exit(0);     // Keluar dari program
 }
 
 // Fungsi validasi login
@@ -226,48 +319,27 @@ bool validasiLogin(const char *username, const char *password, AkunData *akun)
     return false;
 }
 
-// void dashboardUser(const AkunData *akun)
-// {
-//     system("cls");
-//     tampilkanJudul();
-//     if (strcmp(akun->jabatan, "Kasir Tiket") == 0)
-//     {
-//         printf("Selamat datang, %s (Kasir Tiket).\n", akun->username);
-//         printf("Fitur ini belum tersedia.\n");
-//     }
-//     else if (strcmp(akun->jabatan, "Kasir FNB") == 0)
-//     {
-//         printf("Selamat datang, %s (Kasir F&B).\n", akun->username);
-//         printf("Fitur ini belum tersedia.\n");
-//     }
-//     else
-//     {
-//         printf("Jabatan tidak dikenali.\n");
-//     }
-//     printf("Tekan Enter untuk keluar...");
-//     getchar();
-//     getchar();
-// }
+void dashboardUser(AkunData *akun)
+{
+    system("cls");
+    tampilkanJudul();
 
-// void tombolKeluar()
-// {
-//     system("cls");
-//     drawBox(10, 5, 30, 5, " KELUAR PROGRAM ");
-//     gotoxy(12, 11); // Tempatkan pesan di bawah tombol
-//     printf("Tekan Enter untuk keluar...");
-//     gotoxy(12, 12);
-//     printf("Tekan ESC untuk kembali.");
+    if (strcmp(akun->jabatan, "Kasir Tiket") == 0)
+    {
+        printf("Selamat datang, %s (Kasir Tiket).\n", akun->username);
+        DashboardUserTiket(akun);
+    }
+    else if (strcmp(akun->jabatan, "Kasir FNB") == 0)
+    {
+        printf("Selamat datang, %s (Kasir F&B).\n", akun->username);
+        DashboardUserFnb(akun);
+    }
+    else
+    {
+        printf("Jabatan tidak dikenali.\n");
+    }
 
-//     char key = getch(); // Menunggu input tombol
-//     if (key == '\r')
-//     { // Enter
-//         system("cls");
-//         printf("Terima kasih telah menggunakan program ini.\n");
-//         sleep(2);
-//         exit(0);
-//     }
-//     else if (key == 27)
-//     {           // ESC
-//         return; // Kembali ke menu sebelumnya
-//     }
-// }
+    printf("Tekan Enter untuk keluar...");
+    getchar();
+    getchar();
+}

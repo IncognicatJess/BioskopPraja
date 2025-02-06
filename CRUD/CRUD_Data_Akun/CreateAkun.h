@@ -105,6 +105,15 @@ void BuatAkun()
         printf("Sandi   : %s%s\n\n", step == 3 ? ">" : "", sandi);
 
         char key = getch();
+
+        // Tombol "Esc" untuk membatalkan
+        if (key == 27) // 27 adalah kode ASCII untuk tombol "Esc"
+        {
+            TampilkanPesan("\nProses pembuatan akun dibatalkan.\n", 2);
+            fclose(file);
+            return; // Keluar dari fungsi
+        }
+
         if (step == 0)
         {
             if (key == 75)

@@ -2,13 +2,14 @@
 void clearScreen();
 void tampilkanProfilKasirTiket();
 void tampilkanPemesananTiket();
-void tampilkanJadwalTayang();
+void tampilkanJadwalTayangTiket();
 void tampilkanLaporanTiket();
 void tampilkanFilmKasir();
 int tampilkanMenuTiketNavigasi();
 void cariFilmByIDOrJudul(const char *keyword);
+int ReadSchedule();
 
-#include "Transaksi/coba1.h"
+#include "Transaksi/transaksiTiket.h"
 
 
 // Fungsi untuk menampilkan menu dengan navigasi arrow key
@@ -58,17 +59,56 @@ void tampilkanProfilKasirTiket(AkunData *akun, ProfilData *profil)
     {
         clearScreen();
 
-        const char *menuProfil[] = {"KEMBALI"};
+         const char *menuProfil[] = {"GANTI SANDI", "EDIT", "KEMBALI"};
 
-        int pilihan = PilihOpsi("Profil", menuProfil, akun, profil, 1);
+        int pilihan = PilihOpsi("Profil", menuProfil, akun, profil, 3);
 
         ReadProfile(akun, profil);
 
-        switch (pilihan)
+       switch (pilihan)
         {
         case 0:
             system("cls");
             ReadProfile(akun, profil);
+            GantiSandi(akun, "Profil");
+
+            break;
+        case 1:
+            system("cls");
+            ReadProfile(akun, profil);
+            EditProfil(akun, profil);
+            break;
+        case 2:
+            break;
+        }
+        if (pilihan == 2)
+        {
+            break;
+        }
+    }
+}
+
+
+// Fungsi untuk menampilkan daftar akun
+void tampilkanPemesananTiket()
+{
+      while (1)
+    {
+        clearScreen();
+
+         const char *menuPemesanan[] = {"KEMBALI", "PEMESANAN"};
+
+        int pilihan = PilihOpsi("ScheduleShowing", menuPemesanan, NULL, NULL, 2);
+
+
+       switch (pilihan)
+        {
+        case 0:
+            break;
+        case 1:
+           system("cls");
+           PemesananTiket();
+            break;
         }
         if (pilihan == 0)
         {
@@ -77,58 +117,68 @@ void tampilkanProfilKasirTiket(AkunData *akun, ProfilData *profil)
     }
 }
 
-// Fungsi untuk menampilkan daftar akun
-void tampilkanPemesananTiket()
+void tampilkanJadwalTayangTiket()
 {
     while (1)
     {
         system("cls");
-        transaksiFnb();
-    }
-}
-/*
-void tampilkanJadwalTayang()
-{
-    while (1)
-    {
 
-    }
-}
-*/
-void tampilkanFilmKasir()
-{
-    while (1) {
-        system("cls");
+        const char *menuJadwalTayang[] = {"KEMBALI"};
 
-        // Input pencarian
-        char keyword[50];
-        printf("\nMasukkan ID atau Judul Film: ");
-        fgets(keyword, sizeof(keyword), stdin);
-        keyword[strcspn(keyword, "\n")] = '\0'; // Hapus newline
+        const char *Master = "Schedule";
+        int pilihan = PilihOpsi(Master, menuJadwalTayang, NULL, NULL, 1);
+        
 
-        // Jika pengguna ingin keluar
-        if (strcmp(keyword, "EXIT") == 0) {
+        switch (pilihan)
+        {
+        case 0:
+           // system("cls");
+            //Pencarian("Schedule");
             break;
         }
+        if (pilihan == 0)
+        {
+            break;
+        }
+    }
+}
 
-        // Cari film berdasarkan input
-        cariFilmByIDOrJudul(keyword);
+void tampilkanFilmKasir()
+{
+    while (1)
+    {
+        system("cls");
 
-        printf("\nTekan Enter untuk kembali ke pencarian...");
-        getchar();
+        const char *menuJadwalTayang[] = {"KEMBALI"};
+
+        const char *Master = "Film";
+        int pilihan = PilihOpsi(Master, menuJadwalTayang, NULL, NULL, 1);
+        
+       //ReadFilm();
+
+        switch (pilihan)
+        {
+        case 0:
+           // system("cls");
+            //Pencarian("Schedule");
+            break;
+        }
+        if (pilihan == 0)
+        {
+            break;
+        }
     }
 }
 
 // Fungsi untuk menampilkan laporan transaksi
 void tampilkanLaporanTiket()
 {
-    // while (1)
-   
+    TampilkanPesan("Maaf fitur belum tersedia!",2);
 }
 
 // Fungsi untuk menampilkan menu utama
 void tampilkanMenuTiket(AkunData *akun, ProfilData *profil)
-{   
+{
     int pilihan;
 
     do
@@ -144,13 +194,13 @@ void tampilkanMenuTiket(AkunData *akun, ProfilData *profil)
             tampilkanPemesananTiket();
             break;
         case 3:
-            // tampilkanDaftarJadwalTayang();
+            tampilkanJadwalTayangTiket();
             break;
         case 4:
             tampilkanFilmKasir();
             break;
         case 5:
-            // tampilkanLaporanTiket();
+            tampilkanLaporanTiket();
             break;
         case 6:
             TampilkanPesan("Logging out...\n", 1);
@@ -165,7 +215,7 @@ void tampilkanMenuTiket(AkunData *akun, ProfilData *profil)
 }
 
 // MAIN
-int DashboardUser(AkunData *akun)
+int DashboardUserTiket(AkunData *akun)
 {
 
     ProfilData profil = {0};

@@ -1,21 +1,26 @@
-#ifndef DELETE_SCHEDULE_H
-#define DELETE_SCHEDULE_H
+int Pencarian(const char *master, void *data, void *data2);
+int ReadAkun();
+int ReadFilm();
+int ReadFnb();
+void ReadProfile(AkunData *akun, ProfilData *profil);
+int ReadTeater();
+int ReadSchedule();
 
-
-// Deklarasi fungsi
-void HapusSchedule();
-
-int DeleteSchedule()
+int Pencarian(const char *master, void *data, void *data2)
 {
-    printf("\n==== Hapus Jadwal ====\n");
-    HapusSchedule();
-    return 0;
-}
+    int indeks = 0;
+    char key;
 
-void HapusSchedule()
-{
-    FILE *file = fopen(SCHEDULEDAT, "rb");
-    FILE *tempFile = fopen(TEMP_SCHEDULEDAT, "wb");
+    while (1)
+    {
+        system("cls");
+
+        if (strcmp(master, "Schedule") == 0)
+        {
+            ReadSchedule();
+
+            FILE *file = fopen(SCHEDULEDAT, "rb");
+            FILE *tempFile = fopen(TEMP_SCHEDULEDAT, "wb");
 
     if (!file)
     {
@@ -28,7 +33,7 @@ void HapusSchedule()
     }
 
     ReadSchedule();
-    char idHapus[10] = {0};
+    char idCari[10] = {0};
     printf("Masukkan ID jadwal yang ingin dihapus: ");
     
      // Input ID F&B  dan deteksi "Esc"
@@ -39,17 +44,16 @@ void HapusSchedule()
         if (ch == 27) { // Jika tombol "Esc" ditekan (kode ASCII 27)
             TampilkanPesan("\nProses penghapusan jadwal tayang dibatalkan.\n", 2);
             fclose(file);
-            fclose(tempFile);
             remove(TEMP_SCHEDULEDAT);
             return; // Keluar dari fungsi
         } else if (ch == '\r') { // Jika tombol "Enter" ditekan
-            idHapus[i] = '\0'; // Akhiri string
+            idCari[i] = '\0'; // Akhiri string
             break;
         } else if (ch == 8 && i > 0) { // Jika tombol "Backspace" ditekan
             i--;
             printf("\b \b"); // Hapus karakter terakhir dari layar
         } else if (i < 9 && (isalnum(ch) || ch == ' ')) { // Hanya terima alfanumerik atau spasi
-            idHapus[i++] = ch;
+            idCari[i++] = ch;
             putchar(ch); // Tampilkan karakter ke layar
         }
     }
@@ -99,6 +103,62 @@ void HapusSchedule()
         printf("Jadwal dengan ID %s tidak ditemukan.\n", idHapus);
         sleep(2);
     }
-}
 
-#endif // DELETE_SCHEDULE_H
+
+
+
+
+
+
+
+
+        }
+        else if (strcmp(master, "Film") == 0)
+        {
+            ReadFilm();
+        }
+        else if (strcmp(master, "Profil") == 0 && data != NULL)
+        {
+            AkunData *akun = (AkunData *)data;
+            ProfilData *profil = (ProfilData *)data2;
+            ReadProfile(akun, profil);
+        }
+        else if (strcmp(master, "Teater") == 0)
+        {
+            ReadTeater();
+        }
+        else if (strcmp(master, "Fnb") == 0)
+        {
+            ReadFnb();
+        }
+        else if (strcmp(master, "Schedule") == 0)
+        {
+            ReadSchedule();
+            
+        }
+        else
+        {
+            TampilkanPesan("Data Belum Tersedia!\n", 1);
+        }
+
+        for (int i = 0; i < jumlah; i++)
+        {
+            if (i == indeks)
+            {
+                printf(" >[%s]\n", opsi[i]);
+            }
+            else
+            {
+                printf("  [%s]\n", opsi[i]);
+            }
+        }
+
+        key = getch();
+        if (key == 75 || key == 72) // Panah kiri
+            indeks = (indeks - 1 + jumlah) % jumlah;
+        if (key == 77 || key == 80) // Panah kanan
+            indeks = (indeks + 1) % jumlah;
+        if (key == '\r') // Enter
+            return indeks;
+    }
+}

@@ -22,9 +22,31 @@ void HapusAkun() {
         return;
     }
 
-    char idHapus[10];
-    printf("Masukkan ID yang ingin dihapus: ");
-    scanf("%9s", idHapus);
+    char idHapus[10] = {0};
+    printf("Masukkan ID Akun yang ingin dihapus: ");
+    
+    // Input ID film dan deteksi "Esc"
+    int i = 0;
+    while (1) {
+        char ch = getch(); // Ambil input karakter per karakter
+
+        if (ch == 27) { // Jika tombol "Esc" ditekan (kode ASCII 27)
+            TampilkanPesan("\nProses penghapusan akun dibatalkan.\n", 2);
+            fclose(file);
+            fclose(tempFile);
+            remove(TEMP_FILENAME);
+            return; // Keluar dari fungsi
+        } else if (ch == '\r') { // Jika tombol "Enter" ditekan
+            idHapus[i] = '\0'; // Akhiri string
+            break;
+        } else if (ch == 8 && i > 0) { // Jika tombol "Backspace" ditekan
+            i--;
+            printf("\b \b"); // Hapus karakter terakhir dari layar
+        } else if (i < 9 && (isalnum(ch) || ch == ' ')) { // Hanya terima alfanumerik atau spasi
+            idHapus[i++] = ch;
+            putchar(ch); // Tampilkan karakter ke layar
+        }
+    }
 
     // Validasi untuk ID yang tidak bisa dihapus
     if (strcmp(idHapus, "ACT001") == 0) {

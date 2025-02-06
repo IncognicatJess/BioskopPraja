@@ -49,9 +49,38 @@ void PerbaruiJadwal()
     ReadSchedule();
 
     // Cari record yang ingin di-edit
-    char idCari[10];
+    char idCari[10] = {0};
     printf("Masukkan ID jadwal yang ingin diperbarui: ");
-    scanf("%9s", idCari);
+    
+    
+    int i = 0;
+    while (1)
+    {
+        char ch = getch(); // Ambil input karakter per karakter
+
+        if (ch == 27)
+        { // Jika tombol "Esc" ditekan (kode ASCII 27)
+            TampilkanPesan("\nProses pembaruan jadwal tayang dibatalkan.\n", 2);
+            fclose(scheduleFile);
+            return; // Keluar dari fungsi
+        }
+        else if (ch == '\r')
+        {                      // Jika tombol "Enter" ditekan
+            idCari[i] = '\0'; // Akhiri string
+            break;
+        }
+        else if (ch == 8 && i > 0)
+        { // Jika tombol "Backspace" ditekan
+            i--;
+            printf("\b \b"); // Hapus karakter terakhir dari layar
+        }
+        else if (i < 9 && (isalnum(ch) || ch == ' '))
+        { // Hanya terima alfanumerik atau spasi
+            idCari[i++] = ch;
+            putchar(ch); // Tampilkan karakter ke layar
+        }
+    }
+
 
     // Mencari jadwal berdasarkan ID
     int targetIndex = -1;
@@ -117,6 +146,15 @@ void PerbaruiJadwal()
         printf("\n");
 
         char key = getch();
+
+        
+        // Tombol "Esc" untuk membatalkan
+        if (key == 27) // 27 adalah kode ASCII untuk tombol "Esc"
+        {
+            TampilkanPesan("\nProses pembaruan jadwal tayang dibatalkan.\n", 2);
+            fclose(scheduleFile);
+            return; // Keluar dari fungsi
+        }
 
         if (step == 0)
         { // Input judul film

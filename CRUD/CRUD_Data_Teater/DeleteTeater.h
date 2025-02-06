@@ -4,7 +4,6 @@ void HapusTeater();
 int BandingkanIDTeater(const void *a, const void *b);
 int DeleteKursi(char idHapus[10]);
 
-
 int DeleteTeater() {
     ReadTeater();
     printf("\n==== Hapus Teater ====\n");
@@ -23,22 +22,48 @@ void HapusTeater() {
         return;
     }
 
-    char idHapus[10];
-
-    
-    printf("\n\n");
+    char idHapus[10] = {0};
     printf("Masukkan ID teater yang ingin dihapus: ");
-    scanf("%9s", idHapus);
+    
+    // Input ID F&B  dan deteksi "Esc"
+    int i = 0;
+    while (1) {
+        char ch = getch(); // Ambil input karakter per karakter
 
-    // Validasi untuk ID teater yang tidak bisa dihapus
-    /*
-    if (strcmp(idHapus, "TTR001") == 0) {
-        TampilkanPesan("ID TTR001 tidak dapat dihapus karena merupakan data teater utama.\n", 2);
-        fclose(file);
-        fclose(tempFile);
-        remove(TEMP_TEATERDAT);
-        return;
-    }*/
+        if (ch == 27) { // Jika tombol "Esc" ditekan (kode ASCII 27)
+            TampilkanPesan("\nProses penghapusan teater dibatalkan.\n", 2);
+            fclose(file);
+            fclose(tempFile);
+            remove(TEMP_TEATERDAT);
+            return; // Keluar dari fungsi
+        } else if (ch == '\r') { // Jika tombol "Enter" ditekan
+            idHapus[i] = '\0'; // Akhiri string
+            break;
+        } else if (ch == 8 && i > 0) { // Jika tombol "Backspace" ditekan
+            i--;
+            printf("\b \b"); // Hapus karakter terakhir dari layar
+        } else if (i < 9 && (isalnum(ch) || ch == ' ')) { // Hanya terima alfanumerik atau spasi
+            idHapus[i++] = ch;
+            putchar(ch); // Tampilkan karakter ke layar
+        }
+    }
+
+    // Validasi: Cek apakah teater terdaftar di jadwal tayang
+    FILE *fileJadwal = fopen(SCHEDULEDAT, "rb");
+    if (fileJadwal) {
+        ScheduleData jadwal;
+        while (fread(&jadwal, sizeof(ScheduleData), 1, fileJadwal)) {
+            if (strcmp(jadwal.IDTeater, idHapus) == 0) {
+                fclose(fileJadwal);
+                fclose(file);
+                fclose(tempFile);
+                remove(TEMP_TEATERDAT);
+                TampilkanPesan("\nTeater tidak dapat dihapus karena masih terdaftar di jadwal tayang.\n", 2);
+                return;
+            }
+        }
+        fclose(fileJadwal);
+    }
 
     TeaterData teater;
     TeaterData teaterDihapus;
@@ -57,7 +82,6 @@ void HapusTeater() {
     fclose(tempFile);
 
     if (ditemukan) {
-      //  ReadTeater(); // Tampilkan data teater untuk memastikan keberadaan ID
         // Konfirmasi sebelum penghapusan
         int konfirmasi = TombolKonfirmasi("Teater", "Hapus", &teaterDihapus, "TeaterData");
         if (konfirmasi == 1) { // KONFIRMASI
@@ -67,7 +91,7 @@ void HapusTeater() {
             printf("Teater dengan ID %s berhasil dihapus.\n", idHapus);
             sleep(2);
         } else { // BATAL
-            TampilkanPesan("Penghapusan dibatalkan.\n",2);
+            TampilkanPesan("Penghapusan dibatalkan.\n", 2);
             remove(TEMP_TEATERDAT);
         }
     } else {

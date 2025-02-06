@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h> // Untuk getch()
 
 #define TEMP_FILEFILM "./Database/Film/TempDataFilm.dat"
+#define SCHEDULEDAT "./Database/JadwalTayang/DataJadwalTayang.dat"
 
 void HapusFilm();
 int BandingkanIDFilm(const void *a, const void *b);
@@ -24,9 +26,48 @@ void HapusFilm() {
         return;
     }
 
-    char idHapus[10];
-    printf("Masukkan ID film yang ingin dihapus: ");
-    scanf("%9s", idHapus);
+    char idHapus[10] = {0}; // Inisialisasi array untuk menyimpan ID
+    printf("Masukkan ID film yang ingin dihapus (tekan Esc untuk membatalkan): ");
+
+    // Input ID film dengan fgets dan deteksi "Esc"
+    int i = 0;
+    while (1) {
+        char ch = getch(); // Ambil input karakter per karakter
+
+        if (ch == 27) { // Jika tombol "Esc" ditekan (kode ASCII 27)
+            TampilkanPesan("\nProses penghapusan film dibatalkan.\n", 2);
+            fclose(file);
+            fclose(tempFile);
+            remove(TEMP_FILEFILM);
+            return; // Keluar dari fungsi
+        } else if (ch == '\r') { // Jika tombol "Enter" ditekan
+            idHapus[i] = '\0'; // Akhiri string
+            break;
+        } else if (ch == 8 && i > 0) { // Jika tombol "Backspace" ditekan
+            i--;
+            printf("\b \b"); // Hapus karakter terakhir dari layar
+        } else if (i < 9 && (isalnum(ch) || ch == ' ')) { // Hanya terima alfanumerik atau spasi
+            idHapus[i++] = ch;
+            putchar(ch); // Tampilkan karakter ke layar
+        }
+    }
+
+    // Validasi: Cek apakah film terdaftar di jadwal tayang
+    FILE *fileJadwal = fopen(SCHEDULEDAT, "rb");
+    if (fileJadwal) {
+        ScheduleData jadwal;
+        while (fread(&jadwal, sizeof(ScheduleData), 1, fileJadwal)) {
+            if (strcmp(jadwal.IDFilm, idHapus) == 0) {
+                fclose(fileJadwal);
+                fclose(file);
+                fclose(tempFile);
+                remove(TEMP_FILEFILM);
+                TampilkanPesan("\nFilm tidak dapat dihapus karena masih terdaftar di jadwal tayang.\n", 2);
+                return;
+            }
+        }
+        fclose(fileJadwal);
+    }
 
     MovieData film;
     MovieData filmDihapus;

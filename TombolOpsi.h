@@ -18,6 +18,9 @@ int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, i
         if (strcmp(master, "Akun") == 0)
         {
             ReadAkun();
+        }else if (strcmp(master,"ScheduleShowing")==0)
+        {
+            ReadScheduleShowing();
         }
         else if (strcmp(master, "Film") == 0)
         {

@@ -6,7 +6,6 @@
 // #define SCHEDULEDAT "./Database/JadwalTayang/DataJadwalTayang.dat"
 #define MAX_SCHEDULE 1000
 
-
 // Function declarations
 void BuatJadwalTayang();
 bool ValidasiTanggal(ScheduleData tanggal);
@@ -28,7 +27,7 @@ void BuatJadwalTayang()
     ScheduleData jadwalBaru;
     memset(&jadwalBaru, 0, sizeof(ScheduleData));
 
-    char judulFilm[50] = "";
+    char IDFilm[50] = "";
     char noTeaterStr[4] = "";
     char tanggalStr[11] = "";
     char jamStr[6] = "";
@@ -48,7 +47,7 @@ void BuatJadwalTayang()
         printf("\n\n");
         printf("==== Tambah Jadwal Tayang ====\n");
 
-        printf("\nJudul Film : %s%s", step == 0 ? ">" : "", judulFilm);
+        printf("\nID Film    : %s%s", step == 0 ? ">" : "", IDFilm);
         printf("\nNo Teater  : %s%s", step == 1 ? ">" : "", noTeaterStr);
         printf("\nTanggal    : %s%s", step == 2 ? ">" : "", tanggalStr);
         printf("\nJam        : %s%s", step == 3 ? ">" : "", jamStr);
@@ -67,20 +66,28 @@ void BuatJadwalTayang()
 
         char key = getch();
 
+        // Tombol "Esc" untuk membatalkan
+        if (key == 27) // 27 adalah kode ASCII untuk tombol "Esc"
+        {
+            TampilkanPesan("\nProses pembuatan jadwal dibatalkan.\n", 2);
+            fclose(scheduleFile);
+            return; // Keluar dari fungsi
+        }
+
         if (step == 0)
-        { // Input judul film
+        { // Input ID film
             if (isalnum(key) || key == ' ')
             {
-                size_t len = strlen(judulFilm);
+                size_t len = strlen(IDFilm);
                 if (len < 49)
                 {
-                    judulFilm[len] = key;
-                    judulFilm[len + 1] = '\0';
+                    IDFilm[len] = key;
+                    IDFilm[len + 1] = '\0';
                 }
             }
-            else if (key == 8 && strlen(judulFilm) > 0)
+            else if (key == 8 && strlen(IDFilm) > 0)
             {
-                judulFilm[strlen(judulFilm) - 1] = '\0';
+                IDFilm[strlen(IDFilm) - 1] = '\0';
             }
             else if (key == '\r')
             {
@@ -91,18 +98,22 @@ void BuatJadwalTayang()
                     return;
                 }
 
-                strncpy(jadwalBaru.judulFilm, judulFilm, sizeof(jadwalBaru.judulFilm) - 1);
-                jadwalBaru.judulFilm[sizeof(jadwalBaru.judulFilm) - 1] = '\0';
+                strncpy(jadwalBaru.IDFilm, IDFilm, sizeof(jadwalBaru.IDFilm) - 1);
+                jadwalBaru.IDFilm[sizeof(jadwalBaru.IDFilm) - 1] = '\0';
 
                 bool ditemukan = false;
                 MovieData film;
                 while (fread(&film, sizeof(MovieData), 1, filmFile))
                 {
-                    if (strcmp(film.judul, judulFilm) == 0)
+                    if (strcmp(film.ID, IDFilm) == 0)
                     {
                         ditemukan = true;
                         jadwalBaru.durasi = (int)film.durasi;
                         jadwalBaru.harga = film.harga;
+
+                        strncpy(jadwalBaru.judulFilm, film.judul, sizeof(jadwalBaru.judulFilm) - 1);
+                        jadwalBaru.judulFilm[sizeof(jadwalBaru.judulFilm) - 1] = '\0';
+
                         break;
                     }
                 }
@@ -111,7 +122,7 @@ void BuatJadwalTayang()
                 if (!ditemukan)
                 {
 
-                    TampilkanPesan("\n\nJudul film tidak ditemukan.\n", 2);
+                    TampilkanPesan("\n\nID film tidak ditemukan.\n", 2);
                 }
                 else
                 {
@@ -145,12 +156,16 @@ void BuatJadwalTayang()
 
                 bool ditemukan = false;
                 TeaterData teater;
+
                 while (fread(&teater, sizeof(TeaterData), 1, teaterFile))
                 {
                     if (teater.noTeater == atoi(noTeaterStr))
                     {
                         ditemukan = true;
                         jadwalBaru.harga += teater.harga;
+
+                        strncpy(jadwalBaru.IDTeater, teater.ID, sizeof(jadwalBaru.IDTeater) - 1);
+                        jadwalBaru.IDTeater[sizeof(jadwalBaru.IDTeater) - 1] = '\0';
 
                         break;
                     }
@@ -221,23 +236,12 @@ void BuatJadwalTayang()
                     jamStr[len] = key;
                     jamStr[len + 1] = '\0';
                 }
-                /*                 jamAwal = atoi(&jamStr[0]);
-
-                                int inputJam = jamAwal >= 0 ? jamAwal * 10 + (key - '0') : (key - '0');
-                                if (inputJam >= 0 && inputJam <= 23)
-                                {
-                                    jamAwal = inputJam;
-                                }*/
             }
             else if (key == 8 && strlen(jamStr) > 0)
             {
                 jamStr[strlen(jamStr) - 1] = '\0';
             }
-            /*
-            else if (key == 8 && jamAwal >= 0)
-            {
-                jamAwal /= 10;
-            }*/
+
             else if (key == '\r')
             {
                 if (strlen(jamStr) == 5 && jamStr[2] == ':')
@@ -247,7 +251,8 @@ void BuatJadwalTayang()
                     // jadwalBaru.Teater = atoi(noTeaterStr);
                     jadwalBaru.Berakhir.jam = (jadwalBaru.jamTayang.jam + jadwalBaru.durasi / 60) % 24;
                     jadwalBaru.Berakhir.menit = jadwalBaru.jamTayang.menit + jadwalBaru.durasi % 60;
-                    if(jadwalBaru.Berakhir.menit == 60){
+                    if (jadwalBaru.Berakhir.menit == 60)
+                    {
                         jadwalBaru.Berakhir.jam += 1;
                         jadwalBaru.Berakhir.menit -= 60;
                     }
@@ -374,7 +379,7 @@ bool jamUnik(ScheduleData jamUnik, FILE *file)
                                   (temp.jamTayang.jam == jamUnik.Berakhir.jam && temp.jamTayang.menit < jamUnik.Berakhir.menit));
 
                 // Kondisi untuk menghindari tabrakan pada waktu yang sama
-                if ((jamUnik.jamTayang.jam == temp.Berakhir.jam && jamUnik.jamTayang.menit == 0) || 
+                if ((jamUnik.jamTayang.jam == temp.Berakhir.jam && jamUnik.jamTayang.menit == 0) ||
                     (jamUnik.Berakhir.jam == temp.jamTayang.jam && jamUnik.Berakhir.menit == 0))
                 {
                     return false; // Tabrakan jika jam tayang baru dimulai tepat saat berakhirnya jadwal yang sudah ada

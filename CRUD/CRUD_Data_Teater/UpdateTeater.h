@@ -24,10 +24,32 @@ void EditTeater()
         totalRecords++;
     }
 
-    char idCari[10];
+    char idCari[10] = {0};
     ReadTeater();
     printf("Masukkan ID teater yang ingin diedit: ");
-    scanf("%9s", idCari);
+    
+    
+    // Input ID F&B  dan deteksi "Esc"
+    int i = 0;
+    while (1) {
+        char ch = getch(); // Ambil input karakter per karakter
+
+        if (ch == 27) { // Jika tombol "Esc" ditekan (kode ASCII 27)
+            TampilkanPesan("\nProses pembaruan teater dibatalkan.\n", 2);
+            fclose(file);
+            return; // Keluar dari fungsi
+        } else if (ch == '\r') { // Jika tombol "Enter" ditekan
+            idCari[i] = '\0'; // Akhiri string
+            break;
+        } else if (ch == 8 && i > 0) { // Jika tombol "Backspace" ditekan
+            i--;
+            printf("\b \b"); // Hapus karakter terakhir dari layar
+        } else if (i < 9 && (isalnum(ch) || ch == ' ')) { // Hanya terima alfanumerik atau spasi
+            idCari[i++] = ch;
+            putchar(ch); // Tampilkan karakter ke layar
+        }
+    }
+
 
     int targetIndex = -1;
     for (int i = 0; i < totalRecords; i++)
@@ -112,6 +134,15 @@ void EditTeater()
         }
 
         char key = getch();
+
+         // Tombol "Esc" untuk membatalkan
+        if (key == 27) // 27 adalah kode ASCII untuk tombol "Esc"
+        {
+            TampilkanPesan("\nProses pembaruan teater dibatalkan.\n", 2);
+            fclose(file);
+            return; // Keluar dari fungsi
+        }
+
         if (step == 0)
         { // Edit nomor teater
             if (isdigit(key))

@@ -88,7 +88,16 @@
     "updatefnb.h": "c",
     "readschedule.h": "c",
     "deletekursi.h": "c",
-    "createschedule.h": "c"
+    "createschedule.h": "c",
+    "loginpage.h": "c",
+    "dashboardkasirtiket.h": "c",
+    "dashboardkasirfnb.h": "c",
+    "transaksifnb.h": "c",
+    "stdlib.h": "c",
+    "updatesandi.h": "c",
+    "utility.h": "c",
+    "transaksitiket.h": "c",
+    "tombolopsi.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

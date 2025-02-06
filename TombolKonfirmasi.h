@@ -162,11 +162,13 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
         // Penanganan untuk master "Schedule"
         else if (strcmp(master, "Schedule") == 0 && strcmp(tipeData, "ScheduleData") == 0) {
             ScheduleData *jadwal = (ScheduleData *)data;
+          
             if (strcmp(opsi, "Buat") == 0) {
                 ReadSchedule();
                 printf("\n");
                 printf("Apakah anda yakin ingin menambahkan jadwal tayang berikut?\n");
                 printf("ID          : %s\n", jadwal->ID);
+                printf("ID Film     : %s\n", jadwal->IDFilm);
                 printf("Judul Film  : %s\n", jadwal->judulFilm);
                 printf("Teater      : %d\n", jadwal->Teater);
                 printf("Durasi      : %d menit\n", jadwal->durasi);
@@ -181,6 +183,7 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("\n");
                 printf("Apakah anda yakin ingin menghapus jadwal tayang berikut?\n");
                 printf("ID          : %s\n", jadwal->ID);
+                printf("ID Film     : %s\n", jadwal->IDFilm);
                 printf("Judul Film  : %s\n", jadwal->judulFilm);
                 printf("Teater      : %d\n", jadwal->Teater);
                 printf("Tanggal     : %02d/%02d/%04d\n", jadwal->Tanggal.tanggal, jadwal->Tanggal.bulan, jadwal->Tanggal.tahun);
@@ -194,6 +197,7 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("\n");
                 printf("Apakah anda yakin ingin memperbarui jadwal tayang berikut?\n");
                 printf("ID          : %s\n", jadwal->ID);
+                printf("ID Film     : %s\n", jadwal->IDFilm);
                 printf("Judul Film  : %s\n", jadwal->judulFilm);
                 printf("Teater      : %d\n", jadwal->Teater);
                 printf("Tanggal     : %02d/%02d/%04d\n", jadwal->Tanggal.tanggal, jadwal->Tanggal.bulan, jadwal->Tanggal.tahun);
@@ -218,6 +222,7 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("  [%s]", pilihan[i]);
             }
         }
+        printf("\n");
 
         // Input navigasi
         key = getch();

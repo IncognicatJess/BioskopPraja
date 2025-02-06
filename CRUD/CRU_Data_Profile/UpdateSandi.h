@@ -23,8 +23,39 @@ void GantiSandi(AkunData *akun, char *Master)
 
             printf("Sandi lama         : %s\n", akun->sandi);
             printf("Masukkan sandi baru: ");
-            char sandi[50];
-            scanf("%49s", sandi);
+            char sandi[50] = {0};
+            
+
+            
+              // Input sandi baru  dan deteksi "Esc"
+                int i = 0;
+                while (1)
+                {
+                    char ch = getch(); // Ambil input karakter per karakter
+
+                    if (ch == 27)
+                    { // Jika tombol "Esc" ditekan (kode ASCII 27)
+                        TampilkanPesan("\nProses pembaruan sandi dibatalkan.\n", 2);
+                        fclose(file);
+                        return; // Keluar dari fungsi
+                    }
+                    else if (ch == '\r')
+                    {                      // Jika tombol "Enter" ditekan
+                        sandi[i] = '\0'; // Akhiri string
+                        break;
+                    }
+                    else if (ch == 8 && i > 0)
+                    { // Jika tombol "Backspace" ditekan
+                        i--;
+                        printf("\b \b"); // Hapus karakter terakhir dari layar
+                    }
+                    else if (i > 0 || (isalnum(ch) || isalpha(ch) || isdigit(ch) || ispunct(ch)))
+                    {
+                        sandi[i++] = ch;
+                        putchar(ch); // Tampilkan karakter ke layar
+                    }
+                }
+
 
             // Validasi sandi baru
             if (ValidasiSandi(sandi))
@@ -79,10 +110,38 @@ void GantiSandi(AkunData *akun, char *Master)
     {
         // Jika Master adalah "Akun", maka ganti sandi untuk akun tertentu berdasarkan ID
 
-        char id[10];
+        char idCari[10] = {0};
         ReadAkun();
         printf("Masukkan ID Akun: ");
-        scanf("%9s", id);
+
+        // Input ID akun  dan deteksi "Esc"
+        int i = 0;
+        while (1)
+        {
+            char ch = getch(); // Ambil input karakter per karakter
+
+            if (ch == 27)
+            { // Jika tombol "Esc" ditekan (kode ASCII 27)
+                TampilkanPesan("\nProses pembaruan sandi dibatalkan.\n", 2);
+                fclose(file);
+                return; // Keluar dari fungsi
+            }
+            else if (ch == '\r')
+            {                     // Jika tombol "Enter" ditekan
+                idCari[i] = '\0'; // Akhiri string
+                break;
+            }
+            else if (ch == 8 && i > 0)
+            { // Jika tombol "Backspace" ditekan
+                i--;
+                printf("\b \b"); // Hapus karakter terakhir dari layar
+            }
+            else if (i < 9 && (isalnum(ch) || ch == ' '))
+            { // Hanya terima alfanumerik atau spasi
+                idCari[i++] = ch;
+                putchar(ch); // Tampilkan karakter ke layar
+            }
+        }
 
         AkunData temp;
         bool idDitemukan = false;
@@ -91,7 +150,7 @@ void GantiSandi(AkunData *akun, char *Master)
         // Cari akun berdasarkan ID
         while (fread(&temp, sizeof(AkunData), 1, file))
         {
-            if (strcmp(temp.ID, id) == 0)
+            if (strcmp(temp.ID, idCari) == 0)
             {
                 idDitemukan = true;
                 posisi = ftell(file) - sizeof(AkunData);
@@ -109,8 +168,36 @@ void GantiSandi(AkunData *akun, char *Master)
                 printf("ID Akun : %s\n", temp.ID);
                 printf("Sandi Lama : %s\n", temp.sandi);
                 printf("Masukkan sandi baru: ");
-                char sandi[50];
-                scanf("%49s", sandi);
+                char sandi[50] = {0};
+
+                // Input sandi baru  dan deteksi "Esc"
+                int i = 0;
+                while (1)
+                {
+                    char ch = getch(); // Ambil input karakter per karakter
+
+                    if (ch == 27)
+                    { // Jika tombol "Esc" ditekan (kode ASCII 27)
+                        TampilkanPesan("\nProses pembaruan sandi dibatalkan.\n", 2);
+                        fclose(file);
+                        return; // Keluar dari fungsi
+                    }
+                    else if (ch == '\r')
+                    {                      // Jika tombol "Enter" ditekan
+                        sandi[i] = '\0'; // Akhiri string
+                        break;
+                    }
+                    else if (ch == 8 && i > 0)
+                    { // Jika tombol "Backspace" ditekan
+                        i--;
+                        printf("\b \b"); // Hapus karakter terakhir dari layar
+                    }
+                    else if (i > 0 || (isalnum(ch) || isalpha(ch) || isdigit(ch) || ispunct(ch)))
+                    {
+                        sandi[i++] = ch;
+                        putchar(ch); // Tampilkan karakter ke layar
+                    }
+                }
 
                 // Validasi sandi baru
                 if (ValidasiSandi(sandi))
@@ -140,7 +227,7 @@ void GantiSandi(AkunData *akun, char *Master)
         }
         else
         {
-            TampilkanPesan("\nID tidak ditemukan!\n", 2);
+            TampilkanPesan("\nID akun tidak ditemukan!\n", 2);
         }
     }
 

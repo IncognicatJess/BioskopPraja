@@ -53,6 +53,9 @@
 // U SANDI
 #include "CRUD/CRU_Data_Profile/UpdateSandi.h"
 
+
+
+
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
 typedef struct
 {
@@ -72,6 +75,9 @@ void tampilkanDaftarTeater();
 void tampilkanMenuAdmin();
 void tampilkanJadwalTayang();
 int tampilkanMenuAdminNavigasi();
+void gotoxy(int x, int y);
+void setConsoleSize();
+void takeDrawBoxDashboard();
 
 // Fungsi membersihkan layar
 void clearScreen()
@@ -82,44 +88,74 @@ void clearScreen()
     system("clear");
 #endif
 }
+void drawLayout()
+{
+    // Gambar header
+    gotoxy(5,4);
+    printf("\033[37;48;2;197;148;1m DASHBOARD ADMIN \033[0m");
+
+    setConsoleSize();
+    system("cls"); // Membersihkan layar sebelum menampilkan tampilan login
+    takeDrawBoxDashboard();
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0);
+}
 
 // Fungsi untuk menampilkan menu dengan navigasi arrow key
 int tampilkanMenuAdminNavigasi()
 {
-    int pilihan = 1;       // Indeks menu yang sedang dipilih
-    int jumlahPilihan = 8; // Total menu
-    char key;
+    int pilihan = 1;       // Variabel untuk menyimpan pilihan menu (mulai dari 1)
+    int jumlahPilihan = 8; // Jumlah total pilihan menu
+    char key;              // Variabel untuk menyimpan input tombol
+
+    // Daftar menu
+    const char *menu[] = {
+        "PROFIL",
+        "DAFTAR AKUN",
+        "DAFTAR FILM",
+        "DAFTAR TEATER",
+        "JADWAL TAYANG",
+        "DAFTAR FNB",
+        "LAPORAN",
+        "LOGOUT"};
 
     while (1)
     {
-        clearScreen();
-        printf("=== SIDE NAVBAR ===\n");
-        printf("%s PROFIL\n", pilihan == 1 ? ">" : " ");
-        printf("%s DAFTAR AKUN\n", pilihan == 2 ? ">" : " ");
-        printf("%s DAFTAR FILM\n", pilihan == 3 ? ">" : " ");
-        printf("%s DAFTAR TEATER\n", pilihan == 4 ? ">" : " ");
-        printf("%s JADWAL TAYANG\n", pilihan == 5 ? ">" : " ");
-        printf("%s DAFTAR FNB\n", pilihan == 6 ? ">" : " ");
-        printf("%s LAPORAN\n", pilihan == 7 ? ">" : " ");
-        printf("%s LOGOUT\n", pilihan == 8 ? ">" : " ");
+        drawLayout();
 
+        // Tampilkan menu dengan warna yang sesuai
+        for (int i = 0; i < jumlahPilihan; i++)
+        {
+            gotoxy(3, 12 + i * 2); // Atur posisi vertikal setiap opsi menu
+            if (i + 1 == pilihan)
+            {
+                // Highlight opsi yang dipilih dengan warna background coklat keemasan
+                printf("\033[37;48;2;197;148;1m > %s \033[0m", menu[i]);
+            }
+            else
+            {
+                // Tampilkan opsi biasa
+                printf("\033[37;48;2;197;148;1m   %s \033[0m", menu[i]);
+            }
+        }
+
+        // Input tombol dari pengguna
         key = getch();
 
         if (key == 72)
-        { // Arrow Up
+        { // Tombol Arrow Up
             pilihan--;
             if (pilihan < 1)
-                pilihan = jumlahPilihan;
+                pilihan = jumlahPilihan; // Reset ke pilihan terakhir
         }
         else if (key == 80)
-        { // Arrow Down
+        { // Tombol Arrow Down
             pilihan++;
             if (pilihan > jumlahPilihan)
-                pilihan = 1;
+                pilihan = 1; // Reset ke pilihan pertama
         }
         else if (key == '\r')
-        { // Enter
-            return pilihan;
+        {                   // Tombol Enter
+            return pilihan; // Kembalikan nilai pilihan (mulai dari 1)
         }
     }
 }
@@ -247,8 +283,7 @@ void tampilkanDaftarMenu()
 
         const char *menuFnb[] = {"EDIT", "-HAPUS", "+TAMBAH", "KEMBALI"};
 
-      
-        int pilihan = PilihOpsi("Fnb", menuFnb, NULL, NULL, 4);
+              int pilihan = PilihOpsi("Fnb", menuFnb, NULL, NULL, 4);
         switch (pilihan)
         {
         case 0:

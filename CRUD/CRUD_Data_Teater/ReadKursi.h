@@ -14,9 +14,31 @@ int ReadKursi()
 
     ReadTeater();
 
-    char IDTeater[10];
+    char IDTeater[10] = {0};
     printf("Masukkan ID Teater: ");
-    scanf("%s", IDTeater);
+
+
+
+ // Input ID F&B  dan deteksi "Esc"
+    int i = 0;
+    while (1) {
+        char ch = getch(); // Ambil input karakter per karakter
+
+        if (ch == 27) { // Jika tombol "Esc" ditekan (kode ASCII 27)
+            TampilkanPesan("\nProses penghapusan teater dibatalkan.\n", 2);
+            fclose(file);
+            return 0; // Keluar dari fungsi
+        } else if (ch == '\r') { // Jika tombol "Enter" ditekan
+            IDTeater[i] = '\0'; // Akhiri string
+            break;
+        } else if (ch == 8 && i > 0) { // Jika tombol "Backspace" ditekan
+            i--;
+            printf("\b \b"); // Hapus karakter terakhir dari layar
+        } else if (i < 9 && (isalnum(ch) || ch == ' ')) { // Hanya terima alfanumerik atau spasi
+            IDTeater[i++] = ch;
+            putchar(ch); // Tampilkan karakter ke layar
+        }
+    }
 
     bool ditemukan = false;
     TeaterData teater;

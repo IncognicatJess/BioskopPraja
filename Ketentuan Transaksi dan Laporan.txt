@@ -1,0 +1,91 @@
+Menu :
+
+1. Pemesanan :nampilin jadwal tayang yang now showing saja
+dalam jadwal sedang tayang bisa ada judul film yang sama tapi memiliki waktu yang berbeda dan id jadwal tayang yang berbeda
+#Dashboard pemesanan tiket
+- form masukan judul film (judul film yang tersedia yang now showing)
+- form tanggal (tanggal, bulan, tahun dari film tersebut yang now showing) - perulangan now showing pencocokan judul film, judul film yang relevan waktunya akan diprint
+- jam (jam awal dari film now showing tersebut) - perulangannya mirip sama tanggal cuma yang dicocokkan adalah tanggal, bulan, tahun.
+- jumlah tiket (angka)
+- setelah dapat judul, tanggal, jam -> dicocokkan lagi dengan jadwal tayang (operator logika && )lalu jika ketemu ambil ID jadwal tayang.
+#Pilih kursi
+- Mendapatkan no teater/ID teater dari ID jadwal tayang tersebut, 
+- baca datateater.dat, cari ID teater yang sesuai dan cocokokan dengan ID kursi di kursi.dat
+- siapin array buat nampung indeks kursi, kursi[jumlahkursi]
+- setiap arrayKursi[9] dilakukan printf newline 
+- dapat id teater di kursi.dat dan print kursi dalam format [A1] [A2] ... [A10]\n
+- tambahin print LAYAR/SCREEN di bagian bawah 
+- perbaris ada 9 indeks, berarti setiap baris kelipatan 9
+- gerakkan dengan arrow key kiri & kanan(pengurangan & penjumlahan) untuk atas(dikurang 9) & bawah(indeks saat ini ditambah 9)dengan tanda blok warna atau border warna
+- baca jumlah tiket yang dipesan
+- siapkan char array KursiDipesan untuk menampung ID kursi yang dipesan sebanyak tiket.
+- setiap menerima tombol enter dia akan check dan uncheck kursi dengan blok warna atau tanda #,
+- saat menekan enter akan membaca indeks kursi tersebut dan membaca char ID nya, dari char ID itu : status kursi ditandai dengan 1(dipesan) jika enter lagi jadi 0(kosong)
+- perulangan enter hanya akan menerima sesuai jumlah kursi, jika lebih dari tiket yang dipesan sudah tidak bisa menekan enter
+- karena sudah tidak bisa menekan tombol enter, buat agar tombol esc  keluar dari pilih kursi
+- jika ingin memilih kursi kembali, pilih tombol pilih kursi
+- jika sudah fix klik tombol lanjut
+- kalau pilih tombol batal kembali ke dashboard pemesanan
+-
+
+# Transaksi - Invoice -  Pembayaran
+- Create Transaksi ID dan print ID nya(jika sudah ada transaksi sebelumnya berarti baca dulu transaksiTiket.dat dan buat ID terbaru)
+- baca judul film, no teater, kategori teater(baca dengan no teater dari teater.dat), bentuk, tanggal, jam, jumlah tiket, nominal = print "jumlah tiket x harga, total = harga x jumlah tiket
+- pilih metode pembayaran: pembayaran yang tersedia : Cash, E-wallet, Bank. Dengan arrow key kiri-kanan
+- Masukkan nominal pembayaran
+- Validasi pembayaran ,kurang = nominal - harga total
+- jika Kembalian-Kurang =  0 atau lebih maka akan mencetak angka tersebut di form kembalian.
+- jika kembalian-Kurang = angka negatif maka akan memberikan pesan "Nominal yang dimasukkan kurang &lf", Kembalian-Kurang di mutlakan agar tidak negatif dan melakukan pengsian ulang nominal sampai 0 atau lebih
+- Form catatan boleh di-isi atau dikosongkan dengan klik enter untuk lanjut
+- Masuk ke konfirmasi, maka transaksi dicatat dalam transaksiTiket.dat
+- Ada beberapa tombol selama pemesanan : Kembali, Lanjut, Konfirmasi, Batal, Pilih Kursi
+
+
+
+2. jadwal tayang : semua jadwal, ada tombol:
+- form cari judul film, setiap judul yang relevan akan diprint(termasuk judul film yang sama)
+- kembali
+
+3. tambahkan menu daftar ruangan
+- cari no ruangan, setelah ketemu print tabel itu saja, lalu ada opsi:
+- kembali
+- lihat kursi (cari no teater dulu)
+- lihat kursi (yang langsung masukkan no teater)
+
+4. DaftarFilm
+- form cari judul film, setiap judul yang relevan akan diprint(termasuk judul film yang sama)
+- kembali
+
+5. Laporan Tiket (Riwayat Transaksi)
+- Berisi Tabel 10 akhir Transaksi.dat sebagai riwayat transaksi
+- Form penampilan transaksi : Tombol Riwayat transaksi terkahir
+[10 transaksi] [20 transaksi] [30 transaksi]
+- Membaca bulan saat ini(localdate) dan mengambil ID transaksi sebanyak 10 transaksi terbaru di bulan tersebut (perulangan descending, ngecek tanggal saat ini ada berapa transaksi jika sudah tidak ada, lanjut ke tanggal sebelumnya, dan seterusnya)
+
+
+
+6. Laporan Di Manajer
+- Tombol: Tiket Bioskop, F&B
+- Tombol: Bulanan dan tahunan
+- Baca transaksiTiket.dat
+- Tabel default yang ditampilkan transaksi 10 terakhir.
+- Ada sortir berdasarkan bulan(bulan ke-berapa/apa,tanggalnya, transaksi setiap harinya, total transaksi bulanan)
+- Form pencarian bulan
+- cocokkan bulan dengan transaksiTiket.dat, print transaksi.
+- Print Film yang terjual di bawah
+- Print Perhitungan Total penjualan di bawah 
+- Print Perhitungan MoM change di bawah 
+- Ada sortir berdasarkan tahun(Tahun berapa, bulan ke-berapa/apa, total transaksi setiap bulan-nya, total transaksi tahunan.
+- Fungsi penjumlahan total bulan
+- Fungsi penjumlahan total tahun
+- Fungsi Perhitungan MoM Change(double %.2lf) = Laba-Rugi/bulan sebelumnya * 100
+Laba-Rugi = total bulan setelahnya - Total bulan sebelumnya  
+> jika negatif = mengalami penurunan
+> jika positif = mengalami peningkatan
+Laba-Rugi = total tahun setelahnya - Total tahun sebelumnya  
+- Fungsi Perhitungan YoY Change(double %.2lf) = Laba-Rugi/tahun sebelumnya * 100
+- Gerakkan form pencariain bulan/tahun dengan arrow key
+- Tombol [KEMBALI] dipilih menggunakan arrow key 
+
+
+
