@@ -149,6 +149,9 @@ typedef struct {
 typedef struct
 {
     char IDTeater[10];
+    int jumlahKursi;
+    int baris;
+    int kolom;
     char ID[10];
     char status[10]; // Status kursi, default "Tersedia"
 } KursiData;
@@ -164,6 +167,51 @@ typedef struct
     int jumlah;
     float total;
 } ListMakanan;
+
+
+typedef struct
+{
+    int tanggal;
+    int bulan;
+    int tahun;
+} TanggalTayangTransc;
+
+typedef struct
+{
+    int jam;
+    int menit;
+} JamTayangTransc;
+
+typedef struct
+{
+    int tanggal;
+    int bulan;
+    int tahun;
+} TanggalTransc;
+
+typedef struct
+{
+    char ID[10];
+    char IDFilm[10];
+    char IDTeater[10];
+    char judulFilm[50];
+    int Teater;
+    char IDkursi[20][10];
+    char kategori[10];
+    char bentuk[10];
+    TanggalTayangTransc Tanggal;
+    JamTayangTransc jamTayang;
+    int tiket;
+    long no;
+    // char status[20];
+    double harga;
+    double total;
+    char metodePembayaran[10];
+    double nominal;
+    char catatan[1000];
+    TanggalTransc tanggalTransc;
+} Tiket;
+
 
 // FUNGSI EXTENDED
 #include "TampilkanJudul.h"

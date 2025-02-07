@@ -29,6 +29,7 @@ void BuatKursi(TeaterData kursiTeater, int kelas)
     int baris = 0, kolom = 0;
     cariBarisKolom(kursiTeater.jumlahKursi, &baris, &kolom, kelas);
 
+
     // Jika tidak ada pasangan yang valid
     if (baris == 0 || kolom == 0)
     {
@@ -39,7 +40,10 @@ void BuatKursi(TeaterData kursiTeater, int kelas)
     char huruf[3];
     KursiData kursi;
     strncpy(kursi.IDTeater, kursiTeater.ID, sizeof(kursi.IDTeater) - 1);
-
+    kursi.jumlahKursi = kursiTeater.jumlahKursi;
+    kursi.baris = baris;
+    kursi.kolom = kolom;
+    
     for (int i = 0; i < baris; i++)
     {
         indeksKeHuruf(i, huruf); // Mendapatkan huruf baris (A, B, C...)

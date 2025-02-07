@@ -32,20 +32,22 @@ void TampilkanJadwalTayang() {
     qsort(jadwal, jumlahJadwal, sizeof(ScheduleData), BandingkanScheduleID);
 
     // Menampilkan tabel
-    printf("| %-8s | %-20s | %-8s | %-12s | %-10s | %-10s|%-10s | %-15s | %-15s |\n", 
-           "ID", "Judul Film", "Teater", "Tanggal", "Durasi(menit)","Jam Tayang", "Jam Berakhir", "Harga (Rp)", "Status");
+    printf("| %-8s | %-20s | %-8s | %-12s | %-10s | %-10s|%-10s | %-15s | %-15s | %-15s |\n", 
+           "ID", "Judul Film", "Teater", "Tanggal", "Durasi(menit)","Jam Tayang", "Jam Berakhir", "Harga (Rp)", "Status", "ID teater");
     printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
 
     for (int i = 0; i < jumlahJadwal; i++) {
-        printf("| %-8s | %-20s | %-8d | %02d/%02d/%04d    | %d           | %02d:%02d       | %02d:%02d       | %-15.2f |  %s |\n",
+        printf("| %-8s | %-20s | %-8d | %02d/%02d/%04d    | %d           | %02d:%02d       | %02d:%02d       | %-15.2f |  %s | %s  |\n",
                jadwal[i].ID, jadwal[i].judulFilm, jadwal[i].Teater, 
                jadwal[i].Tanggal.tanggal, jadwal[i].Tanggal.bulan, jadwal[i].Tanggal.tahun, 
                jadwal[i].durasi,
                jadwal[i].jamTayang.jam, jadwal[i].jamTayang.menit, 
                jadwal[i].Berakhir.jam, jadwal[i].Berakhir.menit, 
                jadwal[i].harga,
-               jadwal[i].status);
+               jadwal[i].status,
+               jadwal[i].IDTeater);
     }
+
     printf("\n");
 }
 

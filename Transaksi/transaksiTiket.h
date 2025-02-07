@@ -2,63 +2,12 @@
 #define MAX_JAM 10 // Maksimal jam tayang per tanggal adalah 10
 #define MAX_SHOWING 50
 
-typedef struct
-{
-    int tanggal;
-    int bulan;
-    int tahun;
-} TanggalTayangTransc;
-
-typedef struct
-{
-    int jam;
-    int menit;
-} JamTayangTransc;
-
-/*
-typedef struct
-{
-    int jam;
-    int menit;
-} JamTayangAkhirTransc;
-
-*/
-
-typedef struct
-{
-    int tanggal;
-    int bulan;
-    int tahun;
-} TanggalTransc;
-
-typedef struct
-{
-    char ID[10];
-    char IDFilm[10];
-    char IDTeater[10];
-    char judulFilm[50];
-    int Teater;
-    char IDkursi[10];
-    char kategori[10];
-    char bentuk[10];
-    TanggalTayangTransc Tanggal;
-    JamTayangTransc jamTayang;
-    int tiket;
-    // char status[20];
-    double harga;
-    double total;
-    char metodePembayaran[10];
-    double nominal;
-    char catatan[1000];
-    TanggalTransc tanggalTransc;
-} Tiket;
-
 void PemilihanFilm();
+void PemilihanKursi(Tiket pesanan);
 
 void PemesananTiket()
 {
     ReadScheduleShowing();
-
     PemilihanFilm();
 
     // FUNGSI PEMILIHAN FILM
@@ -76,8 +25,11 @@ void PemilihanFilm()
         return;
     }
 
+    Tiket Pesanan;
+    JamTayangTransc jamTayang;
     ScheduleData jadwal[MAX_SHOWING];
     int jumlahJadwal = 0;
+
     while (fread(&jadwal[jumlahJadwal], sizeof(ScheduleData), 1, file))
     {
         jumlahJadwal++;
@@ -137,20 +89,20 @@ void PemilihanFilm()
         printf("Pilih Film:\t");
         for (int i = 0; i < jumlahFilmUnik; i++)
         {
-           // printf(" %s[%s]\t", (i == indeksJudul && step == 0) ? ">" : " ", filmUnik[i]);
+            // printf(" %s[%s]\t", (i == indeksJudul && step == 0) ? ">" : " ", filmUnik[i]);
 
-             if (i == indeksJudul && step == 0)
-                {
-                    printf("  >[%s]\t",filmUnik[i]);
-                }
-                else if (i == indeksJudul)
-                {
-                    printf("  #[%s]\t ", filmUnik[i]);
-                }
-                else
-                {
-                    printf("   [%s]\t", filmUnik[i]);
-                }
+            if (i == indeksJudul && step == 0)
+            {
+                printf("  >[%s]\t", filmUnik[i]);
+            }
+            else if (i == indeksJudul)
+            {
+                printf("  #[%s]\t ", filmUnik[i]);
+            }
+            else
+            {
+                printf("   [%s]\t", filmUnik[i]);
+            }
         }
 
         // Tampilkan pilihan tanggal jika step >= 1
@@ -186,9 +138,9 @@ void PemilihanFilm()
 
             for (int i = 0; i < jumlahTanggalUnik; i++)
             {
-              //  printf(" %s[%s]\t", (i == indeksTanggal && step == 1) ? ">" : " ", tanggalUnik[i]);
+                //  printf(" %s[%s]\t", (i == indeksTanggal && step == 1) ? ">" : " ", tanggalUnik[i]);
 
-              if (i == indeksTanggal && step == 1)
+                if (i == indeksTanggal && step == 1)
                 {
                     printf("  >[%s]\t", tanggalUnik[i]);
                 }
@@ -200,7 +152,6 @@ void PemilihanFilm()
                 {
                     printf("   [%s]\t", tanggalUnik[i]);
                 }
-            
             }
         }
 
@@ -245,7 +196,7 @@ void PemilihanFilm()
 
             for (int i = 0; i < jumlahJamUnik; i++)
             {
-              //printf(" \n%s[%s]\t", (i == indeksJam && step == 2) ? ">" : " ", jamUnik[i]);
+                // printf(" \n%s[%s]\t", (i == indeksJam && step == 2) ? ">" : " ", jamUnik[i]);
 
                 if (i == indeksJam && step == 2)
                 {
@@ -286,12 +237,71 @@ void PemilihanFilm()
                 // Validasi jumlah tiket
                 if (jumlahTiket < 1 || jumlahTiket > 20)
                 {
-                    printf("Jumlah tiket harus antara 1 dan 20. Silakan coba lagi.\n");
-                    getch(); // Tunggu input pengguna
+                    printf("Jumlah tiket maksimal 20!\n");
+                    getch();
+                    return;
                 }
                 else
                 {
+
+                    // Tampilkan hasil pemesanan
+
+                    // Menyimpan data sebagai pesanan
+                    strncpy(Pesanan.judulFilm, filmUnik[indeksJudul], sizeof(Pesanan.judulFilm) - 1);
+                    Pesanan.judulFilm[sizeof(Pesanan.judulFilm) - 1] = '\0';
+
+                    Pesanan.Tanggal.tanggal = atoi(&tanggalUnik[indeksTanggal][0]);
+                    Pesanan.Tanggal.bulan = atoi(&tanggalUnik[indeksTanggal][3]);
+                    Pesanan.Tanggal.tahun = atoi(&tanggalUnik[indeksTanggal][6]);
+
+                    Pesanan.jamTayang.jam = atoi(&jamUnik[indeksJam][0]);
+                    Pesanan.jamTayang.menit = atoi(&jamUnik[indeksJam][3]);
+
+                    Pesanan.tiket = jumlahTiket;
+
+                    // perulangan untuk membandingkan pesanan dengan scheduldata
+
+                    // Tampilkan hasil pemesanan
+
+                    for (int i = 0; i < jumlahJadwal; i++)
+                    {
+                        int judul = strcmp(jadwal[i].judulFilm, Pesanan.judulFilm);
+
+                        // Perulangan mencocokkan pesanan dengan jadwal tayang yang tersedia
+                        if (judul == 0 && jadwal[i].Tanggal.tanggal == Pesanan.Tanggal.tanggal &&
+                            jadwal[i].Tanggal.bulan == Pesanan.Tanggal.bulan &&
+                            jadwal[i].Tanggal.tahun == Pesanan.Tanggal.tahun &&
+                            jadwal[i].jamTayang.jam == Pesanan.jamTayang.jam &&
+                            jadwal[i].jamTayang.menit == Pesanan.jamTayang.menit)
+                        {
+                            // Setelah cocok dapatkan ID,No Teater dari jadwal tayang tersebut serta jumlah tiket
+
+                            strncpy( Pesanan.judulFilm, jadwal[i].judulFilm, sizeof(Pesanan.judulFilm));
+                            Pesanan.judulFilm[sizeof(Pesanan.judulFilm) - 1] = '\0';
+
+                            strncpy(Pesanan.IDTeater, jadwal[i].IDTeater, sizeof(Pesanan.IDTeater));
+                            Pesanan.IDTeater[sizeof(Pesanan.IDTeater) - 1] = '\0';
+
+                            Pesanan.Tanggal.tanggal = jadwal[i].Tanggal.tanggal;
+                            Pesanan.Tanggal.bulan = jadwal[i].Tanggal.bulan;
+                            Pesanan.Tanggal.tahun = jadwal[i].Tanggal.tahun;
+                            Pesanan.jamTayang.jam = jadwal[i].jamTayang.jam;
+                            Pesanan.jamTayang.menit = jadwal[i].jamTayang.menit;
+
+                            Pesanan.Teater = jadwal[i].Teater;
+                            Pesanan.tiket = jumlahTiket;
+                            Pesanan.harga = jadwal[i].harga;
+                            break; // Keluar dari perulangan setelah menemukan jadwal yang cocok
+                        }
+                        else if (i == jumlahJadwal - 1)
+                        {
+                            TampilkanPesan("Jadwal tayang tidak sesuai!", 2);
+                            return; // Keluar dari fungsi jika tidak ada jadwal yang cocok
+                        }
+                    }
+
                     break; // Keluar dari loop jika pemesanan valid
+                    //}
                 }
             }
         }
@@ -316,10 +326,26 @@ void PemilihanFilm()
         }
     }
 
-    // Tampilkan hasil pemesanan
-    printf("\nPemesanan Berhasil!\n");
-    printf("Film: %s\n", filmUnik[indeksJudul]);
-    printf("Tanggal: %s\n", tanggalUnik[indeksTanggal]);
-    printf("Jam: %s\n", jamUnik[indeksJam]);
-    printf("Jumlah Tiket: %d\n", jumlahTiket);
+  
+    const char *menuPemesananTiket[] = {"KEMBALI", "PILIH KURSI"};
+
+    int pilihan = PilihOpsi("TicketBooking", menuPemesananTiket, &Pesanan, NULL, 2);
+
+    switch (pilihan)
+    {
+    case 0:
+        break;
+    case 1:
+        system("cls");
+        PemilihanKursi(Pesanan);
+        break;
+    }
+    if (pilihan == 0)
+    {
+        memset(&Pesanan, 0, sizeof(Tiket));
+        tampilkanPemesananTiket();
+    }
+
+    //    printf("Klik sembarang tombol untuk kembali!");
+    //  getch();
 }

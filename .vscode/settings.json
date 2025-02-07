@@ -97,7 +97,10 @@
     "updatesandi.h": "c",
     "utility.h": "c",
     "transaksitiket.h": "c",
-    "tombolopsi.h": "c"
+    "tombolopsi.h": "c",
+    "pemilihankursi.h": "c",
+    "statuskursi.h": "c",
+    "invoicetiket.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

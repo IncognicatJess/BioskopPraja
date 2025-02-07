@@ -10,6 +10,12 @@ void cariFilmByIDOrJudul(const char *keyword);
 int ReadSchedule();
 
 #include "Transaksi/transaksiTiket.h"
+#include "Transaksi/StatusKursi.h"
+#include "Transaksi/InvoiceTiket.h"
+#include "Transaksi/PemilihanKursi.h"
+
+
+
 
 
 // Fungsi untuk menampilkan menu dengan navigasi arrow key
