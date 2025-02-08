@@ -14,10 +14,6 @@ int ReadSchedule();
 #include "Transaksi/InvoiceTiket.h"
 #include "Transaksi/PemilihanKursi.h"
 
-
-
-
-
 // Fungsi untuk menampilkan menu dengan navigasi arrow key
 int tampilkanMenuTiketNavigasi()
 {
@@ -33,7 +29,7 @@ int tampilkanMenuTiketNavigasi()
         printf("%s PEMESANAN\n", pilihan == 2 ? ">" : " ");
         printf("%s JADWAL TAYANG\n", pilihan == 3 ? ">" : " ");
         printf("%s DAFTAR FILM\n", pilihan == 4 ? ">" : " ");
-        printf("%s LAPORAN\n", pilihan == 5 ? ">" : " ");
+        printf("%s RIWAYAT TRANSAKSI\n", pilihan == 5 ? ">" : " ");
         printf("%s LOGOUT\n", pilihan == 6 ? ">" : " ");
 
         key = getch();
@@ -65,13 +61,13 @@ void tampilkanProfilKasirTiket(AkunData *akun, ProfilData *profil)
     {
         clearScreen();
 
-         const char *menuProfil[] = {"GANTI SANDI", "EDIT", "KEMBALI"};
+        const char *menuProfil[] = {"GANTI SANDI", "EDIT", "KEMBALI"};
 
         int pilihan = PilihOpsi("Profil", menuProfil, akun, profil, 3);
 
         ReadProfile(akun, profil);
 
-       switch (pilihan)
+        switch (pilihan)
         {
         case 0:
             system("cls");
@@ -94,26 +90,24 @@ void tampilkanProfilKasirTiket(AkunData *akun, ProfilData *profil)
     }
 }
 
-
 // Fungsi untuk menampilkan daftar akun
 void tampilkanPemesananTiket()
 {
-      while (1)
+    while (1)
     {
         clearScreen();
 
-         const char *menuPemesanan[] = {"KEMBALI", "PEMESANAN"};
+        const char *menuPemesanan[] = {"KEMBALI", "PEMESANAN"};
 
         int pilihan = PilihOpsi("ScheduleShowing", menuPemesanan, NULL, NULL, 2);
 
-
-       switch (pilihan)
+        switch (pilihan)
         {
         case 0:
             break;
         case 1:
-           system("cls");
-           PemesananTiket();
+            system("cls");
+            PemesananTiket();
             break;
         }
         if (pilihan == 0)
@@ -133,13 +127,12 @@ void tampilkanJadwalTayangTiket()
 
         const char *Master = "Schedule";
         int pilihan = PilihOpsi(Master, menuJadwalTayang, NULL, NULL, 1);
-        
 
         switch (pilihan)
         {
         case 0:
-           // system("cls");
-            //Pencarian("Schedule");
+            // system("cls");
+            // Pencarian("Schedule");
             break;
         }
         if (pilihan == 0)
@@ -159,14 +152,12 @@ void tampilkanFilmKasir()
 
         const char *Master = "Film";
         int pilihan = PilihOpsi(Master, menuJadwalTayang, NULL, NULL, 1);
-        
-       //ReadFilm();
 
         switch (pilihan)
         {
         case 0:
-           // system("cls");
-            //Pencarian("Schedule");
+            // system("cls");
+            // Pencarian("Schedule");
             break;
         }
         if (pilihan == 0)
@@ -179,7 +170,34 @@ void tampilkanFilmKasir()
 // Fungsi untuk menampilkan laporan transaksi
 void tampilkanLaporanTiket()
 {
-    TampilkanPesan("Maaf fitur belum tersedia!",2);
+
+    while (1)
+    {
+        system("cls");
+
+        const char *menuLaporan[] = {"KEMBALI", "BULANAN", "TAHUNAN"};
+
+        const char *Master = "RiwayatTiket";
+        int pilihan = PilihOpsi(Master, menuLaporan, NULL, NULL, 3);
+
+        switch (pilihan)
+        {
+        case 0:
+            break;
+        case 1:
+            BacaTransTiketBerdasarkanBulan();
+            //TampilkanPesan("Maaf fitur belum tersedia!", 2);
+            break;
+        case 2:
+            BacaTransTiketBerdasarkanTahun();
+           // TampilkanPesan("Maaf fitur belum tersedia!", 2);
+            break;
+        }
+        if (pilihan == 0)
+        {
+            break;
+        }
+    }
 }
 
 // Fungsi untuk menampilkan menu utama

@@ -270,14 +270,17 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("==== Transaksi Tiket ====\n\n");
 
                 // Tampilkan invoice
-                printf("Film        : %s\n", pesanan->judulFilm);
-                printf("Tanggal     : %02d/%02d/%04d\n", pesanan->Tanggal.tanggal, pesanan->Tanggal.bulan, pesanan->Tanggal.tahun);
-                printf("Jam         : %02d:%02d\n", pesanan->jamTayang.jam, pesanan->jamTayang.menit);
-                printf("ID Teater   : %s\n", pesanan->IDTeater);
-                printf("No Teater   : %d\n", pesanan->Teater);
-                printf("Jumlah Tiket: %d\n", pesanan->tiket);
-                printf("Harga Tiket : Rp. %.2lf\n", pesanan->harga);
-                printf("Total Harga : Rp. %.2lf\n", pesanan->total);
+                printf("ID Pesanan   : %s\n", pesanan->ID);
+                printf("No Trans     : %ld\n", pesanan->no);
+                printf("Tgl Transaksi: %02d/%02d/%04d\n", pesanan->tanggalTransc.tanggal, pesanan->tanggalTransc.bulan, pesanan->tanggalTransc.tahun);
+                printf("Film         : %s\n", pesanan->judulFilm);
+                printf("Tanggal      : %02d/%02d/%04d\n", pesanan->Tanggal.tanggal, pesanan->Tanggal.bulan, pesanan->Tanggal.tahun);
+                printf("Jam          : %02d:%02d\n", pesanan->jamTayang.jam, pesanan->jamTayang.menit);
+                printf("ID Teater    : %s\n", pesanan->IDTeater);
+                printf("No Teater    : %d\n", pesanan->Teater);
+                printf("Jumlah Tiket : %d\n", pesanan->tiket);
+                printf("Harga Tiket  : Rp. %.2lf\n", pesanan->harga);
+                printf("Total Harga  : Rp. %.2lf\n", pesanan->total);
                 printf("\n");
             }else
             {

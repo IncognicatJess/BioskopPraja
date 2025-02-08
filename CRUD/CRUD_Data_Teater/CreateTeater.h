@@ -47,6 +47,10 @@ void BuatTeater()
             {
                 printf(" >[%s]", kategoriOptions[i]);
             }
+            else if (i == kategoriIndex && step > 1)
+            {
+                printf("  #[%s] ", kategoriOptions[i]);
+            }
             else
             {
                 printf("  [%s]", kategoriOptions[i]);
@@ -60,6 +64,10 @@ void BuatTeater()
             if (i == statusIndex && step == 4)
             {
                 printf(" >[%s]", statusOptions[i]);
+            }
+            else if (i == statusIndex && step > 4)
+            {
+                printf("  #[%s] ", statusOptions[i]);
             }
             else
             {

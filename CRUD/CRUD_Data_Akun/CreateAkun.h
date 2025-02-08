@@ -64,6 +64,7 @@ void BuatAkun()
         ReadAkun();
         printf("==== Tambah Akun ====\n");
         printf("Akun    :");
+
         for (int i = 0; i < 2; i++)
         {
             if (i == pilihanAkunIndex && step == 0)
@@ -90,7 +91,7 @@ void BuatAkun()
             {
                 printf(" >[%s]", jabatanOptions[i]);
             }
-            else if (i == jabatanIndex)
+            else if (i == jabatanIndex && step > 1)
             {
                 printf("  #[%s] ", jabatanOptions[i]);
             }

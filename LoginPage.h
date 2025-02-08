@@ -248,6 +248,7 @@ void loginPage()
 
     while (attempt > 0)
     {
+        
         // Judul LOGIN
         gotoxy(30, 16);
         printf("\033[37;48;2;197;148;1m LOGIN\033[0m");

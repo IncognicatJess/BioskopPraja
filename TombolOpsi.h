@@ -5,6 +5,7 @@ int ReadFnb();
 void ReadProfile(AkunData *akun, ProfilData *profil);
 int ReadTeater();
 int ReadSchedule();
+void BacaTransTiket();
 
 int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, int jumlah)
 {
@@ -18,6 +19,14 @@ int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, i
         if (strcmp(master, "Akun") == 0)
         {
             ReadAkun();
+        }
+        else if (strcmp(master, "Laporan") == 0)
+        {
+            printf("Silahkan Pilih Laporan Transaski TIket atau F&B.\n\n");
+        }
+        else if (strcmp(master, "RiwayatTiket") == 0)
+        {
+            BacaTransTiket();
         }
         else if (strcmp(master, "ScheduleShowing") == 0)
         {
@@ -38,7 +47,8 @@ int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, i
             printf("Harga : Rp. %0.2lf\n", Pesanan->harga);
             printf("\n\n");
         }
-         else if (strcmp(master, "Seat") == 0) {
+        else if (strcmp(master, "Seat") == 0)
+        {
             Tiket *Pesanan = (Tiket *)data;
             KursiData *kursiTeater = (KursiData *)data2;
             ReadScheduleShowing();
@@ -54,9 +64,11 @@ int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, i
 
             printf("ID Kursi yang dipesan: ");
             // Cetak ID kursi yang dipesan
-            for (int i = 0; i < Pesanan->tiket; i++) {
+            for (int i = 0; i < Pesanan->tiket; i++)
+            {
                 printf("%s", Pesanan->IDkursi[i]);
-                if (i < Pesanan->tiket - 1) {
+                if (i < Pesanan->tiket - 1)
+                {
                     printf(", ");
                 }
             }

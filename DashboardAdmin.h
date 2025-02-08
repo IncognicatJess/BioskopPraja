@@ -53,8 +53,10 @@
 // U SANDI
 #include "CRUD/CRU_Data_Profile/UpdateSandi.h"
 
-
-
+// LAPORAN
+#include "Laporan/LaporanBulanTiket.h"
+#include "Laporan/LaporanTahunTiket.h"
+#include "Laporan/ReadTransaksiTiket.h"
 
 // Struct AkunDataSementara (sudah ada di file eksternal CRUD)
 typedef struct
@@ -75,6 +77,7 @@ void tampilkanDaftarTeater();
 void tampilkanMenuAdmin();
 void tampilkanJadwalTayang();
 int tampilkanMenuAdminNavigasi();
+void tampilkanLaporan();
 void gotoxy(int x, int y);
 void setConsoleSize();
 void takeDrawBoxDashboard();
@@ -91,7 +94,7 @@ void clearScreen()
 void drawLayout()
 {
     // Gambar header
-    gotoxy(5,4);
+    gotoxy(5, 4);
     printf("\033[37;48;2;197;148;1m DASHBOARD ADMIN \033[0m");
 
     setConsoleSize();
@@ -283,7 +286,7 @@ void tampilkanDaftarMenu()
 
         const char *menuFnb[] = {"EDIT", "-HAPUS", "+TAMBAH", "KEMBALI"};
 
-              int pilihan = PilihOpsi("Fnb", menuFnb, NULL, NULL, 4);
+        int pilihan = PilihOpsi("Fnb", menuFnb, NULL, NULL, 4);
         switch (pilihan)
         {
         case 0:
@@ -386,6 +389,61 @@ void tampilkanJadwalTayang()
     }
 }
 
+// Fungsi untuk menampilkan jadwal tayang
+void tampilkanLaporan()
+{
+    while (1)
+    {
+        system("cls");
+
+        const char *menuLaporan[] = {"TIKET", "F&B", "KEMBALI"};
+
+        const char *Master = "Laporan";
+        int pilihan = PilihOpsi(Master, menuLaporan, NULL, NULL, 3);
+
+        switch (pilihan)
+        {
+        case 0:
+            system("cls");
+           // BacaTransTiket();
+            
+            const char *menuLaporan[] = {"KEMBALI", "BULANAN", "TAHUNAN"};
+
+            const char *Master = "RiwayatTiket";
+            int pilihan = PilihOpsi(Master, menuLaporan, NULL, NULL, 3);
+
+            switch (pilihan)
+            {
+            case 0:
+                break;
+            case 1:
+                BacaTransTiketBerdasarkanBulan();
+                // TampilkanPesan("Maaf fitur belum tersedia!", 2);
+                break;
+            case 2:
+                BacaTransTiketBerdasarkanTahun();
+                // TampilkanPesan("Maaf fitur belum tersedia!", 2);
+                break;
+            }
+            if (pilihan == 0)
+            {
+                break;
+            }
+
+            break;
+        case 1:
+            TampilkanPesan("Maaf fitur belum tersedia!", 2);
+            break;
+        case 2:
+            break;
+        }
+        if (pilihan == 2)
+        {
+            break;
+        }
+    }
+}
+
 // Fungsi untuk menampilkan menu utama
 void tampilkanMenuAdmin(AkunData *akun, ProfilData *profil)
 {
@@ -414,6 +472,9 @@ void tampilkanMenuAdmin(AkunData *akun, ProfilData *profil)
             break;
         case 6:
             tampilkanDaftarMenu();
+            break;
+        case 7:
+            tampilkanLaporan();
             break;
         case 8:
             TampilkanPesan("Logging out...\n", 1);
