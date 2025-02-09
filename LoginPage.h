@@ -225,12 +225,14 @@ typedef struct
 #include "DashboardKasirFnb.h"
 #include "DashboardKasirTiket.h"
 #include "Utility.h"
+#include "Transaksi/RefreshKursi.h"
 
 
 // Prototipe fungsi
 bool validasiLogin(const char *username, const char *password, AkunData *akun);
 void dashboardUser(AkunData *akun);
 void loginPage();
+void ResetKursiPerID();
 
 // Fungsi utama
 void loginPage()

@@ -81,6 +81,7 @@ void tampilkanLaporan();
 void gotoxy(int x, int y);
 void setConsoleSize();
 void takeDrawBoxDashboard();
+void ResetKursiPerID();
 
 // Fungsi membersihkan layar
 void clearScreen()
@@ -320,10 +321,10 @@ void tampilkanDaftarTeater()
     {
         system("cls");
 
-        const char *menuTeater[] = {"EDIT", "-HAPUS", "+TAMBAH", "KURSI", "KEMBALI"};
+        const char *menuTeater[] = {"EDIT", "-HAPUS", "+TAMBAH", "KURSI", "RESET STATUS KURSI", "KEMBALI"};
 
         const char *Master = "Teater";
-        int pilihan = PilihOpsi(Master, menuTeater, NULL, NULL, 5);
+        int pilihan = PilihOpsi(Master, menuTeater, NULL, NULL, 6);
 
         switch (pilihan)
         {
@@ -344,9 +345,12 @@ void tampilkanDaftarTeater()
             ReadKursi();
             break;
         case 4:
+            ResetKursiPerID();
+            break;
+        case 5:
             break;
         }
-        if (pilihan == 4)
+        if (pilihan == 5)
         {
             break;
         }
@@ -405,8 +409,8 @@ void tampilkanLaporan()
         {
         case 0:
             system("cls");
-           // BacaTransTiket();
-            
+            // BacaTransTiket();
+
             const char *menuLaporan[] = {"KEMBALI", "BULANAN", "TAHUNAN"};
 
             const char *Master = "RiwayatTiket";

@@ -1,4 +1,5 @@
 #include <time.h> // Untuk waktu lokal
+
 void GenerateTransactionID(Tiket *pesanan)
 {
     static long nomorUrut = 0;         // Simpan nomor urut secara global
@@ -39,9 +40,9 @@ void TambahkanTanggalTransaksi(Tiket *pesanan)
     pesanan->tanggalTransc.bulan = local->tm_mon + 1;     // tm_mon dimulai dari 0
     pesanan->tanggalTransc.tahun = local->tm_year + 1900; // tm_year adalah tahun sejak 1900
 }
+
 void InvoiceTiket(Tiket *pesanan)
 {
-
     FILE *file = fopen(TRANSCFILE, "ab");
     if (!file)
     {
@@ -57,7 +58,7 @@ void InvoiceTiket(Tiket *pesanan)
     char catatan[1000] = "";
     int step = 0; // Step untuk navigasi form
     char nominalStr[20] = "";
-
+   
     GenerateTransactionID(pesanan);     // Generate ID dan nomor transaksi
     TambahkanTanggalTransaksi(pesanan); // Tambahkan tanggal transaksi
 
@@ -81,16 +82,13 @@ void InvoiceTiket(Tiket *pesanan)
         printf("\n");
 
         // Step 0: Pilih metode pembayaran
-
         printf("Metode Pembayaran: ");
         for (int i = 0; i < 4; i++)
         {
-
             if (i == metodePembayaran && step > 0)
             {
                 printf(" #[%s]", metode[i]);
             }
-
             else if (i == metodePembayaran)
             {
                 printf(" >[%s] ", metode[i]);
@@ -104,22 +102,13 @@ void InvoiceTiket(Tiket *pesanan)
 
         printf("Nominal Pembayaran  : Rp.%s %s\n", step == 1 ? ">" : (step > 0 ? "#" : " "), nominalStr);
         printf("Kembalian           : Rp. %.2lf\n", kembalian);
-        // Step 2: Input catatan
         printf("Catatan             : %s%s\n", step == 2 ? ">" : (step > 2 ? "#" : " "), catatan);
-
-        // Step 3: Konfirmasi transaksi
-        // printf("%sKonfirmasi Transaksi\n", step == 3 ? ">" : (step > 3 ? "#" : " "));
-
-        // Tombol navigasi
         printf("\nTekan Enter untuk lanjut, Esc untuk keluar.\n");
-
-        // Step 1: Pilih metode pembayaran
 
         // Handle input pengguna
         key = getch();
 
-        // Tombol "Esc" untuk membatalkan transaksi
-        if (key == 27)
+        if (key == 27) // Esc untuk membatalkan transaksi
         {
             printf("Transaksi dibatalkan.\n");
             fclose(file);
@@ -128,31 +117,28 @@ void InvoiceTiket(Tiket *pesanan)
 
         if (step == 0)
         {
-            if (key == 75)
-            { // Panah kiri
+            if (key == 75) // Panah kiri
+            {
                 metodePembayaran = (metodePembayaran - 1 + 4) % 4;
             }
-            else if (key == 77)
-            { // Panah kanan
+            else if (key == 77) // Panah kanan
+            {
                 metodePembayaran = (metodePembayaran + 1) % 4;
             }
-            else if (key == '\r')
-            { // Enter untuk lanjut
+            else if (key == '\r') // Enter untuk lanjut
+            {
                 step++;
             }
         }
-
-        // Step 1: Input nominal pembayaran
         else if (step == 1)
         {
-            // Input harga
             if (isdigit(key) || key == '.')
             {
                 size_t len = strlen(nominalStr);
                 if (len < 9)
                 {
                     nominalStr[len] = key;
-                    nominalStr[len + 1] = '\0';
+                    nominalStr [len + 1] = '\0';
                 }
             }
             else if (key == 8 && strlen(nominalStr) > 0)
@@ -160,7 +146,7 @@ void InvoiceTiket(Tiket *pesanan)
                 nominalStr[strlen(nominalStr) - 1] = '\0';
             }
             else if (key == '\r' && ValidasiHarga(nominalStr))
-            { // Enter untuk lanjut
+            {
                 nominalPembayaran = atof(nominalStr);
                 if (nominalPembayaran >= pesanan->total)
                 {
@@ -169,34 +155,26 @@ void InvoiceTiket(Tiket *pesanan)
                 }
                 else
                 {
-                    // printf("Masukkan nominal pembayaran: ");
-                    // scanf("%lf", &nominalPembayaran);
-                    //  getchar(); // Menangkap newline setelah input
-                    // if (nominalPembayaran < pesanan->total)
-                    // {
                     TampilkanPesan("Uang tidak cukup! Silakan tambah nominal.", 2);
-                    //}
                 }
             }
         }
-        // Step 2: Input catatan
         else if (step == 2)
         {
             if (key == '\r')
-            { // Enter untuk lanjut
+            {
                 step++;
             }
             else if (key == 8 && strlen(catatan) > 0)
-            { // Backspace
+            {
                 catatan[strlen(catatan) - 1] = '\0';
             }
             else if (strlen(catatan) < 999 && isprint(key))
-            { // Input karakter
+            {
                 catatan[strlen(catatan)] = key;
                 catatan[strlen(catatan) + 1] = '\0';
             }
         }
-        // Step 3: Konfirmasi transaksi
         else if (step == 3)
         {
             strncpy(pesanan->metodePembayaran, metode[metodePembayaran], sizeof(pesanan->metodePembayaran) - 1);
@@ -204,20 +182,33 @@ void InvoiceTiket(Tiket *pesanan)
             strncpy(pesanan->catatan, catatan, sizeof(pesanan->catatan) - 1);
             pesanan->catatan[sizeof(pesanan->catatan) - 1] = '\0';
 
-            // Konfirmasi transaksi
             int konfirmasi = TombolKonfirmasi("Transaksi", "Konfirmasi", pesanan, "Tiket");
             if (konfirmasi == 1)
-            { // KONFIRMASI
-              // Generate ID transaksi dan nomor urut
-              //  GenerateTransactionID(pesanan);
-
-                // Simpan transaksi ke file
-                FILE *file = fopen(TRANSCFILE, "ab");
-                if (!file)
+            {
+                FILE *kursiFile = fopen(SEATDAT, "rb+");
+                if (!kursiFile)
                 {
-                    TampilkanPesan("Gagal membuka file transaksi.", 2);
+                    TampilkanPesan("Gagal membuka file kursi.", 2);
+                    fclose(file);
                     return;
                 }
+
+                KursiData kursi;
+                while (fread(&kursi, sizeof(KursiData), 1, kursiFile))
+                {
+                    for (int i = 0; i < pesanan->tiket; i++)
+                    {
+                        if (strcmp(kursi.IDTeater, pesanan->IDTeater) == 0 && strcmp(kursi.ID, pesanan->IDkursi[i]) == 0)
+                        {
+                            strncpy(kursi.status, "Dipesan", sizeof(kursi.status) - 1);
+                            fseek(kursiFile, -sizeof(KursiData), SEEK_CUR);
+                            fwrite(&kursi, sizeof(KursiData), 1, kursiFile);
+                            break; // Keluar dari loop setelah menemukan kursi yang sesuai
+                        }
+                    }
+                }
+                fclose(kursiFile);
+
                 fwrite(pesanan, sizeof(Tiket), 1, file);
                 fclose(file);
 
@@ -225,7 +216,7 @@ void InvoiceTiket(Tiket *pesanan)
                 return;
             }
             else
-            { // BATAL
+            {
                 TampilkanPesan("Transaksi dibatalkan.\n", 2);
                 return;
             }

@@ -61,7 +61,21 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
             {
                 TampilkanPesan("Maaf fitur belum tersedia\n", 2);
             }
-        } // Penanganan untuk master "Fnb"
+        } // Penanganan untuk status kursi
+        else if (strcmp(master, "StatusKursi") == 0 && strcmp(tipeData, "KursiData") == 0)
+        {
+            KursiData *kursi = (KursiData *)data;
+            if (strcmp(opsi, "PerbaruiPerID") == 0)
+            {
+                printf("Apakah anda yakin ingin mereset status kursi %s menjadi \"Tersedia\"?\n", kursi->ID);
+                printf("\n");
+                printf("\n");
+            }
+            else
+            {
+                TampilkanPesan("Maaf fitur belum tersedia\n", 2);
+            }
+        }
         else if (strcmp(master, "Fnb") == 0 && strcmp(tipeData, "FnbData") == 0)
         {
             FnbData *menu = (FnbData *)data;
@@ -282,7 +296,8 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("Harga Tiket  : Rp. %.2lf\n", pesanan->harga);
                 printf("Total Harga  : Rp. %.2lf\n", pesanan->total);
                 printf("\n");
-            }else
+            }
+            else
             {
                 TampilkanPesan("Maaf fitur belum tersedia\n", 2);
             }
