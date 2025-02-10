@@ -26,7 +26,7 @@ void BuatTeater()
     TeaterData teaterBaru;
     memset(&teaterBaru, 0, sizeof(TeaterData));
 
-    const char *statusOptions[] = {"Open", "Closed", "Maintenance"};
+    const char *statusOptions[] = {"Open", "Closed"};
     const char *kategoriOptions[] = {"Reguler", "Premiere", "Mini Studio"};
 
     int statusIndex = 0, kategoriIndex = 0;
@@ -59,7 +59,7 @@ void BuatTeater()
         printf("\nJumlah Kursi: %s%s", step == 2 ? ">" : "", jumlahKursiStr);
         printf("\nHarga       : Rp. %s%s", step == 3 ? ">" : "", hargaStr);
         printf("\nStatus      :");
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 2; i++)
         {
             if (i == statusIndex && step == 4)
             {
@@ -191,9 +191,9 @@ void BuatTeater()
         else if (step == 4)
         { // Pilih status
             if (key == 75)
-                statusIndex = (statusIndex - 1 + 3) % 3;
+                statusIndex = (statusIndex - 1 + 2) % 2;
             if (key == 77)
-                statusIndex = (statusIndex + 1) % 3;
+                statusIndex = (statusIndex + 1) % 2;
             if (key == '\r')
                 step++;
         }

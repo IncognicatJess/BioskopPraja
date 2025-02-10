@@ -96,6 +96,10 @@ int PilihOpsi(const char *master, const char *opsi[], void *data, void *data2, i
         {
             ReadSchedule();
         }
+        else if (strcmp(master, "ResetKursi") == 0)
+        {
+            printf("Pilih opsi reset status kursi. Hanya satu kursi atau seluruh kursi pada teater tertentu.\n\n");
+        }
         else
         {
             TampilkanPesan("Data Belum Tersedia!\n", 1);

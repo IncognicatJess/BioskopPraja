@@ -71,6 +71,13 @@ int TombolKonfirmasi(const char *master, const char *opsi, void *data, const cha
                 printf("\n");
                 printf("\n");
             }
+            else if (strcmp(opsi, "PerbaruiPerTeater") == 0)
+            {
+                char *kursi = (char *)data;
+                printf("Apakah anda yakin ingin mereset semua status kursi pada Teater %s menjadi \"Tersedia\"?\n", kursi);
+                printf("\n");
+                printf("\n");
+            }
             else
             {
                 TampilkanPesan("Maaf fitur belum tersedia\n", 2);

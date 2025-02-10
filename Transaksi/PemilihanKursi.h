@@ -97,15 +97,23 @@ void PemilihanKursi(Tiket pesanan)
         printf("---------------------------------------------------------------------------------------------------------\n");
         printf("|                                                   LAYAR                                               |\n");
         printf("---------------------------------------------------------------------------------------------------------\n");
-        
+
         printf("\nTekan Enter untuk memilih kursi, Esc untuk lanjut.\n");
         printf("Tiket dipilih: %d/%d\n", tiketDipilih, pesanan.tiket);
 
         // Handle input pengguna
         char key = getch();
+
         if (key == 27)
         { // Esc untuk keluar
-            break;
+            if (tiketDipilih < 1)
+            {
+                TampilkanPesan("Pilih kursi terlebih dahulu!!\n", 2);
+            }
+            else
+            {
+                break;
+            }
         }
         else if (key == 13)
         { // Enter untuk memilih kursi
@@ -165,8 +173,8 @@ void PemilihanKursi(Tiket pesanan)
     switch (pilihan)
     {
     case 0:
-       // memset(&pesanan, 0, sizeof(Tiket)); // Reset pesanan
-       PemilihanKursi(pesanan);                    // Kembali ke pemilihan film
+        // memset(&pesanan, 0, sizeof(Tiket)); // Reset pesanan
+        PemilihanKursi(pesanan); // Kembali ke pemilihan film
         break;
     case 1:
         // Hitung total harga

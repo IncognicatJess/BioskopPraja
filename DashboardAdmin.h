@@ -82,6 +82,8 @@ void gotoxy(int x, int y);
 void setConsoleSize();
 void takeDrawBoxDashboard();
 void ResetKursiPerID();
+void ResetKursiPerTeater();
+
 
 // Fungsi membersihkan layar
 void clearScreen()
@@ -345,7 +347,30 @@ void tampilkanDaftarTeater()
             ReadKursi();
             break;
         case 4:
-            ResetKursiPerID();
+            system("cls");
+            // BacaTransTiket();
+
+            const char *menuReset[] = {"KEMBALI", "SATU KURSI", "SEMUA KURSI PER-TEATER"};
+
+            const char *Master = "ResetKursi";
+            int pilihan = PilihOpsi(Master, menuReset, NULL, NULL, 3);
+
+            switch (pilihan)
+            {
+            case 0:
+                break;
+            case 1:
+                ResetKursiPerID();
+                break;
+            case 2:
+                ResetKursiPerTeater();
+                break;
+            }
+            if (pilihan == 0)
+            {
+                break;
+            }
+
             break;
         case 5:
             break;
@@ -499,5 +524,6 @@ int DashboardAdmin(AkunData *akun)
 
     ProfilData profil = {0};
     tampilkanMenuAdmin(akun, &profil);
+    fflush(stdin);
     return 0;
 }

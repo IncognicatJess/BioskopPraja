@@ -40,7 +40,6 @@ void TambahkanTanggalTransaksi(Tiket *pesanan)
     pesanan->tanggalTransc.bulan = local->tm_mon + 1;     // tm_mon dimulai dari 0
     pesanan->tanggalTransc.tahun = local->tm_year + 1900; // tm_year adalah tahun sejak 1900
 }
-
 void InvoiceTiket(Tiket *pesanan)
 {
     FILE *file = fopen(TRANSCFILE, "ab");
@@ -58,7 +57,7 @@ void InvoiceTiket(Tiket *pesanan)
     char catatan[1000] = "";
     int step = 0; // Step untuk navigasi form
     char nominalStr[20] = "";
-   
+
     GenerateTransactionID(pesanan);     // Generate ID dan nomor transaksi
     TambahkanTanggalTransaksi(pesanan); // Tambahkan tanggal transaksi
 
@@ -138,7 +137,7 @@ void InvoiceTiket(Tiket *pesanan)
                 if (len < 9)
                 {
                     nominalStr[len] = key;
-                    nominalStr [len + 1] = '\0';
+                    nominalStr[len + 1] = '\0';
                 }
             }
             else if (key == 8 && strlen(nominalStr) > 0)
@@ -203,6 +202,7 @@ void InvoiceTiket(Tiket *pesanan)
                             strncpy(kursi.status, "Dipesan", sizeof(kursi.status) - 1);
                             fseek(kursiFile, -sizeof(KursiData), SEEK_CUR);
                             fwrite(&kursi, sizeof(KursiData), 1, kursiFile);
+                            fflush(kursiFile); 
                             break; // Keluar dari loop setelah menemukan kursi yang sesuai
                         }
                     }

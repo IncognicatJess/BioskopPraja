@@ -10,7 +10,7 @@ void cariFilmByIDOrJudul(const char *keyword);
 int ReadSchedule();
 
 #include "Transaksi/transaksiTiket.h"
-#include "Transaksi/StatusKursi.h"
+//#include "Transaksi/StatusKursi.h"
 #include "Transaksi/InvoiceTiket.h"
 #include "Transaksi/PemilihanKursi.h"
 
@@ -244,5 +244,6 @@ int DashboardUserTiket(AkunData *akun)
 
     ProfilData profil = {0};
     tampilkanMenuTiket(akun, &profil);
+    fflush(stdin);
     return 0;
 }

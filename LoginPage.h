@@ -233,6 +233,7 @@ bool validasiLogin(const char *username, const char *password, AkunData *akun);
 void dashboardUser(AkunData *akun);
 void loginPage();
 void ResetKursiPerID();
+void ResetKursiPerTeater();
 
 // Fungsi utama
 void loginPage()
