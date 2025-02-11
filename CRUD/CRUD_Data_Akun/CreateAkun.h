@@ -148,7 +148,7 @@ void BuatAkun()
             {
                 username[strlen(username) - 1] = '\0';
             }
-            else if (key == '\r' && ValidasiUsername(username))
+            else if (key == '\r' && ValidasiUsername(username) && UsernameUnik(username, file))
             {
                 step++;
             }
@@ -186,7 +186,7 @@ void BuatAkun()
             if (konfirmasiIndex == 0)
             {
                 memset(&akunBaru, 0, sizeof(AkunData));
-                printf("Pembuatan akun dibatalkan.\n");
+                TampilkanPesan("Pembuatan akun dibatalkan.\n",2);
                 break;
             }
             else
@@ -213,16 +213,10 @@ void BuatAkun()
                 }
                 snprintf(akunBaru.ID, sizeof(akunBaru.ID), "ACT%03d", idBaru);
 
-                // Cek apakah username sudah ada
-                if (UsernameUnik(username, file))
-                {
-                    fwrite(&akunBaru, sizeof(AkunData), 1, file);
-                    TampilkanPesan("Data berhasil disimpan.\n", 2);
-                }
-                else
-                {
-                    TampilkanPesan("Username telah digunakan, coba yang lain.\n", 2);
-                }
+                
+                fwrite(&akunBaru, sizeof(AkunData), 1, file);
+                
+               
                 break;
             }
         }
@@ -282,6 +276,7 @@ bool UsernameUnik(const char *username, FILE *file)
     {
         if (strcmp(temp.username, username) == 0)
         {
+            TampilkanPesan("Username telah digunakan, coba yang lain.\n", 2);
             return false;
         }
     }

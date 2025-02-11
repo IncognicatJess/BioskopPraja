@@ -118,7 +118,7 @@ void EditAkun()
                 }
                 else
                 {
-                    TampilkanPesan("Sandi tidak valid. Coba lagi.", 2);
+                    //TampilkanPesan("Sandi tidak valid. Coba lagi.", 2);
                     system("cls");
                     ReadAkun();
                     printf("==== Edit Akun ====\n\n");
